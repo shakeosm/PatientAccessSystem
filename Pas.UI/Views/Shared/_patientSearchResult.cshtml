@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Pas.Web.ViewModels.PatientDetailsVM>
+
+@{
+    var counter = 1;
+}
+
+
+<table id="PatientSearchTable" class="data-table w-100">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Short Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Bangla Name</th>
+            <th scope="col">Mobile</th>
+            <th scope="col">Age</th>
+            <th scope="col">Gender</th>
+            <th scope="col">-</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th scope="row">@counter</th>
+                <td>@item.ShortId</td>
+                <td>@item.Name</td>
+                <td>@item.BanglaName</td>
+                <td>@item.Mobile</td>
+                <td>@item.Age</td>
+                <td>@item.Gender</td>
+                <td>
+                   
+                    <a class="btn btn-general btn-primary create-new-prescription-button"
+                       asp-area="Doctor"
+                       asp-controller="Home"
+                       asp-action="ViewPatient"
+                       asp-route-id="@item.Id"
+                       data-patient-id="@item.Id"
+                       data-toggle="tooltip" data-placement="right" title="View">
+                        <i class="fa fa-pencil-square-o"></i>
+                    </a>
+                </td>
+            </tr>
+            counter += 1;
+
+        }
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $('#PatientSearchTable').DataTable({            
+        });
+    });
+</script>

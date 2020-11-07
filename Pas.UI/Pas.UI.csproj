@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aspnet-Pas.UI-FFE40124-AAB3-4DBD-8D74-0727E6FB6D1F</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\**" />
+    <Compile Remove="Infrastructure\Startup\**" />
+    <Compile Remove="ViewModels\**" />
+    <Content Remove="Data\**" />
+    <Content Remove="Infrastructure\Startup\**" />
+    <Content Remove="ViewModels\**" />
+    <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="Infrastructure\Startup\**" />
+    <EmbeddedResource Remove="ViewModels\**" />
+    <None Remove="Data\**" />
+    <None Remove="Infrastructure\Startup\**" />
+    <None Remove="ViewModels\**" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Areas\Hospital\Views\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pas.Common\Pas.Common.csproj" />
+    <ProjectReference Include="..\Pas.Data\Pas.Data.csproj" />
+    <ProjectReference Include="..\Pas.Service\Pas.Service.csproj" />
+    <ProjectReference Include="..\Pas.ViewModel\Pas.Web.csproj" />
+  </ItemGroup>
+
+</Project>
