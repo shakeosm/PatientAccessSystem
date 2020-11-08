@@ -1,7 +1,8 @@
 ﻿@*@model Pas.Web.ViewModels.PrescriptionCreateInitialVM*@
 
 @{
-    ViewData["Title"] = "Index";
+    Layout = "/Views/Shared/_LayoutCustom.cshtml";
+    ViewData["Title"] = "Doctor Dashboard";
 }
 <div class="card">
     <div class="card-header">
@@ -69,7 +70,11 @@
                             Gynea, Medicine, Surgery<br />
                             Govt Reg: 0123456<br />
                         </p>
-                        <a href="#" class="btn btn-primary">Edit</a>
+                        <button type="button" class="">
+                            <span class="fal fa-edit mr-1"></span>
+                            Edit
+                        </button>
+
                     </div>
                 </div>
             </div>
@@ -83,7 +88,10 @@
                             Gynea, Medicine, Surgery<br />
                             Govt Reg: 0123456<br />
                         </p>
-                        <a href="#" class="btn btn-primary">Edit</a>
+                        <button type="button" class="">
+                            <span class="fal fa-edit mr-1"></span>
+                            Edit
+                        </button>
                     </div>
                 </div>
             </div>
@@ -91,12 +99,17 @@
 
     </div>
 
+    <button type="button" class="btn btn-lg btn-info waves-effect waves-themed">
+        <span class="fal fa-prescription mr-1"></span>
+        New Prescription
+    </button>
+
     <a class="et_pb_button et_pb_bg_layout_dark" href="">New Prescription</a>
     <hr />
 
-    <a href="/doctor/Home/SearchPatient" class="round-button" role="button">New Prescription</a>
+    <a href="/Doctor/Home/SearchPatient" class="round-button" role="button">New Prescription</a>
 
-    <a id="NewPrescriptionLinkButton" href="/doctor/Home/SearchPatient"
+    <a id="NewPrescriptionLinkButton" href="/Doctor/Home/SearchPatient"
        class="btn btn-general btn-primary mt-3"
        @*asp-area="Doctor"
        asp-action="Home"
@@ -149,7 +162,6 @@
     </div>
 </div>
 
-<link href="~/css/round-button.css" rel="stylesheet" />
 
 
 

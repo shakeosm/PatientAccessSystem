@@ -1,6 +1,9 @@
 ﻿$(document).ready(function () {
 
     $("#SearchPatientButton").click(function () {
+
+        return;
+
         var getUrl = "/Patient/Home/Search";
         console.log("getUrl: " + getUrl);
 

@@ -13,5 +13,17 @@ namespace Pas.UI.Models.Identity
 
         [PersonalData]
         public DateTime? BirthDate { get; set; }
+
+        [PersonalData]
+        public int? RoleId { get; set; }
+        
+        [PersonalData]
+        public string RoleName { get; set; }
+
+        [PersonalData]
+        public int? OrganisationId { get; set; }
+        
+        [PersonalData]
+        public string OrganisationName { get; set; }
     }
 }

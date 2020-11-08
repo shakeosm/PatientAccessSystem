@@ -56,7 +56,10 @@ namespace Pas.Web.ViewModels
         public DoctorDetailsVM DoctorDetails { get; set; }
         
         /// <summary>Doctor may chose to select one from the regular patient and create a new Prescription</summary>
-        public IEnumerable<PatientDetailsVM> RegularPatients { get; set; }
+        public IEnumerable<PatientDetailsVM> PatientsList { get; set; }
+        
+        public string PatientsListTitle { get; set; }
+
         public PatientSearchVM SearchVM { get; set; } = new PatientSearchVM();
     }
 

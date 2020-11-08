@@ -13,6 +13,8 @@ namespace Pas.Data.Models
         public DateTime? ApprovedOn { get; set; }
         public int? ApprovedById { get; set; }
 
+        public bool? IsDeleted { get; set; }
+
         public virtual Organisation Organisation { get; set; }
         public virtual Role Role { get; set; }
         public virtual User User { get; set; }

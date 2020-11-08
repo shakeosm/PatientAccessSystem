@@ -2,6 +2,7 @@
 using Pas.Service;
 using Pas.Service.Interface;
 using Pas.Web.ViewModels;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Pas.UI.Areas.Doctor.Controllers
@@ -50,7 +51,33 @@ namespace Pas.UI.Areas.Doctor.Controllers
                 HospitalId = 4,
                 PatientId = 1,
 
-                RegularPatients = regularPatients,
+                PatientsList = regularPatients,
+                PatientsListTitle = $"Recent visitors",
+                HospitalDetails = null,
+                DoctorDetails = null
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> SearchPatient(PatientSearchVM search)
+        {
+            //## search the patient using the Search VM
+            search.FirstName = "car";
+            var matchingPatients = await _patientService.SearchPatient(search);
+
+            //## Doctor will Search Patients and Create a new Prescription
+            PrescriptionCreateInitialVM vm = new PrescriptionCreateInitialVM()
+            {
+                DoctorId = 3,
+                HospitalId = 4,
+                PatientId = 1,
+
+                SearchVM = search,
+
+                PatientsList = matchingPatients,
+                PatientsListTitle = $"Matching records",
                 HospitalDetails = null,
                 DoctorDetails = null
             };

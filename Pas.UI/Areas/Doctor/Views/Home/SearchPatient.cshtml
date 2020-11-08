@@ -1,7 +1,7 @@
 ﻿@model Pas.Web.ViewModels.PrescriptionCreateInitialVM
 
-@{
-    ViewData["Title"] = "SearchPatient";
+@{    
+    ViewData["Title"] = "Search Patient";
 }
 
     <div class="tab-pane fade show active p-2" id="nav-prescription" role="tabpanel" aria-labelledby="nav-prescription-tab">
@@ -11,13 +11,17 @@
                 Search a Patient
             </h5>
             <div id="PatientSearchInputContainer" class="card-body">
-                @await Html.PartialAsync("_patientSearchOption")
+                <form id="SearchInputForm" asp-area="Doctor" asp-controller="Home" asp-action="SearchPatient" method="post">
+                    @Html.AntiForgeryToken()
+
+                      @await Html.PartialAsync("_patientSearchOption", @Model.SearchVM)
+                </form>
             </div>
         </div>
 
         <div id="RegularPatientDiv" class="bg-white mt-3 p-3">
-            <h5>Recent visitors</h5>
-            @await Html.PartialAsync("_patientSearchResult", Model.RegularPatients)
+            <h5>@Model.PatientsListTitle <span class="badge badge-pill badge-primary">@Model.PatientsList.Count()</span></h5>
+            @await Html.PartialAsync("_patientSearchResult", Model.PatientsList)
         </div>
 
         <form id="StartNewPrescriptionForm" action="/" method="post">

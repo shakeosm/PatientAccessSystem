@@ -43,7 +43,7 @@ var Tooltip = (function () {
 })();
 
 
-development = true;
+var development = true;
 
 function logToConsole(object) {
     if (development)

@@ -1,0 +1,634 @@
+﻿<!DOCTYPE html>
+<!--
+Template Name:  SmartAdmin Responsive WebApp - Template build with Twitter Bootstrap 4
+Version: 4.5.1
+Author: Sunnyat A.
+Website: http://gootbootstrap.com
+Purchase: https://wrapbootstrap.com/theme/smartadmin-responsive-webapp-WB0573SK0?ref=myorange
+License: You must have a valid license purchased only from wrapbootstrap.com (link above) in order to legally use this theme for your project.
+-->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>@ViewData["Title"] - PAS</title>
+    <meta name="description" content="Contacts">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, minimal-ui">
+    
+    <!-- Call App Mode on ios devices -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <!-- Remove Tap Highlight on Windows Phone IE -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- base css -->
+    <link id="vendorsbundle" rel="stylesheet" media="screen, print" href="css/vendors.bundle.css">
+    <link id="appbundle" rel="stylesheet" media="screen, print" href="css/app.bundle.css">
+    
+    <link id="myskin" rel="stylesheet" media="screen, print" href="css/skins/skin-master.css">
+
+    <!-- Place favicon.ico in the root directory -->
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
+    <link rel="mask-icon" href="images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="stylesheet" media="screen, print" href="css/fa-solid.css">
+    <link rel="stylesheet" media="screen, print" href="css/fa-brands.css">
+</head>
+<!-- BEGIN Body -->
+<!-- Possible Classes
+
+    * 'header-function-fixed'         - header is in a fixed at all times
+    * 'nav-function-fixed'            - left panel is fixed
+    * 'nav-function-minify'			  - skew nav to maximize space
+    * 'nav-function-hidden'           - roll mouse on edge to reveal
+    * 'nav-function-top'              - relocate left pane to top
+    * 'mod-main-boxed'                - encapsulates to a container
+    * 'nav-mobile-push'               - content pushed on menu reveal
+    * 'nav-mobile-no-overlay'         - removes mesh on menu reveal
+    * 'nav-mobile-slide-out'          - content overlaps menu
+    * 'mod-bigger-font'               - content fonts are bigger for readability
+    * 'mod-high-contrast'             - 4.5:1 text contrast ratio
+    * 'mod-color-blind'               - color vision deficiency
+    * 'mod-pace-custom'               - preloader will be inside content
+    * 'mod-clean-page-bg'             - adds more whitespace
+    * 'mod-hide-nav-icons'            - invisible navigation icons
+    * 'mod-disable-animation'         - disables css based animations
+    * 'mod-hide-info-card'            - hides info card from left panel
+    * 'mod-lean-subheader'            - distinguished page header
+    * 'mod-nav-link'                  - clear breakdown of nav links
+
+    >>> more settings are described inside documentation page >>>
+-->
+<body class="mod-bg-1 mod-nav-link ">
+    <!-- DOC: script to save and load page settings -->
+    <script>
+        /**
+         *	This script should be placed right after the body tag for fast execution
+         *	Note: the script is written in pure javascript and does not depend on thirdparty library
+         **/
+        'use strict';
+
+        var classHolder = document.getElementsByTagName("BODY")[0],
+            /**
+             * Load from localstorage
+             **/
+            themeSettings = (localStorage.getItem('themeSettings')) ? JSON.parse(localStorage.getItem('themeSettings')) :
+                {},
+            themeURL = themeSettings.themeURL || '',
+            themeOptions = themeSettings.themeOptions || '';
+        /**
+         * Load theme options
+         **/
+        if (themeSettings.themeOptions) {
+            classHolder.className = themeSettings.themeOptions;
+            console.log("%c✔ Theme settings loaded", "color: #148f32");
+        }
+        else {
+            console.log("%c✔ Heads up! Theme settings is empty or does not exist, loading default settings...", "color: #ed1c24");
+        }
+        if (themeSettings.themeURL && !document.getElementById('mytheme')) {
+            var cssfile = document.createElement('link');
+            cssfile.id = 'mytheme';
+            cssfile.rel = 'stylesheet';
+            cssfile.href = themeURL;
+            document.getElementsByTagName('head')[0].appendChild(cssfile);
+
+        }
+        else if (themeSettings.themeURL && document.getElementById('mytheme')) {
+            document.getElementById('mytheme').href = themeSettings.themeURL;
+        }
+        /**
+         * Save to localstorage
+         **/
+        var saveSettings = function () {
+            themeSettings.themeOptions = String(classHolder.className).split(/[^\w-]+/).filter(function (item) {
+                return /^(nav|header|footer|mod|display)-/i.test(item);
+            }).join(' ');
+            if (document.getElementById('mytheme')) {
+                themeSettings.themeURL = document.getElementById('mytheme').getAttribute("href");
+            };
+            localStorage.setItem('themeSettings', JSON.stringify(themeSettings));
+        }
+        /**
+         * Reset settings
+         **/
+        var resetSettings = function () {
+            localStorage.setItem("themeSettings", "");
+        }
+
+    </script>
+    <!-- BEGIN Page Wrapper -->
+    <div class="page-wrapper">
+        <div class="page-inner">
+            <!-- BEGIN Left Aside -->
+            <aside class="page-sidebar">
+                <div class="page-logo">
+                    <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative" data-toggle="modal" data-target="#modal-shortcut">
+                        <img src="images/logo.png" alt="SmartAdmin WebApp" aria-roledescription="logo">
+                        <span class="page-logo-text mr-1">SmartAdmin WebApp</span>
+                        <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
+                        <i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
+                    </a>
+                </div>
+                <!-- BEGIN PRIMARY NAVIGATION -->
+                <nav id="js-primary-nav" class="primary-nav" role="navigation">
+                    <div class="nav-filter">
+                        <div class="position-relative">
+                            <input type="text" id="nav_filter_input" placeholder="Filter menu" class="form-control" tabindex="0">
+                            <a href="#" onclick="return false;" class="btn-primary btn-search-close js-waves-off" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar">
+                                <i class="fal fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <img src="images/demo/avatars/avatar-admin.png" class="profile-image rounded-circle" alt="Dr. Codex Lantern">
+                        <div class="info-card-text">
+                            <a href="#" class="d-flex align-items-center text-white">
+                                <span class="text-truncate text-truncate-sm d-inline-block">
+                                    Dr. Codex Lantern
+                                </span>
+                            </a>
+                            <span class="d-inline-block text-truncate text-truncate-sm">Toronto, Canada</span>
+                        </div>
+                        <img src="images/card-backgrounds/cover-2-lg.png" class="cover" alt="cover">
+                        <a href="#" onclick="return false;" class="pull-trigger-btn" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar" data-focus="nav_filter_input">
+                            <i class="fal fa-angle-down"></i>
+                        </a>
+                    </div>
+                    <ul id="js-nav-menu" class="nav-menu">
+                        <li>
+                            <a href="#" title="Application Intel" data-filter-tags="application intel">
+                                <i class="fal fa-info-circle"></i>
+                                <span class="nav-link-text" data-i18n="nav.application_intel">Application Intel</span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="intel_analytics_dashboard.html" title="Analytics Dashboard" data-filter-tags="application intel analytics dashboard">
+                                        <span class="nav-link-text" data-i18n="nav.application_intel_analytics_dashboard">Analytics Dashboard</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" title="Theme Settings" data-filter-tags="theme settings">
+                                <i class="fal fa-cog"></i>
+                                <span class="nav-link-text" data-i18n="nav.theme_settings">Theme Settings</span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="settings_how_it_works.html" title="How it works" data-filter-tags="theme settings how it works">
+                                        <span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">How it works</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" title="Documentation" data-filter-tags="documentation">
+                                <i class="fal fa-book"></i>
+                                <span class="nav-link-text" data-i18n="nav.documentation">Documentation</span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="docs_general.html" title="General Docs" data-filter-tags="documentation general docs">
+                                        <span class="nav-link-text" data-i18n="nav.documentation_general_docs">General Docs</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="docs_project_structure.html" title="Project Structure" data-filter-tags="documentation project structure">
+                                        <span class="nav-link-text" data-i18n="nav.documentation_project_structure">Project Structure</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-title">Tools & Components</li>
+                        <li>
+                            <a href="#" title="UI Components" data-filter-tags="ui components">
+                                <i class="fal fa-window"></i>
+                                <span class="nav-link-text" data-i18n="nav.ui_components">UI Components</span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="ui_alerts.html" title="Alerts" data-filter-tags="ui components alerts">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_alerts">Alerts</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_accordion.html" title="Accordions" data-filter-tags="ui components accordions">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_accordions">Accordions</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_badges.html" title="Badges" data-filter-tags="ui components badges">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_badges">Badges</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_breadcrumbs.html" title="Breadcrumbs" data-filter-tags="ui components breadcrumbs">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_breadcrumbs">Breadcrumbs</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_buttons.html" title="Buttons" data-filter-tags="ui components buttons">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_buttons">Buttons</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_button_group.html" title="Button Group" data-filter-tags="ui components button group">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_button_group">Button Group</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_cards.html" title="Cards" data-filter-tags="ui components cards">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_cards">Cards</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_carousel.html" title="Carousel" data-filter-tags="ui components carousel">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_carousel">Carousel</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_collapse.html" title="Collapse" data-filter-tags="ui components collapse">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_collapse">Collapse</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_dropdowns.html" title="Dropdowns" data-filter-tags="ui components dropdowns">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_dropdowns">Dropdowns</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_list_filter.html" title="List Filter" data-filter-tags="ui components list filter">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_list_filter">List Filter</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_modal.html" title="Modal" data-filter-tags="ui components modal">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_modal">Modal</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_navbars.html" title="Navbars" data-filter-tags="ui components navbars">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_navbars">Navbars</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_panels.html" title="Panels" data-filter-tags="ui components panels">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_panels">Panels</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_pagination.html" title="Pagination" data-filter-tags="ui components pagination">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_pagination">Pagination</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_popovers.html" title="Popovers" data-filter-tags="ui components popovers">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_popovers">Popovers</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_progress_bars.html" title="Progress Bars" data-filter-tags="ui components progress bars">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_progress_bars">Progress Bars</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_scrollspy.html" title="ScrollSpy" data-filter-tags="ui components scrollspy">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_scrollspy">ScrollSpy</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_side_panel.html" title="Side Panel" data-filter-tags="ui components side panel">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_side_panel">Side Panel</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_spinners.html" title="Spinners" data-filter-tags="ui components spinners">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_spinners">Spinners</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_tabs_pills.html" title="Tabs & Pills" data-filter-tags="ui components tabs & pills">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_tabs_&_pills">Tabs & Pills</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_toasts.html" title="Toasts" data-filter-tags="ui components toasts">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_toasts">Toasts</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ui_tooltips.html" title="Tooltips" data-filter-tags="ui components tooltips">
+                                        <span class="nav-link-text" data-i18n="nav.ui_components_tooltips">Tooltips</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" title="Utilities" data-filter-tags="utilities">
+                                <i class="fal fa-bolt"></i>
+                                <span class="nav-link-text" data-i18n="nav.utilities">Utilities</span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="utilities_borders.html" title="Borders" data-filter-tags="utilities borders">
+                                        <span class="nav-link-text" data-i18n="nav.utilities_borders">Borders</span>
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </li>
+                    </ul>
+                </nav>
+                <!-- END PRIMARY NAVIGATION -->
+                <!-- NAV FOOTER -->
+                <div class="nav-footer shadow-top">
+                    <a href="#" onclick="return false;" data-action="toggle" data-class="nav-function-minify" class="hidden-md-down">
+                        <i class="ni ni-chevron-right"></i>
+                        <i class="ni ni-chevron-right"></i>
+                    </a>
+                    <ul class="list-table m-auto nav-footer-buttons">
+                        <li>
+                            <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Chat logs">
+                                <i class="fal fa-comments"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Support Chat">
+                                <i class="fal fa-life-ring"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Make a call">
+                                <i class="fal fa-phone"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div> <!-- END NAV FOOTER -->
+            </aside>
+            <!-- END Left Aside -->
+            <div class="page-content-wrapper">
+                <!-- BEGIN Page Header -->
+                <header class="page-header" role="banner">
+                    <!-- we need this logo when user switches to nav-function-top -->
+                    <div class="page-logo">
+                        <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative" data-toggle="modal" data-target="#modal-shortcut">
+                            <img src="images/logo.png" alt="SmartAdmin WebApp" aria-roledescription="logo">
+                            <span class="page-logo-text mr-1">SmartAdmin WebApp</span>
+                            <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
+                            <i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
+                        </a>
+                    </div>
+                    <!-- DOC: nav menu layout change shortcut -->
+                    <div class="hidden-md-down dropdown-icon-menu position-relative">
+                        <a href="#" class="header-btn btn js-waves-off" data-action="toggle" data-class="nav-function-hidden" title="Hide Navigation">
+                            <i class="ni ni-menu"></i>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="#" class="btn js-waves-off" data-action="toggle" data-class="nav-function-minify" title="Minify Navigation">
+                                    <i class="ni ni-minify-nav"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="btn js-waves-off" data-action="toggle" data-class="nav-function-fixed" title="Lock Navigation">
+                                    <i class="ni ni-lock-nav"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- DOC: mobile button appears during mobile width -->
+                    <div class="hidden-lg-up">
+                        <a href="#" class="header-btn btn press-scale-down" data-action="toggle" data-class="mobile-nav-on">
+                            <i class="ni ni-menu"></i>
+                        </a>
+                    </div>
+                    <div class="search">
+                        <form class="app-forms hidden-xs-down" role="search" action="page_search.html" autocomplete="off">
+                            <input type="text" id="search-field" placeholder="Search for anything" class="form-control" tabindex="1">
+                            <a href="#" onclick="return false;" class="btn-danger btn-search-close js-waves-off d-none" data-action="toggle" data-class="mobile-search-on">
+                                <i class="fal fa-times"></i>
+                            </a>
+                        </form>
+                    </div>
+                    <div class="ml-auto d-flex">
+                        <!-- activate app search icon (mobile) -->
+                        <div class="hidden-sm-up">
+                            <a href="#" class="header-icon" data-action="toggle" data-class="mobile-search-on" data-focus="search-field" title="Search">
+                                <i class="fal fa-search"></i>
+                            </a>
+                        </div>
+                        <!-- app settings -->
+                        <div class="hidden-md-down">
+                            <a href="#" class="header-icon" data-toggle="modal" data-target=".js-modal-settings">
+                                <i class="fal fa-cog"></i>
+                            </a>
+                        </div>
+                        <!-- app shortcuts -->
+                        <!-- app message -->
+                        <a href="#" class="header-icon" data-toggle="modal" data-target=".js-modal-messenger">
+                            <i class="fal fa-globe"></i>
+                            <span class="badge badge-icon">!</span>
+                        </a>
+
+                        <!-- app user menu -->
+                        @await Html.PartialAsync("_AdminAppUserMenu")
+                    </div>
+                </header>
+                <!-- END Page Header -->
+                <!-- BEGIN Page Content -->
+                <!-- the #js-page-content id is needed for some plugins to initialize -->
+                <main id="js-page-content" role="main" class="page-content">
+                    @*Breadcrumb is disabled*@
+                    <ol class="breadcrumb page-breadcrumb d-none">
+                        <li class="breadcrumb-item"><a href="javascript:void(0);">SmartAdmin</a></li>
+                        <li class="breadcrumb-item">Page Views</li>
+                        <li class="breadcrumb-item active">Contacts</li>
+                        <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+                    </ol>
+
+                    <div class="container">
+                        <main role="main" class="pb-3">
+                            @RenderBody()
+                        </main>
+                    </div>
+                </main>
+                <!-- this overlay is activated only when mobile menu is triggered -->
+                <div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div> <!-- END Page Content -->
+                <!-- BEGIN Page Footer -->
+                @await Html.PartialAsync("_AdminFooter")
+
+                <!-- END Page Footer -->
+                <!-- BEGIN Shortcuts -->
+                <div class="modal fade modal-backdrop-transparent" id="modal-shortcut" tabindex="-1" role="dialog" aria-labelledby="modal-shortcut" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-top modal-transparent" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <ul class="app-list w-auto h-auto p-0 text-left">
+                                    <li>
+                                        <a href="intel_introduction.html" class="app-list-item text-white border-0 m-0">
+                                            <div class="icon-stack">
+                                                <i class="base base-7 icon-stack-3x opacity-100 color-primary-500 "></i>
+                                                <i class="base base-7 icon-stack-2x opacity-100 color-primary-300 "></i>
+                                                <i class="fal fa-home icon-stack-1x opacity-100 color-white"></i>
+                                            </div>
+                                            <span class="app-list-name">
+                                                Home
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="page_inbox_general.html" class="app-list-item text-white border-0 m-0">
+                                            <div class="icon-stack">
+                                                <i class="base base-7 icon-stack-3x opacity-100 color-success-500 "></i>
+                                                <i class="base base-7 icon-stack-2x opacity-100 color-success-300 "></i>
+                                                <i class="ni ni-envelope icon-stack-1x text-white"></i>
+                                            </div>
+                                            <span class="app-list-name">
+                                                Inbox
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="intel_introduction.html" class="app-list-item text-white border-0 m-0">
+                                            <div class="icon-stack">
+                                                <i class="base base-7 icon-stack-2x opacity-100 color-primary-300 "></i>
+                                                <i class="fal fa-plus icon-stack-1x opacity-100 color-white"></i>
+                                            </div>
+                                            <span class="app-list-name">
+                                                Add More
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END Shortcuts -->
+                <!-- BEGIN Color profile -->
+                <!-- this area is hidden and will not be seen on screens or screen readers -->
+                <!-- we use this only for CSS color refernce for JS stuff -->
+                <p id="js-color-profile" class="d-none">
+                    <span class="color-primary-50"></span>
+                    <span class="color-primary-100"></span>
+                    <span class="color-primary-200"></span>
+                    <span class="color-primary-300"></span>
+                    <span class="color-primary-400"></span>
+                    <span class="color-primary-500"></span>
+                    <span class="color-primary-600"></span>
+                    <span class="color-primary-700"></span>
+                    <span class="color-primary-800"></span>
+                    <span class="color-primary-900"></span>
+                    <span class="color-info-50"></span>
+                    <span class="color-info-100"></span>
+                    <span class="color-info-200"></span>
+                    <span class="color-info-300"></span>
+                    <span class="color-info-400"></span>
+                    <span class="color-info-500"></span>
+                    <span class="color-info-600"></span>
+                    <span class="color-info-700"></span>
+                    <span class="color-info-800"></span>
+                    <span class="color-info-900"></span>
+                    <span class="color-danger-50"></span>
+                    <span class="color-danger-100"></span>
+                    <span class="color-danger-200"></span>
+                    <span class="color-danger-300"></span>
+                    <span class="color-danger-400"></span>
+                    <span class="color-danger-500"></span>
+                    <span class="color-danger-600"></span>
+                    <span class="color-danger-700"></span>
+                    <span class="color-danger-800"></span>
+                    <span class="color-danger-900"></span>
+                    <span class="color-warning-50"></span>
+                    <span class="color-warning-100"></span>
+                    <span class="color-warning-200"></span>
+                    <span class="color-warning-300"></span>
+                    <span class="color-warning-400"></span>
+                    <span class="color-warning-500"></span>
+                    <span class="color-warning-600"></span>
+                    <span class="color-warning-700"></span>
+                    <span class="color-warning-800"></span>
+                    <span class="color-warning-900"></span>
+                    <span class="color-success-50"></span>
+                    <span class="color-success-100"></span>
+                    <span class="color-success-200"></span>
+                    <span class="color-success-300"></span>
+                    <span class="color-success-400"></span>
+                    <span class="color-success-500"></span>
+                    <span class="color-success-600"></span>
+                    <span class="color-success-700"></span>
+                    <span class="color-success-800"></span>
+                    <span class="color-success-900"></span>
+                    <span class="color-fusion-50"></span>
+                    <span class="color-fusion-100"></span>
+                    <span class="color-fusion-200"></span>
+                    <span class="color-fusion-300"></span>
+                    <span class="color-fusion-400"></span>
+                    <span class="color-fusion-500"></span>
+                    <span class="color-fusion-600"></span>
+                    <span class="color-fusion-700"></span>
+                    <span class="color-fusion-800"></span>
+                    <span class="color-fusion-900"></span>
+                </p>
+                <!-- END Color profile -->
+            </div>
+        </div>
+    </div>
+    <!-- END Page Wrapper -->
+    <!-- BEGIN Quick Menu -->
+    <!-- to add more items, please make sure to change the variable '$menu-items: number;' in your _page-components-shortcut.scss -->
+    @await Html.PartialAsync("_AdminQuickMenu")
+    <!-- END Quick Menu -->
+    <!-- BEGIN Messenger -->
+    @await Html.PartialAsync("_AdminMessengerMenu")
+    <!-- END Messenger -->
+    <!-- BEGIN Page Settings -->
+    <div class="modal fade js-modal-settings modal-backdrop-transparent" tabindex="-1" role="dialog" aria-hidden="true">
+        @await Html.PartialAsync("_AdminPageSettings")
+    </div>
+    <!-- END Page Settings -->
+    <!-- base vendor bundle:
+         DOC: if you remove pace.js from core please note on Internet Explorer some CSS animations may execute before a page is fully loaded, resulting 'jump' animations
+                    + pace.js (recommended)
+                    + jquery.js (core)
+                    + jquery-ui-cust.js (core)
+                    + popper.js (core)
+                    + bootstrap.js (core)
+                    + slimscroll.js (extension)
+                    + app.navigation.js (core)
+                    + ba-throttle-debounce.js (core)
+                    + waves.js (extension)
+                    + smartpanels.js (extension)
+                    + src/../jquery-snippets.js (core) -->
+
+    <script src="~/js/lib/jquery/dist/jquery.js"></script>
+    <script src="js/app.bundle.js"></script>
+    <script src="js/vendors.bundle.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('input[type=radio][name=contactview]').change(function () {
+                if (this.value == 'grid') {
+                    $('#js-contacts .card').removeClassPrefix('mb-').addClass('mb-g');
+                    $('#js-contacts .col-xl-12').removeClassPrefix('col-xl-').addClass('col-xl-4');
+                    $('#js-contacts .js-expand-btn').addClass('d-none');
+                    $('#js-contacts .card-body + .card-body').addClass('show');
+
+                }
+                else if (this.value == 'table') {
+                    $('#js-contacts .card').removeClassPrefix('mb-').addClass('mb-1');
+                    $('#js-contacts .col-xl-4').removeClassPrefix('col-xl-').addClass('col-xl-12');
+                    $('#js-contacts .js-expand-btn').removeClass('d-none');
+                    $('#js-contacts .card-body + .card-body').removeClass('show');
+                }
+
+            });
+
+            //initialize filter
+            initApp.listFilter($('#js-contacts'), $('#js-filter-contacts'));
+        });
+
+    </script>
+</body>
+<!-- END Body -->
+</html>

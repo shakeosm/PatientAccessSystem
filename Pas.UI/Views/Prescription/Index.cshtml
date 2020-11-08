@@ -1,5 +1,6 @@
 ﻿
 @{
+    Layout = "/Views/Shared/_LayoutLanding.cshtml";
     ViewData["Title"] = "Index";
 }
 
@@ -15,7 +16,10 @@
         <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="123456">
     </div>
 
-    <button type="button" id="SearchButton" value="Find">Find</button>
+    <button type="button" id="SearchPatientButton" value="Find">
+        <span class="fal fa-search mr-1"></span>
+        Search
+    </button>
 </form>
 
 <div id="PrescriptionView" class="invisible">
@@ -28,7 +32,8 @@
 
 @section scripts
 {
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js"></script>
+
     <script src="~/js/prescription/search.js"></script>
 }
-
-

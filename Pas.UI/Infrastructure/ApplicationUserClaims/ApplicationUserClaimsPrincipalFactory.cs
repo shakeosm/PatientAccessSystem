@@ -22,6 +22,10 @@ namespace Pas.UI.Infrastructure.ApplicationUserClaims
             if (!string.IsNullOrWhiteSpace(user.FullName))
             {
                 ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
+                    new Claim("FullName", user.FullName),
+                    new Claim("JobDescription", user.JobDescription),
+                    new Claim("Role", user.RoleId.Value.ToString()),
+                    new Claim("RoleName", user.RoleName),
                     new Claim("FullName", user.FullName)
                 });
             }

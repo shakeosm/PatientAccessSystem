@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Pas.Data;
 using Pas.Service;
 using Pas.Service.Interface;
+using Pas.UI.Infrastructure;
 using Pas.UI.Infrastructure.ApplicationUserClaims;
 using Pas.UI.Models.Identity;
 using System;
@@ -37,10 +40,19 @@ namespace Pas.UI
                 options.UseSqlServer(
                     Configuration.GetConnectionString("PasData")));
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<DataContext>();
 
-            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
+            services.AddTransient<IPatientService, PatientService>();
+            services.AddTransient<IPrescriptionService, PrescriptionService>();
+            services.AddTransient<IUserOrgRoleService, UserOrgRoleService>();
+            
+
+            services.AddTransient<SignInManager<IdentityUser>>();
+            services.AddTransient<UserManager<IdentityUser>>();
+
+            //services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -52,8 +64,8 @@ namespace Pas.UI
                 // Default Password settings.
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
-                options.Password.RequireNonAlphanumeric = true;
-                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 6;
                 options.Password.RequiredUniqueChars = 1;
 
@@ -69,7 +81,11 @@ namespace Pas.UI
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.Cookie.Name = "CreativeTim.Argon.DotNetCore.AppCookie";
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+
+                options.Cookie.Name = "PasDB.AppCookie";
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
                 // You might want to only set the application cookies over a secure connection:
@@ -91,21 +107,23 @@ namespace Pas.UI
                 options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
             });
 
-            //services.AddDbContext<DataContext>(options =>
-            //    options.UseSqlServer(configuration.GetConnectionString(DataContextFactory.CONNECTION_STRING_NAME), b =>
-            //    {
-            //        b.MigrationsAssembly(DataContextFactory.ASSEMBLY_NAME);
-            //        b.MigrationsHistoryTable(DataContextFactory.MIGRATION_HISTORY_TABLE);
-            //    }));
+            //services.AddDataProtection().PersistKeysToDbContext<DataContext>();
 
-            services.AddTransient<IPatientService, PatientService>();
-            services.AddTransient<IPrescriptionService, PrescriptionService>();
+            //services.AddAntiforgery();
 
             services.AddControllersWithViews(options =>
-            {              
+            {
+                options.Conventions.Add(
+                    new RouteTokenTransformerConvention(
+                        new SlugifyParameterTransformer()));
+
                 // Enable Antiforgery feature by default on all controller actions
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
+            
+            //services.AddRazorPages()
+            //    .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+            //    .AddSessionStateTempDataProvider();
 
             services.AddRazorPages(options =>
             {
@@ -114,8 +132,35 @@ namespace Pas.UI
                 options.Conventions.AddAreaPageRoute("Identity", "/Account/Logout", "/logout");
                 options.Conventions.AddAreaPageRoute("Identity", "/Account/ForgotPassword", "/forgot-password");
             })
-               .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
-               .AddSessionStateTempDataProvider();
+            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+            .AddSessionStateTempDataProvider();
+
+            services.AddAuthorization(options =>
+            {
+                options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+            });
+
+            // You probably want to use in-memory cache if not developing using docker-compose
+            services.AddMemoryCache();
+            //services.AddDistributedMemoryCache();
+
+            //services.AddDistributedRedisCache(action => { action.Configuration = Configuration["Redis:InstanceName"]; });
+
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+                options.Cookie.Name = "PasDB.SessionCookie";
+                // You might want to only set the application cookies over a secure connection:
+                // options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.Cookie.HttpOnly = true;
+                // Make the session cookie essential
+                options.Cookie.IsEssential = true;
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -133,6 +178,9 @@ namespace Pas.UI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            
+            app.UseSession();            
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -152,6 +200,7 @@ namespace Pas.UI
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                
                 endpoints.MapRazorPages();
             });
         }

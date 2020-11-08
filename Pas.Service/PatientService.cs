@@ -53,8 +53,9 @@ namespace Pas.Service
                 Gender = (Gender) user.Gender,
                 Id = user.Id,
                 Mobile = user.Mobile,
+                Email = user.Email,
                 Name = $"{user.FirstName} {user.LastName}",
-                ShortId = user.ShortId
+                ShortId = user.ShortId                
             };
         }
 
@@ -83,10 +84,10 @@ namespace Pas.Service
 
         public async Task<IEnumerable<PatientDetailsVM>> SearchPatient(PatientSearchVM searchVM)
         {
-            bool hasMobileNumber = (searchVM.Mobile.Length >= 10);
-            bool hasShortId = (searchVM.Mobile.Length >= 5);
-            bool hasFirstName = (searchVM.FirstName.Length >= 3);
-            bool hasLastName = (searchVM.LastName.Length >= 3);
+            bool hasMobileNumber = ( !string.IsNullOrEmpty(searchVM.Mobile) && searchVM.Mobile.Length >= 10);
+            bool hasShortId = (!string.IsNullOrEmpty(searchVM.ShortId) && searchVM.ShortId.Length >= 5);
+            bool hasFirstName = (!string.IsNullOrEmpty(searchVM.FirstName) && searchVM.FirstName.Length >= 3);
+            bool hasLastName = (!string.IsNullOrEmpty(searchVM.LastName) && searchVM.LastName.Length >= 3);
 
             Expression<Func<User, bool>> userSearch = u => ((hasMobileNumber && u.Mobile.Equals(searchVM.Mobile))
                                                             || (hasShortId && u.ShortId.Equals(searchVM.ShortId))

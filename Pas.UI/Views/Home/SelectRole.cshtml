@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewData["Title"] = "Role selection";
+}
+
+    <div class="text-center">
+
+        <h5>Please select your role</h5>
+
+        @* Log in as Options *@
+        <div class="mt-3">
+            @* Notes: these should be buttons to go on POST and set the Claim() to be a Patient/Doctor/Director *@
+            <a class="btn btn-outline-primary" asp-area="Patient" asp-controller="Home" asp-action="Index" role="button">
+                <img src="~/images/button-icons/patient-01.jfif" alt="Login as Patient" style="width: 100px; height:100px;" />
+                <br />
+                Patient
+            </a>
+            <a class="btn btn-outline-success ml-3" asp-area="Doctor" asp-controller="Home" asp-action="Index" role="button">
+                <img src="~/images/button-icons/doctor.jfif" alt="Login as Doctor" style="width: 100px; height:100px;" />
+                <br />
+                Doctor
+            </a>
+            <a class="btn btn-outline-info ml-3" asp-area="Hospital" asp-controller="Home" asp-action="Index" role="button">
+                <img src="~/images/button-icons/hospital-02.png" alt="Login as Hospital" style="width: 100px; height:100px;" /><br />
+                Hospital
+            </a>
+        </div>
+
+    </div>
+
