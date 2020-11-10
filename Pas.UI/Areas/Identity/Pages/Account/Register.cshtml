@@ -1,0 +1,113 @@
+﻿@page
+@using Pas.Common.Enums
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+
+    <div class="card col-sm-8 border text-dark">
+        <div class="card-header">
+            Create a new Account
+        </div>
+        <div class="card-body">
+            <h5 class="card-title d-none">Special title treatment</h5>
+
+            <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                <h4>Enter your details:</h4>
+                <hr />
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="form-row">
+                    <div class="form-group col-sm-2">
+                        <label for="inputTitle">Title</label>
+                        <select class="form-control"
+                                asp-items="Html.GetEnumSelectList<Title>()" id="inputTitle">
+                        </select>
+
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label for="inputFirstName">First Name</label>
+                        <input type="text" class="form-control" id="inputFirstName" placeholder="First Name">
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label for="inputLastName">Last Name</label>
+                        <input type="text" class="form-control" id="inputLastName" placeholder="Last Name">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputMobile">Mobile</label>
+                        <input type="number" class="form-control" id="inputMobile" placeholder="Mobile">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Input.Email"></label>
+                            <input asp-for="Input.Email" class="form-control" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputAge">Age</label>
+                        <input type="number" class="form-control" id="inputAge" placeholder="Age">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div class="form-group">
+                            <label for="inputAge">Gender</label>
+                            <div class="frame-wrap">
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="radioGenderMale" name="radioGender" checked="">
+                                    <label class="custom-control-label" for="radioGenderMale">Male</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="radioGenderFemale" name="radioGender">
+                                    <label class="custom-control-label" for="radioGenderFemale">Female</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="radioGenderOther" name="radioGender">
+                                    <label class="custom-control-label" for="radioGenderOther">Other</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                @*Passwords**@
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="Input.Password"></label>
+                        <input asp-for="Input.Password" class="form-control" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="Input.ConfirmPassword"></label>
+                        <input asp-for="Input.ConfirmPassword" class="form-control" />
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
+        <div class="card-footer text-muted py-2">
+            You are just a click away...
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

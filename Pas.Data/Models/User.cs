@@ -14,6 +14,8 @@ namespace Pas.Data.Models
             UserRelated = new HashSet<UserRelated>();
             PatientAilments = new HashSet<PatientAilment>();
         }
+        
+        public int Title { get; set; }
 
         [Required]
         [Column(TypeName = "varchar(100)")]

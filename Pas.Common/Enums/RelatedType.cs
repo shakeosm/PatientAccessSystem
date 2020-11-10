@@ -2,6 +2,23 @@
 
 namespace Pas.Common.Enums
 {
+    public enum Title
+    {
+        Unknwon = 0,
+        Mr,
+        Ms,
+        Mrs,
+        Dr,
+        Esq,
+        Hon,
+        Prof,
+        Rt,
+        Rev,
+        Moulvi,
+        Mawlana,
+        Other = 99
+    }
+
     public enum RelatedType
     {
         Unknown = 0,
