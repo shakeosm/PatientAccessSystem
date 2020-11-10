@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Pas.Data.Models
 {
-    public partial class DrugModeOfDelivery
+    public partial class DrugModeOfDelivery : BaseEntityModel
     {
-        public int Id { get; set; }
+        
+        [Required]
         public int DrugId { get; set; }
+
+        [Required]
         public int ModeOfDeliveryId { get; set; }
         public bool? IsDeleted { get; set; }
 

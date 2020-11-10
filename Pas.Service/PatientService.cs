@@ -36,9 +36,9 @@ namespace Pas.Service
 
         public async Task<PatientDetailsVM> FindByEmail(string email)
         {
-            User patient = await _pasContext.User.FirstOrDefaultAsync(u => u.Email == email);
+            User user = await _pasContext.User.FirstOrDefaultAsync(u => u.Email == email);
             
-            return MapToPatientDetails(patient);
+            return MapToPatientDetails(user);
             
         }
 
@@ -144,5 +144,22 @@ namespace Pas.Service
             }
         }
 
+        public async Task<IEnumerable<UserRole>> GetRolesByUser(int id)
+        {
+            var userRoles = await _pasContext.UserOrganisationRole
+                                .Include(uor => uor.Organisation)
+                                .Include(uor => uor.Role)
+                                .Where(uor => uor.UserId == id).ToListAsync();
+
+            var userSwitchRoleViewVM = userRoles.Select(ur=> new UserRole { 
+                OrganisationId = ur.OrganisationId,
+                OrganisationName = ur.Organisation.Name,
+                RoleId = ur.RoleId,
+                //RoleName - ur.Role.Name,
+                UserOrganisationRoleId = ur.Id
+            });
+
+            return userSwitchRoleViewVM;
+        }
     }
 }

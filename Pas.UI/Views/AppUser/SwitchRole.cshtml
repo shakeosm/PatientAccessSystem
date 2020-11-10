@@ -1,54 +1,99 @@
-﻿@model Pas.Web.ViewModels.UserSwitchRoleSelection
+﻿@model Pas.Web.ViewModels.UserSwitchRoleViewVM
 
 @{
     ViewData["Title"] = "Role selection";
     Layout = "~/Views/Shared/_LayoutLanding.cshtml";
 }
 
-<div class="text-center">
+    <div class="text-center">
 
-    <h5>Please select your role</h5>
+        <h5>Please select your role</h5>
+        <div class="form-row">
+            <div class="card-deck">
+                <div class="card">
+                    <div class="w-100 bg-fusion-50 rounded-top" style="padding:40px 0 40px;"></div>
+                    <div class="card-body">
+                        <h5 class="card-title">Patient</h5>
+                        <p class="card-text">Log in as a Patient and view your medical records.</p>
+                        <p class="card-text">You can also share your records with 3rd parties in and outside of the country.</p>
+                    </div>
+                    <div class="card-footer">
 
-    @* Log in as Options *@
-    <div class="mt-3">
-        <form action="/" method="post">
-
-            <input type="hidden" asp-for="UserId" />
-            <input type="hidden" asp-for="RoleId" />
-            <input type="hidden" asp-for="OrganisationId" />
-
-            @* Notes: these should be buttons to go on POST and set the Claim() to be a Patient/Doctor/Director *@
-            <a class="btn btn-outline-primary" asp-area="Patient" asp-controller="Home" asp-action="Index" role="button">
-                <img src="~/images/button-icons/patient-01.jfif" alt="Login as Patient" style="width: 100px; height:100px;" />
-                <br />
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="RolePatientOption" name="RoleId" class="custom-control-input">
-                    <label class="custom-control-label" for="RolePatientOption">Patient</label>
+                    </div>
                 </div>
-            </a>
-            <a class="btn btn-outline-success ml-3" asp-area="Doctor" asp-controller="Home" asp-action="Index" role="button">
-                <img src="~/images/button-icons/doctor.jfif" alt="Login as Doctor" style="width: 100px; height:100px;" />
-                <br />
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="RoleDoctorOption" name="RoleId" class="custom-control-input">
-                    <label class="custom-control-label" for="RoleDoctorOption">Doctor</label>
+                <div class="card">
+                    <div class="w-100 bg-fusion-50 rounded-top" style="padding:40px 0 40px;"></div>
+                    <div class="card-body">
+                        <h5 class="card-title">Doctor</h5>
+                        <p class="card-text">Log in as a Doctor and see your own profile.</p>
+                        <p class="card-text">You can search for a patient and view their medical history.</p>
+                    </div>
+                    <div class="card-footer">
+
+                    </div>
                 </div>
-                
-            </a>
-            <a class="btn btn-outline-info ml-3" asp-area="Hospital" asp-controller="Home" asp-action="Index" role="button">
-                <img src="~/images/button-icons/hospital-02.png" alt="Login as Hospital" style="width: 100px; height:100px;" /><br />
-                <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="RoleHospitalOption" name="RoleId" class="custom-control-input">
-                    <label class="custom-control-label" for="RoleHospitalOption">Hospital</label>
+                <div class="card">
+                    <div class="w-100 bg-fusion-50 rounded-top" style="padding:40px 0 40px;"></div>
+                    <div class="card-body">
+                        <h5 class="card-title">Director</h5>
+                        <p class="card-text">Log in as a Hospital director and see the reports.</p>
+                        <p class="card-text">You can view the daily real-time patients' activities and doctors' calander.</p>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">Last updated 3 mins ago</small>
+                    </div>
                 </div>
-                
-            </a>
-            
-            <button id="SubmitButton" class="btn btn-primary" type="submit">Submit form</button>
-            
-        </form>
+            </div>
+        
+            <div class="form-row text-center">
+                <button type="button" class="btn btn-primary waves-effect waves-themed"
+                        asp-area="Doctor" asp-controller="Home" asp-action="Index"
+                        >Continue</button>
+
+            </div>
+        </div>
+        
+
+        @* Log in as Options *@
+        <div class="mt-3">
+            <form action="/" method="post">
+
+                <input type="hidden" asp-for="UserId" />
+                <input type="hidden" name="RoleId" />
+                <input type="hidden" name="OrganisationId" />
+
+                @* Notes: these should be buttons to go on POST and set the Claim() to be a Patient/Doctor/Director *@
+                <a class="btn btn-outline-primary" asp-area="Patient" asp-controller="Home" asp-action="Index" role="button">
+                    <img src="~/images/button-icons/patient-01.jfif" alt="Login as Patient" style="width: 100px; height:100px;" />
+                    <br />
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="RolePatientOption" name="RoleId" class="custom-control-input">
+                        <label class="custom-control-label" for="RolePatientOption">Patient</label>
+                    </div>
+                </a>
+                <a class="btn btn-outline-success ml-3" asp-area="Doctor" asp-controller="Home" asp-action="Index" role="button">
+                    <img src="~/images/button-icons/doctor.jfif" alt="Login as Doctor" style="width: 100px; height:100px;" />
+                    <br />
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="RoleDoctorOption" name="RoleId" class="custom-control-input">
+                        <label class="custom-control-label" for="RoleDoctorOption">Doctor</label>
+                    </div>
+
+                </a>
+                <a class="btn btn-outline-info ml-3" asp-area="Hospital" asp-controller="Home" asp-action="Index" role="button">
+                    <img src="~/images/button-icons/hospital-02.png" alt="Login as Hospital" style="width: 100px; height:100px;" /><br />
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="RoleHospitalOption" name="RoleId" class="custom-control-input">
+                        <label class="custom-control-label" for="RoleHospitalOption">Hospital</label>
+                    </div>
+
+                </a>
+
+                <button id="SubmitButton" class="btn btn-primary" type="submit">Submit form</button>
+
+            </form>
+        </div>
+
     </div>
-
-</div>
 
 

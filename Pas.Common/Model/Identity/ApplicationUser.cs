@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Identity;
 
-namespace Pas.UI.Models.Identity
+namespace Pas.Common.Models.Identity
 {
     public class ApplicationUser : IdentityUser
     {
@@ -25,5 +25,8 @@ namespace Pas.UI.Models.Identity
         
         [PersonalData]
         public string OrganisationName { get; set; }
+
+        [PersonalData]
+        public string ImageUrl { get; set; }
     }
 }

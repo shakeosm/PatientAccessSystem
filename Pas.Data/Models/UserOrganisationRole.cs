@@ -1,14 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pas.Data.Models
 {
-    public partial class UserOrganisationRole
+    public partial class UserOrganisationRole : BaseEntityModel
     {
-        public int Id { get; set; }
+        [Required]
         public int UserId { get; set; }
+
+        [Required]
         public int OrganisationId { get; set; }
+
+        [Required]
         public int RoleId { get; set; }
+
+        [Required]
+        [Column(TypeName = "datetime2(3)")]
         public DateTime CreatedOn { get; set; }
         public DateTime? ApprovedOn { get; set; }
         public int? ApprovedById { get; set; }

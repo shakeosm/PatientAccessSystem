@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Pas.Service.Interface;
@@ -19,8 +20,7 @@ namespace Pas.UI.Areas.Patient.Controllers
         }
 
         public IActionResult Index()
-        {
-
+        {            
             //## Somethig like Dashboard
             return View();
         }

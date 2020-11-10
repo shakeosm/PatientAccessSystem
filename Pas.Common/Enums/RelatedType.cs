@@ -23,12 +23,16 @@ namespace Pas.Common.Enums
         Female = 2
     }
 
-    public enum AppRole
+    public enum ApplicationRole
     {
         Patient = 1,
         Doctor = 2,
-        Director = 3,
-        Clinician = 4
+        Director = 3,        
+        Hospital_SuperUser = 11,
+        Hospital_Technician = 12,
+        App_SuperUser = 99
+
+            
     }
 
     public enum BloodGroup

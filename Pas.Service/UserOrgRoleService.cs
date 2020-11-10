@@ -18,6 +18,14 @@ namespace Pas.Service
         {
             _dataContext = DataContext;
         }
+
+        public async Task<UserOrganisationRole> Find(int Id)
+        {
+            var result = await _dataContext.UserOrganisationRole.FindAsync(Id);
+
+            return result;
+        }
+
         public async Task<IEnumerable<UserOrganisationRole>> FindRolesByUserId(int appUserId)
         {
             var result = await _dataContext.UserOrganisationRole

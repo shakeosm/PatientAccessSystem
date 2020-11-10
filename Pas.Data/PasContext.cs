@@ -16,6 +16,10 @@ namespace Pas.Data
         {
         }
 
+        
+        public virtual DbSet<AilmentTypes> AilmentTypes { get; set; }
+        public virtual DbSet<AllergyTypes> AllergyTypes { get; set; }
+        
         public virtual DbSet<CategoryTypes> CategoryTypes { get; set; }
         public virtual DbSet<DiagnosticTest> DiagnosticTest { get; set; }
         public virtual DbSet<DiagnosticTestHistory> DiagnosticTestHistory { get; set; }
@@ -28,6 +32,8 @@ namespace Pas.Data
         public virtual DbSet<IndicationTypes> IndicationTypes { get; set; }
         public virtual DbSet<ModeOfDelivery> ModeOfDelivery { get; set; }
         public virtual DbSet<Organisation> Organisation { get; set; }
+        public virtual DbSet<PatientAilment> PatientAilmentTypes { get; set; }
+        public virtual DbSet<PatientAllergy> PatientAllergies { get; set; }
         public virtual DbSet<Prescription> Prescription { get; set; }
         public virtual DbSet<PrescriptionDiagnosticTest> PrescriptionDiagnosticTest { get; set; }
         public virtual DbSet<PrescriptionDrugs> PrescriptionDrugs { get; set; }
@@ -347,7 +353,7 @@ namespace Pas.Data
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.ContactPerson)
-                    .WithMany(p => p.Organisation)
+                    .WithMany(p => p.Organisations)
                     .HasForeignKey(d => d.ContactPersonId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Organisation_Organisation");
@@ -379,6 +385,17 @@ namespace Pas.Data
                     .HasForeignKey(d => d.PrescriptionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PrescriptionDiagnosticTest_Prescription");
+            });
+
+            modelBuilder.Entity<PatientAilment>(entity =>
+            {
+                entity.ToTable("PatientAilment", "Patient");
+            });
+
+
+            modelBuilder.Entity<PatientAllergy>(entity =>
+            {
+                entity.ToTable("PatientAllergy", "Patient");
             });
 
             modelBuilder.Entity<PrescriptionDrugs>(entity =>
@@ -477,7 +494,7 @@ namespace Pas.Data
                     .HasConstraintName("FK_UserOrganisationRole_Role");
 
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.UserOrganisationRole)
+                    .WithMany(p => p.UserOrganisationRoles)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UserOrganisationRole_User");

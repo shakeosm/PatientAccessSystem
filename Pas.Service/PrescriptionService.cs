@@ -29,7 +29,7 @@ namespace Pas.Service
         {
             //## Find the Doctor- Chamber info
             var doctorChamber = await _pasContext.UserOrganisationRole
-                                            .FirstOrDefaultAsync(or=> or.RoleId == (int)AppRole.Doctor
+                                            .FirstOrDefaultAsync(or=> or.RoleId == (int)ApplicationRole.Doctor
                                                                 && or.OrganisationId== vm.HospitalId
                                                                 && or.UserId == vm.DoctorId);
             

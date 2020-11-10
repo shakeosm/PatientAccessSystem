@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using Pas.UI.Models.Identity;
+using Pas.Common.Models.Identity;
 
 namespace Pas.UI.Infrastructure.ApplicationUserClaims
 {

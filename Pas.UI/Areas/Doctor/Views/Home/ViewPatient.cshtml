@@ -9,18 +9,7 @@
         </div>
         <div class="card-body">
             @*asp-action="StartNewPrescription" asp-controller="Home" asp-area="Doctor"*@
-            <form id="NewPrescriptionForm" formaction="/" method="post">
-                <input type="hidden" id="Id" name="Id" value="1" />
-                <button id="NewPrescriptionSubmitButton"
-                        asp-action="StartNewPrescription"
-                        asp-controller="Home"
-                        asp-area="Doctor"
-                        class="btn btn-primary"
-                        data-patient-id="1"
-                        data-toggle="tooltip" data-placement="right" title="View">
-                    <i class="fa fa-pencil-square-o"></i> New Prescription
-                </button>
-            </form>
+
             @await Html.PartialAsync("_patientProfile")
 
         </div>

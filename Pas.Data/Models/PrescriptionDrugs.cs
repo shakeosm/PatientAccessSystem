@@ -5,14 +5,24 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pas.Data.Models
 {
-    public partial class PrescriptionDrugs
+    public partial class PrescriptionDrugs : BaseEntityModel
     {
-        public int Id { get; set; }
+        [Required]
         public int PrescriptionId { get; set; }
+
+        [Required]
         public int DrugId { get; set; }
+
+        [Required]
         public int DosageId { get; set; }
+
+        [Required]
         public int ModeOfDeliveryId { get; set; }
+
+        [Required]
         public short Quantity { get; set; }
+
+        [Required]
         public short DurationDays { get; set; }
         
         [Column(TypeName = "nvarchar(100)")]

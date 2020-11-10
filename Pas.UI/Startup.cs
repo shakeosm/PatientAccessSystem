@@ -14,8 +14,7 @@ using Pas.Data;
 using Pas.Service;
 using Pas.Service.Interface;
 using Pas.UI.Infrastructure;
-using Pas.UI.Infrastructure.ApplicationUserClaims;
-using Pas.UI.Models.Identity;
+using StackExchange.Redis;
 using System;
 
 namespace Pas.UI
@@ -146,7 +145,14 @@ namespace Pas.UI
             services.AddMemoryCache();
             //services.AddDistributedMemoryCache();
 
-            //services.AddDistributedRedisCache(action => { action.Configuration = Configuration["Redis:InstanceName"]; });
+            services.AddSingleton<ICacheService, RedisCacheService>();
+            //services.AddStackExchangeRedisCache(option =>
+            //    {
+            //        option.Configuration = 
+            //            Configuration.GetConnectionString("RedisCache");
+            //    });
+
+            services.AddSingleton<IConnectionMultiplexer>(x => ConnectionMultiplexer.Connect(Configuration.GetConnectionString("RedisCache")));
 
             services.AddSession(options =>
             {

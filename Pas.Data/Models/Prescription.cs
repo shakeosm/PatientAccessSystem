@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pas.Data.Models
 {
-    public partial class Prescription
+    public partial class Prescription : BaseEntityModel
     {
         public Prescription()
         {
@@ -11,11 +13,20 @@ namespace Pas.Data.Models
             PrescriptionDrugs = new HashSet<PrescriptionDrugs>();
         }
 
-        public int Id { get; set; }
+        [Required]
         public int PatientId { get; set; }
+
+        [Required]
         public int DoctorId { get; set; }
+
+        [Required]
         public int OrganisationId { get; set; }
+
+        [Required]
+        [Column(TypeName = "datetime2(3)")]
         public DateTime DateCreated { get; set; }
+
+        [Column(TypeName = "varchar(500)")]
         public string Notes { get; set; }
         public bool? IsRepeatingVisit { get; set; }
         public int? PreviousPrescriptionId { get; set; }

@@ -40,5 +40,6 @@ namespace Pas.Service.Interface
         Task<IEnumerable<PatientDetailsVM>> SearchPatient(PatientSearchVM searchVM);
 
         Task<IEnumerable<PatientDetailsVM>> GetRegularPatientList(int doctorId);
+        Task<IEnumerable<UserRole>> GetRolesByUser(int id);
     }
 }

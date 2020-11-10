@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pas.Common.Enums;
+using Pas.Common.Models.Identity;
 using Pas.Service.Interface;
 using Pas.UI.Infrastructure.ApplicationUserClaims;
-using Pas.UI.Models.Identity;
 using Pas.Web.ViewModels;
 
 namespace Pas.UI.Controllers
@@ -20,6 +20,7 @@ namespace Pas.UI.Controllers
         ///private readonly ApplicationUserClaimsPrincipalFactory _applicationUserClaimsPrincipalFactory;
         private readonly IPatientService _patientService;
         private readonly IUserOrgRoleService _userOrgRoleService;
+        private readonly ICacheService _cacheService;
 
         //private readonly ApplicationUser _userManager;
 
@@ -27,6 +28,7 @@ namespace Pas.UI.Controllers
 
         public AppUserController(IPatientService PatientService
                                 , IUserOrgRoleService UserOrgRoleService
+                                , ICacheService cacheService
             //,UserManager<ApplicationUser> userManager
             )
         {
@@ -34,83 +36,103 @@ namespace Pas.UI.Controllers
             //_applicationUserClaimsPrincipalFactory = UserClaimsPrincipalFactory;
             _patientService = PatientService;
             _userOrgRoleService = UserOrgRoleService;
+            _cacheService = cacheService;
         }
 
 
         [HttpGet]
         public async Task<IActionResult> SwitchRole()
         {
-            //var currentUserClaims = await _userClaimsPrincipalFactory.
-            var currentClaims = ClaimsPrincipal.Current?.Identities.First().Claims.ToList();
-            if (currentClaims is null) {
-                return RedirectToAction("Login", "Account", new { Area = "Identity" });
+            //## The reason for coming here is-> You have multiple ROles, ie: Doctor+Director. 
+            //##    Or You wanted to Switch between roles.
+
+
+            ////var currentUserClaims = await _userClaimsPrincipalFactory.
+            //var currentClaims = ClaimsPrincipal.Current?.Identities.First().Claims.ToList();
+            //if (currentClaims is null) {
+            //    return RedirectToAction("Login", "Account", new { Area = "Identity" });
+            //}
+
+            //var x = currentClaims.FirstOrDefault();
+            //var y = currentClaims?.FirstOrDefault(x => x.Type.Equals("UserName", StringComparison.OrdinalIgnoreCase)); //?.Value;
+
+            var userEmail = "shakeosm@gmail.com"; // HttpContext.User.FindFirst(ClaimTypes.Email).Value;
+            if (userEmail is null) { 
+                //## User Not Found
+                return RedirectToAction("Index", "Home");
             }
 
-            var x = currentClaims.FirstOrDefault();
-            var y = currentClaims?.FirstOrDefault(x => x.Type.Equals("UserName", StringComparison.OrdinalIgnoreCase)); //?.Value;
-
-            
-
-            var currentAppUser = await _patientService.FindByEmail("shakeosm@gmail.com");
+            var currentAppUser = await _patientService.FindByEmail(userEmail);
 
             //## Go to DB.. See if this User has multiple roles or only one.
-            var currentRole = await _userOrgRoleService.FindRolesByUserId(currentAppUser.Id);
-            
-            if (currentRole is null) {
+            var userRoles = await _userOrgRoleService.FindRolesByUserId(currentAppUser.Id);
+
+            if (userRoles is null)
+            {
                 //## No Role in UserOrgTable - means this is a Patient- go to Patient Home Page
-                
+
                 ApplicationUser currentUser = new ApplicationUser()
                 {
                     Email = currentAppUser.Email,
                     FullName = currentAppUser.Name,
                     OrganisationId = -1,
                     OrganisationName = "Patient",
-                    RoleId = (int) AppRole.Patient,
-                    RoleName = AppRole.Patient.ToString()
+                    RoleId = (int)ApplicationRole.Patient,
+                    RoleName = ApplicationRole.Patient.ToString()
+                };
+                //## Add this User in the RedisCache
+
+                // await _applicationUserClaimsPrincipalFactory.CreateAsync(currentUser);
+
+                return RedirectToAction("Index", "Home", new { id = currentAppUser.Id, Area = "Patient" });
+            }
+            else {
+                //## We found there are roles for this User- so- we need to ask the user to Select a Role
+                //## Passing the ViewModel with some values
+
+                var  userRoleList = await _patientService.GetRolesByUser(currentAppUser.Id);
+
+                UserSwitchRoleViewVM vm = new UserSwitchRoleViewVM() { 
+                    UserId = currentAppUser.Id,
+                    UserRoleList = userRoleList
                 };
 
-               // await _applicationUserClaimsPrincipalFactory.CreateAsync(currentUser);
-
-                return RedirectToAction("Index", "Home", new { id = 123, Area = "Patient" });
+                //## Roles found-> As the user which role they want to select
+                return View(vm);
             }
             
-            //## We found there are roles found for this User- so- we need to ask the user to Select a Role
-            //## Passing the ViewModel with some values
-            var vm = new UserSwitchRoleSelection()
-            {
-                OrganisationId = 4,
-                RoleId = 2,
-                UserId = currentAppUser.Id  //## So- on PostBack- we know who is the User
-            };
-
-            //## Roles found-> As the user which role they want to select
-            return View(vm);
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> SwitchRole(UserSwitchRoleSelection vm)
+        public async Task<IActionResult> SwitchRole(UserSwitchRoleUpdate vm)
         {
-            AppRole selectedRole = (AppRole) vm.RoleId;
+            //## Check this is not a hacker trying to allocate Roles that doesn't exist
+
+            var selectedOrgRole = await _userOrgRoleService.Find(vm.UserOrganisationRoleId);
+            if (selectedOrgRole is null) {
+                return RedirectToAction("Index", "Login", new { Area = "Identity" });
+            }
+
+            //TODO: Also check- does current user has a Role in that Organisation? Is it a Genuine User selection or BOT Attack?
+
+            ApplicationRole selectedRole = (ApplicationRole)selectedOrgRole.RoleId;
             string areaName = selectedRole.ToString();
-
-            var selectedOrgRole = await _userOrgRoleService.FindRolesInOrganisationByUserId(vm.OrganisationId, vm.UserId);
-            var firstRole = selectedOrgRole.First();
-
 
             ApplicationUser currentUser = new ApplicationUser()
             {               
-                Email = firstRole.User.Email,
-                FullName = $"{firstRole.User.FirstName} {firstRole.User.LastName}",
-                OrganisationId = firstRole.OrganisationId,
-                OrganisationName = firstRole.Organisation.Name,
-                RoleId = firstRole.RoleId,
-                RoleName = firstRole.Role.Name
+                Email = selectedOrgRole.User.Email,
+                FullName = $"{selectedOrgRole.User.FirstName} {selectedOrgRole.User.LastName}",
+                OrganisationId = selectedOrgRole.OrganisationId,
+                OrganisationName = selectedOrgRole.Organisation.Name,
+                RoleId = selectedOrgRole.RoleId,
+                RoleName = selectedOrgRole.Role.Name,
+                ImageUrl = ""
             };
 
             //await _applicationUserClaimsPrincipalFactory.CreateAsync(currentUser);
 
-            return RedirectToAction("Index", "Home", new { id = firstRole.UserId, Area = areaName });
+            return RedirectToAction("Index", "Home", new { id = selectedOrgRole.UserId, Area = areaName });
 
         }
     }

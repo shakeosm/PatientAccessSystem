@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pas.Data.Models
 {
-    public partial class DosageTypes
+    public partial class DosageTypes : BaseEntityModel
     {
         public DosageTypes()
         {
@@ -11,7 +13,8 @@ namespace Pas.Data.Models
             PrescriptionDrugs = new HashSet<PrescriptionDrugs>();
         }
 
-        public int Id { get; set; }
+        [Required]
+        [Column(TypeName = "varchar(30)")]
         public string Name { get; set; }
 
         public virtual ICollection<DrugDosageType> DrugDosageType { get; set; }
