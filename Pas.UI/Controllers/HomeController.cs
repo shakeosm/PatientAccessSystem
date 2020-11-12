@@ -4,25 +4,30 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Pas.Service.Interface;
 using Pas.UI.Models;
+using Pas.Web.ViewModels;
 
 namespace Pas.UI.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IPatientService _patientService;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IAppUserService _appUserService;
         private readonly IUserOrgRoleService _userOrgRoleService;
 
         public HomeController(ILogger<HomeController> logger,
-                                IPatientService PatientService,
+                                UserManager<IdentityUser> userManager,
+                                IAppUserService AppUserService,
                                 IUserOrgRoleService UserOrgRoleService)
         {
             _logger = logger;
-            _patientService = PatientService;
+            _userManager = userManager;
+            _appUserService = AppUserService;
             _userOrgRoleService = UserOrgRoleService;
         }
 
@@ -32,27 +37,23 @@ namespace Pas.UI.Controllers
         /// <returns></returns>
         public async Task<IActionResult> Index()
         {
-            return View();
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var userEmail = _userManager.GetUserName(HttpContext.User);            
 
-            bool isAnonymusUser = HttpContext.User.Claims.Count() < 1;
-            var u1 = HttpContext.User.Claims.ToList();
-            var userId = HttpContext.User.FindFirst(ClaimTypes.Email).Value;
+            //var u1 = HttpContext.User.Claims.ToList();
+            //var userClaim = HttpContext.User.FindFirst(ClaimTypes.Email).Value;
 
+            AppUserDetailsVM currentUser = new AppUserDetailsVM();
 
-            if (isAnonymusUser) {
-                //## Not Logged in.. Show Regular Screen to Log In                
-                return View();
+            if (userEmail != null) {
+                currentUser = _appUserService.FindByEmail(userEmail);
+            
             }
-
-            var claimList = ClaimsPrincipal.Current?.Identities.First().Claims.ToList();
-
-            var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email).Value;
-
-            var currentUser = _patientService.FindByEmail(userEmail);
-            if (currentUser is null){
-                //## Something not right.. Show Regular Screen to Log In
-                return View();
-            }
+            
+            //var claimList = ClaimsPrincipal.Current?.Identities.First().Claims.ToList();
+            
+            return View(currentUser);
+            
 
             //## The User is found in the DB.. How many roles the User have. Is the User simply a Patient or a Doctor or Hospital-Director
             var roles = await _userOrgRoleService.FindRolesByUserId(currentUser.Id);

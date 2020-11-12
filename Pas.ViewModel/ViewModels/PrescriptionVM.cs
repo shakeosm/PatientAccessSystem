@@ -7,7 +7,7 @@ namespace Pas.Web.ViewModels
         public int Id { get; set; }
         public HospitalDetailsVM HospitalDetails { get; set; }
         public DoctorDetailsVM DoctorDetails { get; set; }
-        public PatientDetailsVM PatientDetails { get; set; }
+        public AppUserDetailsVM PatientDetails { get; set; }
 
         public int IndicatioId { get; set; }
         public IList<IndicationVM> indicationList { get; set; }
@@ -56,7 +56,7 @@ namespace Pas.Web.ViewModels
         public DoctorDetailsVM DoctorDetails { get; set; }
         
         /// <summary>Doctor may chose to select one from the regular patient and create a new Prescription</summary>
-        public IEnumerable<PatientDetailsVM> PatientsList { get; set; }
+        public IEnumerable<AppUserDetailsVM> PatientsList { get; set; }
         
         public string PatientsListTitle { get; set; }
 

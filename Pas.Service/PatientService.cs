@@ -29,12 +29,12 @@ namespace Pas.Service
             throw new NotImplementedException();
         }
 
-        public Task<PatientDetailsVM> Find(int id)
+        public Task<AppUserDetailsVM> Find(int id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<PatientDetailsVM> FindByEmail(string email)
+        public async Task<AppUserDetailsVM> FindByEmail(string email)
         {
             User user = await _pasContext.User.FirstOrDefaultAsync(u => u.Email == email);
             
@@ -42,9 +42,9 @@ namespace Pas.Service
             
         }
 
-        PatientDetailsVM MapToPatientDetails(User user)
+        AppUserDetailsVM MapToPatientDetails(User user)
         {
-            return new PatientDetailsVM()
+            return new AppUserDetailsVM()
             {
                 Address = "",
                 Age = user.Age,
@@ -59,20 +59,20 @@ namespace Pas.Service
             };
         }
 
-        public Task<PatientDetailsVM> FindByMobile(string mobileNumber)
+        public Task<AppUserDetailsVM> FindByMobile(string mobileNumber)
         {
             //var result = _pasContext.User.Where(u => u.FirstName.StartsWith("Car"))
-            //                .Select(p=> new PatientDetailsVM() { 
+            //                .Select(p=> new AppUserDetailsVM() { 
             //                });
             throw new NotImplementedException();
         }
 
-        public Task<PatientDetailsVM> FindByShortId(string ShortId)
+        public Task<AppUserDetailsVM> FindByShortId(string ShortId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> Update(PatientDetailsVM patientDetailsVM)
+        public Task<bool> Update(AppUserDetailsVM AppUserDetailsVM)
         {
             throw new NotImplementedException();
         }
@@ -82,7 +82,7 @@ namespace Pas.Service
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<PatientDetailsVM>> SearchPatient(PatientSearchVM searchVM)
+        public async Task<IEnumerable<AppUserDetailsVM>> SearchPatient(PatientSearchVM searchVM)
         {
             bool hasMobileNumber = ( !string.IsNullOrEmpty(searchVM.Mobile) && searchVM.Mobile.Length >= 10);
             bool hasShortId = (!string.IsNullOrEmpty(searchVM.ShortId) && searchVM.ShortId.Length >= 5);
@@ -104,7 +104,7 @@ namespace Pas.Service
 
             }
 
-        public async Task<IEnumerable<PatientDetailsVM>> GetRegularPatientList(int doctorId)
+        public async Task<IEnumerable<AppUserDetailsVM>> GetRegularPatientList(int doctorId)
         {            
             Expression<Func<User, bool>> userSearch = u => (u.FirstName.Contains("Ma"));
 
@@ -115,14 +115,14 @@ namespace Pas.Service
 
         /// <summary>Search Patients as per your Search Expression</summary>
         /// <param name="userSearch">Search expression</param>
-        /// <returns>Get PatientList in PatientDetailsVM</returns>
-        private async Task<IEnumerable<PatientDetailsVM>> Search(Expression<Func<User, bool>> userSearch)
+        /// <returns>Get PatientList in AppUserDetailsVM</returns>
+        private async Task<IEnumerable<AppUserDetailsVM>> Search(Expression<Func<User, bool>> userSearch)
         {
             try
             {
                 List<User> result = await _pasContext.User.Where(userSearch).ToListAsync();
 
-                IEnumerable<PatientDetailsVM> resultVM = result.Select(u => new PatientDetailsVM()
+                IEnumerable<AppUserDetailsVM> resultVM = result.Select(u => new AppUserDetailsVM()
                 {
                     Id = u.Id,
                     Name = $"{u.FirstName} {u.LastName}",

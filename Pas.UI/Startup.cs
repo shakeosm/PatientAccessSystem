@@ -46,7 +46,10 @@ namespace Pas.UI
             services.AddTransient<IPatientService, PatientService>();
             services.AddTransient<IPrescriptionService, PrescriptionService>();
             services.AddTransient<IUserOrgRoleService, UserOrgRoleService>();
+            services.AddTransient<IAppUserService, AppUserService>();
             
+
+
 
             services.AddTransient<SignInManager<IdentityUser>>();
             services.AddTransient<UserManager<IdentityUser>>();

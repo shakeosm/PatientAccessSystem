@@ -7,50 +7,113 @@
 
     <div class="text-center">
 
-        <h5>Please select your role</h5>
         <div class="form-row">
-            <div class="card-deck">
+            <div class="card-deck text-dark">
                 <div class="card">
-                    <div class="w-100 bg-fusion-50 rounded-top" style="padding:40px 0 40px;"></div>
+                    <div class="w-100 bg-fusion-50 rounded-top bg-trans-gradient" style="padding:20px 0;">
+                        <div class="card-title text-white">Patient</div>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title">Patient</h5>
                         <p class="card-text">Log in as a Patient and view your medical records.</p>
                         <p class="card-text">You can also share your records with 3rd parties in and outside of the country.</p>
                     </div>
                     <div class="card-footer">
-
+                        @*<button type="button" class="btn btn-primary btn-pills waves-effect waves-themed">Select</button>*@
+                        <a href="~/Patient/Home" class="btn btn-primary btn-pills waves-effect waves-themed" role="button">Select</a>
                     </div>
                 </div>
+                @*# Doctor Card *@
                 <div class="card">
-                    <div class="w-100 bg-fusion-50 rounded-top" style="padding:40px 0 40px;"></div>
+                    <div class="w-100 bg-fusion-50 rounded-top bg-trans-gradient" style="padding:20px 0;">
+                        <div class="card-title text-white">Doctor</div>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title">Doctor</h5>
                         <p class="card-text">Log in as a Doctor and see your own profile.</p>
-                        <p class="card-text">You can search for a patient and view their medical history.</p>
+                        @*<p class="card-text"></p>*@
+                        <h5 class="card-title">Select a Chamber</h5>
+                        <div class="text-left p-2 border-top border-bottom">
+                            <div class="custom-control custom-radio pb-2">
+                                <input type="radio" class="custom-control-input" id="hospitalOption1" name="hospitalOption">
+                                <label class="custom-control-label" for="hospitalOption1">BelleVue Hospital</label>
+                            </div>
+                            <div class="custom-control custom-radio pb-2">
+                                <input type="radio" class="custom-control-input" id="hospitalOption2" name="hospitalOption">
+                                <label class="custom-control-label" for="hospitalOption2">Royal Hospital</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" id="hospitalOption3" name="hospitalOption">
+                                <label class="custom-control-label" for="hospitalOption3">Personal Chamber</label>
+                            </div>
+
+                        </div>
+
+                        You can search for a patient and view their medical history.
                     </div>
                     <div class="card-footer">
+                        @*<button type="button" class="btn btn-primary btn-pills waves-effect waves-themed">Select</button>*@                        
+                        <a href="~/Doctor/Home" class="btn btn-primary btn-pills waves-effect waves-themed" role="button">Select</a>
+                    </div>
+                </div>
+
+                @*# Hospital Card *@
+                <div class="card">
+                    <div class="w-100 bg-fusion-50 rounded-top bg-trans-gradient" style="padding:20px 0;">
+                        <div class="card-title text-white">Hospital</div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Log in as a Hospital director and see the reports.</p>
+                        @*<p class="card-text"></p>*@
+
+                        <h5 class="card-title">Select a Hospital</h5>
+                        <div class="text-left p-2 border-top border-bottom">
+                            <div class="custom-control custom-radio pb-2">
+                                <input type="radio" class="custom-control-input" id="directorOption1" name="directorOption">
+                                <label class="custom-control-label" for="directorOption1">BelleVue Hospital</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" id="directorOption2" name="directorOption">
+                                <label class="custom-control-label" for="directorOption2">Royal Hospital</label>
+                            </div>
+
+                        </div>
+                        You can view the daily real-time patients' activities and doctors' calander.
+                    </div>
+                    <div class="card-footer">
+                        @*<button type="button" class="btn btn-primary btn-pills waves-effect waves-themed">Select</button>*@
+                        <a href="~/Hospital/Home" class="btn btn-primary btn-pills waves-effect waves-themed" role="button">Select</a>
 
                     </div>
                 </div>
+
+                @*# Technician Card *@
                 <div class="card">
-                    <div class="w-100 bg-fusion-50 rounded-top" style="padding:40px 0 40px;"></div>
+                    <div class="w-100 bg-fusion-50 rounded-top bg-trans-gradient" style="padding:20px 0;">
+                        <div class="card-title text-white">Technician</div>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title">Director</h5>
-                        <p class="card-text">Log in as a Hospital director and see the reports.</p>
-                        <p class="card-text">You can view the daily real-time patients' activities and doctors' calander.</p>
+                        <p class="card-text">Log in as a Technician.</p>
+                        @*<p class="card-text"></p>*@
+
+                        <h5 class="card-title">Select a Hospital</h5>
+                        <div class="text-left p-2 border-top border-bottom">
+                            <div class="custom-control custom-radio pb-2">
+                                <input type="radio" class="custom-control-input" id="technicianOption1" name="technicianOption">
+                                <label class="custom-control-label" for="technicianOption1">BelleVue Hospital</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" id="technicianOption2" name="technicianOption">
+                                <label class="custom-control-label" for="technicianOption2">Royal Hospital</label>
+                            </div>
+                        </div>
+
+                        You can do data entry for Clinical information and register a new Patient in the system.
                     </div>
                     <div class="card-footer">
-                        <small class="text-muted">Last updated 3 mins ago</small>
+                        <button type="button" class="btn btn-primary btn-pills waves-effect waves-themed">Select</button>
                     </div>
                 </div>
             </div>
         
-            <div class="form-row text-center">
-                <button type="button" class="btn btn-primary waves-effect waves-themed"
-                        asp-area="Doctor" asp-controller="Home" asp-action="Index"
-                        >Continue</button>
-
-            </div>
         </div>
         
 
@@ -88,9 +151,6 @@
                     </div>
 
                 </a>
-
-                <button id="SubmitButton" class="btn btn-primary" type="submit">Submit form</button>
-
             </form>
         </div>
 

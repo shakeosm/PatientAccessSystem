@@ -4,26 +4,31 @@
     Layout = "/Views/Shared/_LayoutCustom.cshtml";
     ViewData["Title"] = "Doctor Dashboard";
 }
-<div class="card">
-    <div class="card-header">
-        Dashboard
-    </div>
-    <div class="card-body">
-        <div class="form-row">
-            <div class="col-xs-12 col-sm-6">
-                <h5 class="card-title">Last 7 Days</h5>
-                <p>Chart showing last 7 days visitors' count</p>
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                Dashboard
             </div>
-            <div class="col-xs-12 col-sm-6">
-                <h5 class="card-title"></h5>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="col-xs-12 col-sm-6 card p-3">
+                        <h5 class="card-title">Last 7 Days</h5>
+                        <img src="~/images/sample-chart-01.png" alt="sample chart" style="width:500px;"/>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 card p-3">
+                        <h5 class="card-title">Right column</h5>
+                        <img src="~/images/sample-chart-02.png" alt="sample chart" style="width:500px;" />
+                    </div>
+                    <div>
+                        <h4>New visitors: 40. Repeat visitors: 10</h4>
+                    </div>
+                    https://docs.microsoft.com/en-us/aspnet/web-pages/overview/data/7-displaying-data-in-a-chart
+                </div>
             </div>
-            <div>
-                <h4>New visitors: 40. Repeat visitors: 10</h4>
-            </div>
-            https://docs.microsoft.com/en-us/aspnet/web-pages/overview/data/7-displaying-data-in-a-chart
         </div>
     </div>
-</div>
+
 
 @*<nav class="mt-3">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -36,136 +41,62 @@
         <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
         </div>*@
 
-@*  Doctor's Profile    *@
-<div class="card mt-3">
-    <div class="card-header">
-        Profile
-    </div>
-    <div class="card-body">
-        <div class="form-row">
-            <div class="col-8">
-                <h5 class="card-title">
-                    <i class="fa fa-user-md"></i>
-                    Dr Rawnak Jahan MBBS, MRCOG
-                </h5>
-                <p class="card-text">Current chamber: Belle Vue Hospital. Joined on 01/10/2020</p>
-            </div>
-            <div class="col-4">
-                <img class="float-right"
-                     src="~/images/032-doctor.png"
-                     alt="Doctor's profile photo" style="width:100px; height:100px;" />
-            </div>
-        </div>
-
-
-        <h5 class="card-title mt-2">Prescription Header Preview</h5>
-        <div class="form-row">
-            <div id="PrescriptionEnglishHeader" class="col-6">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">
-                            Dr Rawnak Jahan <br />
-                            MBBS, MRCOG (England) </br>
-                            Belle Vue Hospital<br />
-                            Gynea, Medicine, Surgery<br />
-                            Govt Reg: 0123456<br />
-                        </p>
-                        <button type="button" class="">
-                            <span class="fal fa-edit mr-1"></span>
-                            Edit
-                        </button>
-
-                    </div>
-                </div>
-            </div>
-            <div id="PrescriptionBanglaHeader" class="col-6">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">
-                            Dr Rawnak Jahan <br />
-                            MBBS, MRCOG (England) </br>
-                            Belle Vue Hospital<br />
-                            Gynea, Medicine, Surgery<br />
-                            Govt Reg: 0123456<br />
-                        </p>
-                        <button type="button" class="">
-                            <span class="fal fa-edit mr-1"></span>
-                            Edit
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <button type="button" class="btn btn-lg btn-info waves-effect waves-themed">
-        <span class="fal fa-prescription mr-1"></span>
-        New Prescription
-    </button>
-
-    <a class="et_pb_button et_pb_bg_layout_dark" href="">New Prescription</a>
-    <hr />
-
-    <a href="/Doctor/Home/SearchPatient" class="round-button" role="button">New Prescription</a>
-
-    <a id="NewPrescriptionLinkButton" href="/Doctor/Home/SearchPatient"
-       class="btn btn-general btn-primary mt-3"
-       @*asp-area="Doctor"
-       asp-action="Home"
-       asp-controller="SearchPatient"*@>
-        <img src="~/images/report.png" alt="Create Prescription" style="width: 50px; height:50px;" />
-        <br />
-        New Prescription
-    </a>
-</div>
-
 @* Prescription History *@
-<div id="rescriptionHistoryDiv" class="card mt-3">
-    <div class="card-header">
-        Prescription History
-    </div>
-    <div class="card-body">
-        <table id="PrescriptionHistoryTable" class="data-table">
-            <tr>
-                <th>Name</th>
-                <th>Bangla Name</th>
-                <th>Mobile</th>
-                <th>Age</th>
-                <th>Gender</th>
-                <th>Last Visit</th>
-                <th></th>
-            </tr>
-            <tr>
+<div class="col-8">
+    <div id="PrescriptionHistoryDiv" class="card mt-3">
+        <div class="card-header">
+            Prescription History
+        </div>
+        <div class="card-body">
+            <div class="">
+                <table id="PrescriptionHistoryTable"
+                       class="table table-bordered table-hover table-striped w-100 dataTable dtr-inline">
+                    <tbody>
+                        <tr>
+                            <th>Name</th>
+                            <th>Bangla Name</th>
+                            <th>Mobile</th>
+                            <th>Age</th>
+                            <th>Gender</th>
+                            <th>Last Visit</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                        </tr>
+                        <tr>
+                            <td>Shawkat Osman</td>
+                            <td>শওকত ওসমান </td>
+                            <td>0156-456789123</td>
+                            <td>65</td>
+                            <td>Male</td>
+                            <td>01 Mar 2020</td>
+                            <td>
 
-            <tr>
-                <td>Moshiur Rohman</td>
-                <td>Moshiur Rohman</td>
-                <td>0156-456789123</td>
-                <td>65</td>
-                <td>Male</td>
-                <td>01 Mar 2020</td>
-                <td>
+                                <a class="btn btn-general btn-primary create-new-prescription-button"
+                                   role="button"
+                                   asp-area="Doctor"
+                                   asp-controller="Home"
+                                   asp-action="ViewPatient"
+                                   asp-route-id="1"
+                                   data-patient-id="1"
+                                   data-toggle="tooltip" data-placement="right" title="View">
+                                    <i class="fa fa-id-card fa-lg" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                    <a class="btn btn-general btn-primary create-new-prescription-button"
-                       asp-area="Doctor"
-                       asp-controller="Patient"
-                       asp-action="ViewPatient"
-                       asp-route-id="item.Id"
-                       data-patient-id="item.Id"
-                       data-toggle="tooltip" data-placement="right" title="View">
-                        <i class="fa fa-pencil-square-o"></i>
-                    </a>
-                </td>
-            </tr>
-        </table>
+            </div>
+        </div>
     </div>
 </div>
 
 
-
-
-
-
-
-
+@section Scripts
+{
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/customerDatatable.js"></script>
+    <script src="~/js/patient/search-result-table.js"></script>
+}

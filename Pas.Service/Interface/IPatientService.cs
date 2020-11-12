@@ -13,15 +13,15 @@ namespace Pas.Service.Interface
         /// </summary>
         /// <param name="prescriptionDiagnosticTest">PrescriptionDiagnosticTestCreateVM View Model</param>
         /// <returns>Id of the new Record</returns>
-        Task<PatientDetailsVM> Find(int id);
+        Task<AppUserDetailsVM> Find(int id);
         
-        Task<PatientDetailsVM> FindByEmail(string email);
+        Task<AppUserDetailsVM> FindByEmail(string email);
 
-        Task<PatientDetailsVM> FindByMobile(string mobileNumber);
+        Task<AppUserDetailsVM> FindByMobile(string mobileNumber);
         
-        Task<PatientDetailsVM> FindByShortId(string ShortId);
+        Task<AppUserDetailsVM> FindByShortId(string ShortId);
 
-        Task<bool> Update(PatientDetailsVM patientDetailsVM);
+        Task<bool> Update(AppUserDetailsVM AppUserDetailsVM);
 
         /// <summary>
         /// If a Patient haven't seen any Doctor within 3 months of creating an account- delete it.
@@ -37,9 +37,9 @@ namespace Pas.Service.Interface
         /// <param name="prescriptionUpdateVM">PrescriptionUpdateVM View Model</param>
         /// <returns>True/False</returns>
         Task<bool> Update(PrescriptionConfirmSaveVM prescriptionUpdateVM);
-        Task<IEnumerable<PatientDetailsVM>> SearchPatient(PatientSearchVM searchVM);
+        Task<IEnumerable<AppUserDetailsVM>> SearchPatient(PatientSearchVM searchVM);
 
-        Task<IEnumerable<PatientDetailsVM>> GetRegularPatientList(int doctorId);
+        Task<IEnumerable<AppUserDetailsVM>> GetRegularPatientList(int doctorId);
         Task<IEnumerable<UserRole>> GetRolesByUser(int id);
     }
 }

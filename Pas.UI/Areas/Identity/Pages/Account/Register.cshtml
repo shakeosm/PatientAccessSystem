@@ -23,26 +23,41 @@
 
                 <div class="form-row">
                     <div class="form-group col-sm-2">
-                        <label for="inputTitle">Title</label>
-                        <select class="form-control"
+                        <label asp-for="Input.Title"></label>
+                        <select class="form-control" asp-for="Input.Title"                                
                                 asp-items="Html.GetEnumSelectList<Title>()" id="inputTitle">
                         </select>
+                        <span asp-validation-for="Input.Title" class="text-danger"></span>
 
                     </div>
                     <div class="form-group col-md-5">
-                        <label for="inputFirstName">First Name</label>
-                        <input type="text" class="form-control" id="inputFirstName" placeholder="First Name">
+                        <label asp-for="Input.FirstName"></label>
+                        <input asp-for="Input.FirstName" class="form-control" />
+                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+
                     </div>
                     <div class="form-group col-md-5">
-                        <label for="inputLastName">Last Name</label>
-                        <input type="text" class="form-control" id="inputLastName" placeholder="Last Name">
+                        <label asp-for="Input.LastName"></label>
+                        <input asp-for="Input.LastName" class="form-control" />
+                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="inputMobile">Mobile</label>
-                        <input type="number" class="form-control" id="inputMobile" placeholder="Mobile">
+                        <label asp-for="Input.Mobile"></label>
+
+                        <div class="input-group">
+                            @*<div class="input-group-prepend">
+                                <span class="input-group-text">&#64;</span>
+                            </div>*@
+                            <input asp-for="Input.Mobile" class="form-control" placeholder="Mobile" />
+
+                        </div>
+                        @*<span class="help-block">Do not enter the first Zero</span>*@
+
+                        <span asp-validation-for="Input.Mobile" class="text-danger"></span>
+                        @*<input type="number" class="form-control" id="inputMobile" placeholder="Mobile">*@
                     </div>
                     <div class="form-group col-md-6">
                         <div class="form-group">
@@ -55,23 +70,24 @@
 
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="inputAge">Age</label>
-                        <input type="number" class="form-control" id="inputAge" placeholder="Age">
+                        <label asp-for="Input.Age"></label>
+                        <input asp-for="Input.Age" class="form-control" />
+                        <span asp-validation-for="Input.Age" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-6">
                         <div class="form-group">
                             <label for="inputAge">Gender</label>
                             <div class="frame-wrap">
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" class="custom-control-input" id="radioGenderMale" name="radioGender" checked="">
+                                    <input type="radio" class="custom-control-input" id="radioGenderMale" name="Gender" checked="" value="1">
                                     <label class="custom-control-label" for="radioGenderMale">Male</label>
                                 </div>
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" class="custom-control-input" id="radioGenderFemale" name="radioGender">
+                                    <input type="radio" class="custom-control-input" id="radioGenderFemale" name="Gender" value="2">
                                     <label class="custom-control-label" for="radioGenderFemale">Female</label>
                                 </div>
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" class="custom-control-input" id="radioGenderOther" name="radioGender">
+                                    <input type="radio" class="custom-control-input" id="radioGenderOther" name="Gender" value="0"> 
                                     <label class="custom-control-label" for="radioGenderOther">Other</label>
                                 </div>
                             </div>

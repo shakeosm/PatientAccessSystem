@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Pas.UI.Areas.Doctor.Controllers
 {
+    [Area("Doctor")]
     public class ProfileController : Controller
     {
         [HttpGet]

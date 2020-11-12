@@ -31,7 +31,7 @@ namespace Pas.UI.Areas.Doctor.Controllers
 
             HospitalDetailsVM hospitalDetails = null;
             DoctorDetailsVM doctorDetails = null;
-            PatientDetailsVM patientDetails = null;
+            AppUserDetailsVM patientDetails = null;
 
             IList<IndicationVM> indicationList = null;
             IList<DrugDetailsVM> drugList = null;

@@ -3,7 +3,7 @@ using System;
 
 namespace Pas.Web.ViewModels
 {
-    public class PatientDetailsVM
+    public class AppUserDetailsVM
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -15,5 +15,10 @@ namespace Pas.Web.ViewModels
         public Gender Gender { get; set; }
         public string DateOfBirth { get; set; }
         public string ShortId { get; set; }
+        public bool HasMultipleRoles { get; set; }
+
+        public UserRole  CurrentRole { get; set; }
+        public string Organisation { get; set; }
+        public int OrganisationId { get; set; }
     }
 }
