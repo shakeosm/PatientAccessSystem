@@ -3,47 +3,49 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
-    @*<form>*@
-        <div class="form-row">
-            <div class="form-group col-md-3 col-xs-6">
-                <label for="Mobile">Mobile number</label>
-                <input type="text" asp-for="Mobile" class="form-control" id="Mobile" placeholder="01X-000-0000">
-            </div>
-            <div class="form-group col-md-3 col-xs-6">
-                <label for="ShortId">Short Id</label>
-                <input type="text" asp-for="ShortId" class="form-control" id="ShortId" placeholder="A564Z">
-            </div>
-            <div class="form-group col-md-3 col-xs-6">
-                <label for="FirstName">First Name</label>
-                <input type="text" asp-for="FirstName" class="form-control" id="FirstName" placeholder="FirstName">
-                <small id="FirstNameHelp" class="form-text text-muted">Enter minimum 3 letters to search.</small>
-            </div>
-            <div class="form-group col-md-3 col-xs-6">
-                <label for="LastName">Last Name</label>
-                <input type="text" asp-for="LastName" class="form-control" id="LastName" placeholder="LastName">
-                <small id="LastNameHelp" class="form-text text-muted">Enter minimum 3 letters to search.</small>
-            </div>
-        </div>
-        <div class="form-group d-none">
-            <label for="Email">Email</label>
-            <input type="email" class="form-control" id="Email" placeholder="Email">
-        </div>
+<!-- _patientSearchOption.cshtml  -->
 
-        <button type="button" class="btn btn-secondary waves-effect waves-themed">
-            <span class="fa fa-times mr-1"></span>&nbsp;
-            Reset
-        </button>
+@*<form>*@
+<div class="form-row">
+    <div class="form-group col-md-3 col-xs-6">
+        <label for="Mobile">Mobile number</label>
+        <input type="text" asp-for="Mobile" class="form-control" id="Mobile" placeholder="01X-000-0000">
+    </div>
+    <div class="form-group col-md-3 col-xs-6">
+        <label for="ShortId">Short Id</label>
+        <input type="text" asp-for="ShortId" class="form-control" id="ShortId" placeholder="A564Z">
+    </div>
+    <div class="form-group col-md-3 col-xs-6">
+        <label for="FirstName">First Name</label>
+        <input type="text" asp-for="FirstName" class="form-control" id="FirstName" placeholder="FirstName">
+        <small id="FirstNameHelp" class="form-text text-muted">Enter minimum 3 letters to search.</small>
+    </div>
+    <div class="form-group col-md-3 col-xs-6">
+        <label for="LastName">Last Name</label>
+        <input type="text" asp-for="LastName" class="form-control" id="LastName" placeholder="LastName">
+        <small id="LastNameHelp" class="form-text text-muted">Enter minimum 3 letters to search.</small>
+    </div>
+</div>
+<div class="form-group d-none">
+    <label for="Email">Email</label>
+    <input type="email" class="form-control" id="Email" placeholder="Email">
+</div>
 
-        <button type="submit" id="SearchPatientButton" class="btn btn-primary waves-effect waves-themed">
-            <i class="fa fa-search"></i>&nbsp;Search
-        </button>
-        
-        <div class="d-none">
-            https://stackoverflow.com/questions/1960240/jquery-ajax-submit-form <br />
-            $("#theForm").ajaxForm({url: 'server.php', type: 'post'})<br />
-            or<br />
-            $("#theForm").ajaxSubmit({url: 'server.php', type: 'post'})
+<button type="button" class="btn btn-secondary waves-effect waves-themed">
+    <span class="fa fa-times mr-1"></span>&nbsp;
+    Reset
+</button>
 
-        </div>
+<button type="submit" id="SearchPatientButton" class="btn btn-primary waves-effect waves-themed">
+    <i class="fa fa-search"></i>&nbsp;Search
+</button>
 
-    @*</form>*@
+<div class="d-none">
+    https://stackoverflow.com/questions/1960240/jquery-ajax-submit-form <br />
+    $("#theForm").ajaxForm({url: 'server.php', type: 'post'})<br />
+    or<br />
+    $("#theForm").ajaxSubmit({url: 'server.php', type: 'post'})
+
+</div>
+
+@*</form>*@

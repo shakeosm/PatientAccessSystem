@@ -43,13 +43,14 @@ namespace Pas.UI
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<DataContext>();
 
+            services.AddHttpContextAccessor();
+
             services.AddTransient<IPatientService, PatientService>();
             services.AddTransient<IPrescriptionService, PrescriptionService>();
             services.AddTransient<IUserOrgRoleService, UserOrgRoleService>();
             services.AddTransient<IAppUserService, AppUserService>();
+            services.AddTransient<IAppAuthorisationService, AppAuthorisationService>();
             
-
-
 
             services.AddTransient<SignInManager<IdentityUser>>();
             services.AddTransient<UserManager<IdentityUser>>();

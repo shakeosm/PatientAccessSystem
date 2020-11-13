@@ -3,127 +3,173 @@
 @{
     ViewData["Title"] = "Role selection";
     Layout = "~/Views/Shared/_LayoutLanding.cshtml";
+
+    int rowCounter = 1;
 }
 
-    <div class="text-center">
+    <div class="text-center form-row">
+        <form asp-action="SwitchRole" asp-controller="AppUser" method="post">
 
-        <div class="form-row">
-            <div class="card-deck text-dark">
-                <div class="card">
-                    <div class="w-100 bg-fusion-50 rounded-top bg-trans-gradient" style="padding:20px 0;">
-                        <div class="card-title text-white">Patient</div>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Log in as a Patient and view your medical records.</p>
-                        <p class="card-text">You can also share your records with 3rd parties in and outside of the country.</p>
-                    </div>
-                    <div class="card-footer">
-                        @*<button type="button" class="btn btn-primary btn-pills waves-effect waves-themed">Select</button>*@
-                        <a href="~/Patient/Home" class="btn btn-primary btn-pills waves-effect waves-themed" role="button">Select</a>
-                    </div>
-                </div>
-                @*# Doctor Card *@
-                <div class="card">
-                    <div class="w-100 bg-fusion-50 rounded-top bg-trans-gradient" style="padding:20px 0;">
-                        <div class="card-title text-white">Doctor</div>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Log in as a Doctor and see your own profile.</p>
-                        @*<p class="card-text"></p>*@
-                        <h5 class="card-title">Select a Chamber</h5>
-                        <div class="text-left p-2 border-top border-bottom">
-                            <div class="custom-control custom-radio pb-2">
-                                <input type="radio" class="custom-control-input" id="hospitalOption1" name="hospitalOption">
-                                <label class="custom-control-label" for="hospitalOption1">BelleVue Hospital</label>
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" asp-for="UserEmail" name="UserEmail" />
+                <input type="hidden" asp-for="UserId" name="UserId"/>
+
+                <div class="card-deck text-dark">
+                    <div class="col-sm-12 col-md-4 mb-2 p-0">
+                        @* Patient's Card *@
+                        <div class="card">
+                            <div class="w-100 bg-fusion-50 rounded-top bg-trans-gradient" style="padding:20px 0;">
+                                <div class="card-title text-white">Patient</div>
                             </div>
-                            <div class="custom-control custom-radio pb-2">
-                                <input type="radio" class="custom-control-input" id="hospitalOption2" name="hospitalOption">
-                                <label class="custom-control-label" for="hospitalOption2">Royal Hospital</label>
+                            <div class="card-body">
+                                <p class="card-text">Log in as a Patient and view your medical records.</p>
+                                <p class="card-text">You can also share your records with 3rd parties in and outside of the country.</p>
+
+                                <img src="~/images/button-icons/patient-01.jfif" alt="Login as Patient" style="width: 100px; height:100px;" />
+
                             </div>
-                            <div class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" id="hospitalOption3" name="hospitalOption">
-                                <label class="custom-control-label" for="hospitalOption3">Personal Chamber</label>
-                            </div>
-
-                        </div>
-
-                        You can search for a patient and view their medical history.
-                    </div>
-                    <div class="card-footer">
-                        @*<button type="button" class="btn btn-primary btn-pills waves-effect waves-themed">Select</button>*@                        
-                        <a href="~/Doctor/Home" class="btn btn-primary btn-pills waves-effect waves-themed" role="button">Select</a>
-                    </div>
-                </div>
-
-                @*# Hospital Card *@
-                <div class="card">
-                    <div class="w-100 bg-fusion-50 rounded-top bg-trans-gradient" style="padding:20px 0;">
-                        <div class="card-title text-white">Hospital</div>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Log in as a Hospital director and see the reports.</p>
-                        @*<p class="card-text"></p>*@
-
-                        <h5 class="card-title">Select a Hospital</h5>
-                        <div class="text-left p-2 border-top border-bottom">
-                            <div class="custom-control custom-radio pb-2">
-                                <input type="radio" class="custom-control-input" id="directorOption1" name="directorOption">
-                                <label class="custom-control-label" for="directorOption1">BelleVue Hospital</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" id="directorOption2" name="directorOption">
-                                <label class="custom-control-label" for="directorOption2">Royal Hospital</label>
-                            </div>
-
-                        </div>
-                        You can view the daily real-time patients' activities and doctors' calander.
-                    </div>
-                    <div class="card-footer">
-                        @*<button type="button" class="btn btn-primary btn-pills waves-effect waves-themed">Select</button>*@
-                        <a href="~/Hospital/Home" class="btn btn-primary btn-pills waves-effect waves-themed" role="button">Select</a>
-
-                    </div>
-                </div>
-
-                @*# Technician Card *@
-                <div class="card">
-                    <div class="w-100 bg-fusion-50 rounded-top bg-trans-gradient" style="padding:20px 0;">
-                        <div class="card-title text-white">Technician</div>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Log in as a Technician.</p>
-                        @*<p class="card-text"></p>*@
-
-                        <h5 class="card-title">Select a Hospital</h5>
-                        <div class="text-left p-2 border-top border-bottom">
-                            <div class="custom-control custom-radio pb-2">
-                                <input type="radio" class="custom-control-input" id="technicianOption1" name="technicianOption">
-                                <label class="custom-control-label" for="technicianOption1">BelleVue Hospital</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" id="technicianOption2" name="technicianOption">
-                                <label class="custom-control-label" for="technicianOption2">Royal Hospital</label>
+                            <div class="card-footer">
+                                <button type="submit"
+                                        asp-action="SwitchRoleToPatient" asp-controller="AppUser"
+                                        class="btn btn-primary btn-pills waves-effect waves-themed">
+                                    Select
+                                </button>
                             </div>
                         </div>
-
-                        You can do data entry for Clinical information and register a new Patient in the system.
                     </div>
-                    <div class="card-footer">
-                        <button type="button" class="btn btn-primary btn-pills waves-effect waves-themed">Select</button>
+
+                    <div class="col-sm-12 col-md-8">
+                        @*# Doctor Card *@
+                        <div class="card">
+                            <div class="w-100 bg-fusion-50 rounded-top bg-trans-gradient" style="padding:20px 0;">
+                                <div class="card-title text-white">Medical User</div>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">Log in as an Organisational user and manage patient.</p>
+                                @*<p class="card-text"></p>*@
+                                <h5 class="card-title">Select a Role</h5>
+                                <div class="text-left p-2 ">
+
+                                    <table class="table m-0 w-100">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Hospital</th>
+                                                <th>Role</th>
+                                                <th>Date added</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.UserRoleList)
+                                            {
+                                                <tr>
+                                                    <th scope="row">@rowCounter</th>
+                                                    <td class="p-3">
+                                                        <div class="custom-control custom-radio pb-2">
+                                                            <input type="radio"
+                                                                   value="@item.UserOrganisationRoleId" required
+                                                                   class="custom-control-input" id="orgRoleOption_@rowCounter" name="UserOrganisationRoleId">
+                                                            <label class="custom-control-label" for="orgRoleOption_@rowCounter">@item.OrganisationName</label>
+                                                        </div>
+                                                    </td>
+                                                    <td>@item.RoleName</td>
+                                                    <td>@item.DateAdded.ToShortDateString()</td>
+                                                </tr>
+
+                                                rowCounter = rowCounter + 1;
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                You can search for a patient and view their medical history.
+                            </div>
+                            <div class="card-footer">
+                                
+                                <button type="submit" class="btn btn-primary btn-pills waves-effect waves-themed">Select</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    @*# Hospital Card *@
+                    <div class="card invisible d-none">
+                        <div class="w-100 bg-fusion-50 rounded-top bg-trans-gradient" style="padding:20px 0;">
+                            <div class="card-title text-white">Hospital</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Log in as a Hospital director and see the reports.</p>
+                            @*<p class="card-text"></p>*@
+
+                            <h5 class="card-title">Select a Hospital</h5>
+                            <div class="text-left p-2 border-top border-bottom">
+                                <div class="custom-control custom-radio pb-2">
+                                    <input type="radio"
+                                           value="200"
+                                           class="custom-control-input" id="directorOption1" name="UserOrganisationRoleId">
+                                    <label class="custom-control-label" for="directorOption1">BelleVue Hospital</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio"
+                                           value="201"
+                                           class="custom-control-input" id="directorOption2" name="UserOrganisationRoleId">
+                                    <label class="custom-control-label" for="directorOption2">Royal Hospital</label>
+                                </div>
+
+                            </div>
+                            You can view the daily real-time patients' activities and doctors' calander.
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary btn-pills waves-effect waves-themed">Select</button>
+                            @*<a href="~/Hospital/Home" class="btn btn-primary btn-pills waves-effect waves-themed" role="button">Select</a>*@
+
+                        </div>
+                    </div>
+
+                    @*# Technician Card *@
+                    <div class="card invisible d-none">
+                        <div class="w-100 bg-fusion-50 rounded-top bg-trans-gradient" style="padding:20px 0;">
+                            <div class="card-title text-white">Technician</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Log in as a Technician.</p>
+                            @*<p class="card-text"></p>*@
+
+                            <h5 class="card-title">Select a Hospital</h5>
+                            <div class="text-left p-2 border-top border-bottom">
+                                <div class="custom-control custom-radio pb-2">
+                                    <input type="radio"
+                                           value="300"
+                                           class="custom-control-input" id="technicianOption1" name="UserOrganisationRoleId">
+                                    <label class="custom-control-label" for="technicianOption1">BelleVue Hospital</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio"
+                                           value="302"
+                                           class="custom-control-input" id="technicianOption2" name="UserOrganisationRoleId">
+                                    <label class="custom-control-label" for="technicianOption2">Royal Hospital</label>
+                                </div>
+                            </div>
+
+                            You can do data entry for Clinical information and register a new Patient in the system.
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary btn-pills waves-effect waves-themed">Select</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        
-        </div>
-        
+            </form>
+                
 
         @* Log in as Options *@
-        <div class="mt-3">
+        <div class="mt-3 d-none invisible">
             <form action="/" method="post">
 
-                <input type="hidden" asp-for="UserId" />
-                <input type="hidden" name="RoleId" />
-                <input type="hidden" name="OrganisationId" />
+                <input type="hidden" asp-for="UserId" />                                
 
                 @* Notes: these should be buttons to go on POST and set the Claim() to be a Patient/Doctor/Director *@
                 <a class="btn btn-outline-primary" asp-area="Patient" asp-controller="Home" asp-action="Index" role="button">

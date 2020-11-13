@@ -94,6 +94,12 @@ namespace Pas.Service
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// This will Mapp all basic User Details- except any Role Details.
+        /// Wait fo the User to go the page to select a role
+        /// </summary>
+        /// <param name="appUser"></param>
+        /// <returns></returns>
         private AppUserDetailsVM MapToViewModel(User appUser)
         {
             AppUserDetailsVM mappedVM = new AppUserDetailsVM()

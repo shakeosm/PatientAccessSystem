@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pas.Service.Interface;
 using Pas.Web.ViewModels;
@@ -14,14 +15,29 @@ namespace Pas.UI.Areas.Patient.Controllers
     {
         private IPatientService _patientService { get; }
 
-        public HomeController(IPatientService PatientService)
+        private readonly IAppAuthorisationService _appAuthorisationService;
+        public readonly UserManager<IdentityUser> _userManager;
+        
+        public HomeController(IPatientService PatientService,
+                            IAppAuthorisationService AppAuthorisationService,
+                            UserManager<IdentityUser> UserManager)
         {
             _patientService = PatientService;
+            _appAuthorisationService = AppAuthorisationService;
+            _userManager = UserManager;
+            
         }
 
-        public IActionResult Index()
-        {            
-            //## Somethig like Dashboard
+        public async Task<IActionResult> Index()
+        {
+            //## Somethig like Patient Dashboard
+            var _userEmail = _userManager.GetUserName(HttpContext.User);
+
+            var currentUser = await _appAuthorisationService.GetActiveUserFromCache(_userEmail);
+            currentUser.AddressAreaLocality = "Panchlaish, Chattogram";
+            
+            ViewBag.UserDetails = currentUser;
+
             return View();
         }
 

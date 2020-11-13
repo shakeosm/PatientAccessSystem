@@ -1,138 +1,98 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Pas.Common.Enums;
 using Pas.Data.Models;
 using Pas.Service.Interface;
+using Pas.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Pas.Service
 {
     public class AppAuthorisationService : IAppAuthorisationService
     {
         private readonly IHttpContextAccessor Context;
-        private readonly IPatientService AppUserService;
+        private readonly IAppUserService _appUserService;
         //private readonly IActiveUserService ActiveUserService;
-        private readonly IUserOrgRoleService UserOrgRoleService;
+        private readonly IUserOrgRoleService _userOrgRoleService;
         //private readonly IOrganisationService _organisationService;
         private readonly ICacheService _cacheService;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public AppAuthorisationService(IHttpContextAccessor context, 
-                                        IPatientService appUserService, 
+        public UserManager<IdentityUser> _userManager { get; }
+
+        public AppAuthorisationService(IHttpContextAccessor context,
+                                        IAppUserService AppUserService,
                                         //IActiveUserService activeUserService, 
                                         //IOrganisationService organisationService, 
                                         ICacheService cacheService,
-                                        IUserOrgRoleService userOrgRoleService)
+                                        //UserManager<IdentityUser> UserManager,
+                                        IUserOrgRoleService UserOrgRoleService
+                                        //IHttpContextAccessor HttpContextAccessor
+                                        )
         {
             Context = context;
-            AppUserService = appUserService;
+            _appUserService = AppUserService;
             //ActiveUserService = activeUserService;
-            UserOrgRoleService = userOrgRoleService;
+            _userOrgRoleService = UserOrgRoleService;
             //_organisationService = organisationService;
-            _cacheService = cacheService;            
-    }
-
-      
-        public User GetActiveUser(string userName)
-        {
-            var cachedUser = _cacheService.GetCacheValue<User>(userName);
-            return cachedUser;
-
-            //if (cachedUser is null)
-            //{
-            //    //stored user has an entry in ActiveUser table
-            //    var storedUser = ActiveUserService.GetByUserId(AppUserService.GetByUserName(userName, false).Id);
-
-            //    if (storedUser is null)
-            //    {
-            //        cachedUser =  SetActiveUser(userName);
-            //    }
-            //    else
-            //    {
-            //        _cacheService.SetCacheValue(userName, storedUser);                    
-            //        cachedUser = storedUser;
-            //    }
-            //}
-
-            //return null if the cached user doesn't match a current UserOrgRole
-            //if (UserOrgRoleService.CheckCachedDetails(cachedUser))
-            //{
-            //    return cachedUser;
-            //}
-            //else
-            //{
-            //    return null;
-            //}
-        }
-
-        public User SetActiveUser(string userName)
-        {
-            return new User();
-            ////TODO: can this be null when authenticating with NHS SSO?
-            //var appUser = AppUserService.GetByUserName(userName, true);
-
-            ////create default Activer User
-            //User activeUser = new User()
-            //    {
-            //        UserId = appUser.Id,
-            //        OrganisationId = appUser.UserOrganisationRoles.OrderBy(x => x.EffectiveFrom).First().OrganisationId,
-            //        RoleId = (int)appUser.UserOrganisationRoles.OrderBy(x => x.EffectiveFrom).First().AppRoleId
-            //    };
-
-            //if (ActiveUserService.AddActiveUser(activeUser))
-            //{
-            //    _cacheService.SetCacheValue(userName, activeUser);  
-            //    return activeUser;
-            //}
-            //else
-            //{
-            //    //TODO: amend to throw the correct (or custom) exception
-            //    throw new Exception();
-            //}
-
+            _cacheService = cacheService;
+            //httpContextAccessor = HttpContextAccessor;
+            //_userManager = UserManager;
         }
 
 
-        /// <summary>This will return a AppUser Object- with child entities, ie: Organisation, Roles, OrgRoles</summary>
-        /// <returns>AppUser with Include Predicate</returns>
-        public User GetCurrentAppUserWithIncludes()
-        {
-            return GetUser(true);
+        public bool SetActiveUserInCache(AppUserDetailsVM user)
+        {         
+            if (user != null) { 
+                _cacheService.SetCacheValue(user.Email, user);
+                return true;            
+            }
+
+            return false;
+         
         }
-
-        /// <summary>This will return a AppUser Object- which doesn't have any child entity</summary>
-        /// <returns>AppUser Object</returns>
-        public User GetCurrentAppUser()
-        {
-            return GetUser(false);
-        }
-
-        private User GetUser(bool includePredicate)
-        {
-            //var userNameClaim = Context.HttpContext.User.FindFirst(AppClaims.Name).Value;
-            //var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email).Value;
-
-            //var appUser = AppUserService.GetByUserName(userNameClaim, includePredicate);
-
-            //TODO: work out why this is hit 3 times on startup
-            return new User();
-        }
-
-        public ApplicationRole GetCurrentRole()
-        {
-            //TODO - Spec what happens with multiple claims, for now we only want one, and if there isn't one, null exception will be fine.
-            return (ApplicationRole)GetCurrentAppUserWithIncludes().UserOrganisationRoles.First().RoleId;
-        }
-
-
-        public Organisation GetCurrentOrganisation()
-        {
-            //TODO - Spec what happens with multiple claims, for now we only want one, and if there isn't one, null exception will be fine.
-            return GetCurrentAppUserWithIncludes().UserOrganisationRoles.Select(o => o.Organisation).First();
-        }
-
         
+        /// <summary>This will return a AppUserDetailsVM Object- which doesn't have any child entity</summary>
+        /// <returns>AppUser Object</returns>
+        public async Task<AppUserDetailsVM> GetActiveUserFromCache(string userEmail)
+        {
+            //var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            //var userEmail = Context.HttpContext.User.FindFirst(ClaimTypes.Email).Value;
+            //if (userEmail is null) return null;     //## Unauthenticated User
+
+            var cachedUser = _cacheService.GetCacheValue<AppUserDetailsVM>(userEmail);
+
+            if (cachedUser is null) {
+                cachedUser = _appUserService.FindByEmail(userEmail);
+                
+                //## this User Details were never read from DB.. So- now read the UserOrganisationRoles as well- and put them in the Cache
+                var userRoles = await _userOrgRoleService.FindMappedRolesByUserId(cachedUser.Id);
+
+                //## Is this a PatientOnly Account? Who has no other Roles anywhere?
+                cachedUser.HasAdditionalRoles = userRoles.Count() >= 1;
+
+                if (userRoles.Count() < 1) {
+                    cachedUser.ApplicationRole = ApplicationRole.Patient;
+                }
+
+                SetActiveUserInCache(cachedUser);
+
+                //## And now set them in the Cache- so we will have everything we need
+                SetUserRolesInCache(userRoles, cachedUser.Id);
+            }
+
+            //if (cachedUser is null) return null;     //## First Time Logged in- no cache value
+
+            return cachedUser;
+        }
+
+                
+                
         /// <summary>
         /// See if a user has a given role at a given organisation
         /// </summary>
@@ -148,22 +108,48 @@ namespace Pas.Service
             return true;
         }
 
+        /// <summary>
+        /// When User is switchig Roles- update all values at once. User Details+Roles- all info
+        /// </summary>
+        /// <param name="userEmail"></param>
+        /// <param name="organisationId"></param>
+        /// <param name="organisationName"></param>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
+        public bool SetCurrentOrganisationRole(AppUserDetailsVM user) 
+        {
+             _cacheService.SetCacheValue<AppUserDetailsVM>(user.Email, user);
+            return true;
 
-        public bool SetCurrentOrganisationRole(int userId, int organisationId, int roleId) 
-        {             
-            //TODO: Write to Redis Cache and update ActiveUser
-            //var activeUser = ActiveUserService.GetByUserId(userId);
+            //## get the Cached Value
+            //var currentUser = _cacheService.GetCacheValue<AppUserDetailsVM>(user.Email);
 
-            //activeUser.RoleId = roleId;
-            //activeUser.OrganisationId = organisationId;
+            //currentUser.OrganisationId = user.OrganisationId;
+            //currentUser.CurrentRole.RoleId = user.CurrentRole.RoleId;
+            //currentUser.CurrentRole.OrganisationId = user.CurrentRole.OrganisationId;
+            //currentUser.CurrentRole.OrganisationName = user.CurrentRole.OrganisationName;
 
-
-            //    //TODO: more robust check on username
-            //    _cacheService.SetCacheValue(Context.HttpContext.User.Identity.Name, activeUser);
-                return true;
 
         }
 
+        public bool SetUserRolesInCache(IEnumerable<UserRoleVM> roles, int appUserId)
+        {
+            _cacheService.SetCacheValue<IEnumerable<UserRoleVM>>(appUserId.ToString(), roles);
+            return true;
+        }
 
+        public async Task<IEnumerable<UserRoleVM>> GetUserRolesFromCache(int appUserId)
+        {
+            IEnumerable<UserRoleVM> result = _cacheService.GetCacheValue<IList<UserRoleVM>>(appUserId.ToString());
+            if (result is null) {
+                //## If User Roles list isnt found in the cache- read from DB
+                result = await _userOrgRoleService.FindMappedRolesByUserId(appUserId);
+
+                //## Save it in the cache
+                _cacheService.SetCacheValue(appUserId.ToString(), result);
+            }
+            return result;
+            
+        }
     }
 }

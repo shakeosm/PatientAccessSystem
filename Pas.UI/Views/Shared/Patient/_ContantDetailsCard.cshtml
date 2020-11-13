@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNetCore.Identity
+@*@using Pas.Common.Models.Identity*@
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<!-- _ContantDetailsCard.cshtml -->
+<div id="ContactDetailsDiv" class="card">
+    <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
+        <!-- we wrap header title inside a span tag with utility padding -->
+        <div class="card-title text-white"></div>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">
+            Contact details
+        </h5>
+        <p class="card-text">
+            <i class="fa fa-address-book" aria-hidden="true"></i>&nbsp;
+
+            Address: 1069/A jang Shah Majer Lane, Badurtola, Chittagong-4212. <br /><br />
+            <i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;Mobile: 01598-456-333<br />
+            <i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;Email: shakeosm@gmail.com
+        </p>
+    </div>
+    <div class="card-footer">
+        <small class="text-muted">Last updated 3 months ago</small>
+        <a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
+            <i class="fal fa-edit"></i>
+        </a>
+    </div>
+
+    <div>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <p>Hello @User.Identity.Name!</p>
+        }
+        else
+        {<p>Not signed in</p>
+        }
+    </div>
+</div>

@@ -33,14 +33,14 @@
         @if (isLoggedIn)
         {
             <div class="card-header">
-                Welcome @Model.Name @*@User.GetFullNameOrEmail()*@
+                Welcome <strong>@Model.Name @*@User.GetFullNameOrEmail()*@ </strong>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <a id="PrintLinkButton" class="nav-link text-dark"
                        asp-action="Profile" asp-controller="AppUser"
                        aria-labelledby="View Profile">
-                        <i class="fal fa-print mr-1"></i>
+                        <i class="fas fa-user-md fa-2x mr-1"></i>
                         View Profile
                     </a>
                 </li>
@@ -48,7 +48,7 @@
                     <a id="PrintLinkButton" class="nav-link text-dark"
                        asp-action="Index" asp-controller="Prescription"
                        aria-labelledby="Print Prescription">
-                        <i class="fal fa-print mr-1"></i>
+                        <i class="fal fa-file-prescription fa-2x mr-1"></i>
                         Print Prescription
                     </a>
                 </li>
@@ -59,7 +59,7 @@
                            asp-area=""
                            asp-action="SwitchRole" asp-controller="AppUser"
                            aria-labelledby="Select Role">
-                            <i class="fal fa-user mr-1"></i>
+                            <i class="fas fa-people-arrows fa-2x mr-1"></i>
                             Select Role
                         </a>
                     </li>
@@ -72,7 +72,7 @@
                            asp-area="Patient"
                            asp-action="Index" asp-controller="Home"
                            aria-labelledby="Select Role">
-                            <i class="fal fa-user mr-1"></i>
+                            <i class="fal fa-chart-pie fa-2x mr-1"></i>
                             Go to Dashboard
                         </a>
                     </li>
@@ -84,7 +84,7 @@
                        asp-area="Identity"
                        asp-action="Logout" asp-controller="Account"
                        aria-labelledby="Sign out">
-                        <i class="fal fa-sign-out mr-1"></i>
+                        <i class="fal fa-sign-out fa-2x mr-1"></i>
                         Sign out
                     </a>
                 </li>
@@ -102,7 +102,7 @@
                     <a id="LoginLinkButton" class="nav-link text-dark"
                        asp-area="Identity" asp-page="/Account/Login"
                        aria-labelledby="Access your Account">
-                        <i class="fal fa-user-alt mr-1"></i>
+                        <i class="fal fa-user-circle fa-2x mr-1"></i>
                         Access your Account
                     </a>
                 </li>
@@ -110,7 +110,7 @@
                     <a id="RegisterLinkButton" class="nav-link text-dark"
                        asp-area="Identity" asp-page="/Account/Register"
                        aria-labelledby="Create new Account">
-                        <i class="fal fa-user mr-1"></i>
+                        <i class="fal fa-hospital-user fa-2x mr-1"></i>
                         Create new Account
                     </a>
                 </li>
@@ -118,7 +118,7 @@
                     <a id="PrintLinkButton" class="nav-link text-dark"
                        asp-action="Index" asp-controller="Prescription"
                        aria-labelledby="Print Prescription">
-                        <i class="fal fa-print mr-1"></i>
+                        <i class="fal fa-print fa-2x mr-1"></i>
                         Print Prescription
                     </a>
                 </li>

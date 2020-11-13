@@ -4,84 +4,21 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
+<!-- _patientProfileSummary.cshtml -->
 <div id="ProfileMainContainer" class="form-row col-12">
     @*Left Column*@
     <div id="ProfileLeftColumn" class="col-xs-6 col-sm-4  col-lg-2">
         @* Card: Patient Info Card *@
-        <div id="PatientInfoCard" class="card mb-g rounded-top ">
-            <div class="row no-gutters row-grid">
-                <div class="col-12">
-                    <div class="d-flex flex-column align-items-center justify-content-center p-4">
-                        <img src="~/images/demo/avatars/avatar-patient-image.jpg" class="rounded-circle shadow-2 img-thumbnail" style="width:150px;" alt="">
-                        <h5 class="mb-0 fw-700 text-center mt-3">
-                            Shawkat Osman<br />শওকত ওসমান 
-                            <small class="text-muted mb-0">Allergy</small>
-                        </h5>
-
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="text-center py-3">
-                        <h5 class="mb-0 fw-700">
-                            7
-                            <small class="text-muted mb-0">Medications</small>
-                        </h5>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="text-center py-3">
-                        <h5 class="mb-0 fw-700">
-                            5
-                            <small class="text-muted mb-0">Medical Tests</small>
-                        </h5>
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
+        <partial name="_ProfilePhotoCard.cshtml" />
 
         @* Card: Contact details *@
-        <div class="card">
-            <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
-                <!-- we wrap header title inside a span tag with utility padding -->
-                <div class="card-title text-white"></div>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">
-                    Contact details
-                </h5>
-                <p class="card-text">
-                    <i class="fa fa-address-book" aria-hidden="true"></i>&nbsp;
-
-                    Address: 1069/A jang Shah Majer Lane, Badurtola, Chittagong-4212. <br /><br />
-                    <i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;Mobile: 01598-456-333<br />
-                    <i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;Email: shakeosm@gmail.com
-                </p>
-            </div>
-            <div class="card-footer">
-                <small class="text-muted">Last updated 3 months ago</small>
-                <a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
-                    <i class="fal fa-edit"></i>
-                </a>
-            </div>
-
-            <div>
-                @if (SignInManager.IsSignedIn(User))
-                {
-                    <p>Hello @User.Identity.Name!</p>
-                }
-                else
-                {<p>Not signed in</p>
-                }
-            </div>
-        </div>
+        <partial name="_ContantDetailsCard.cshtml" />
     </div>
 
     @*Right Column*@
     <div id="ProfileRightColumn" class="col-md-8 col-lg-9">
 
-        <div id="TabbedContainerDiv" class="row" style="min-height:300px;">
+        <div id="TabbedContainerDiv" class="row col-12" style="min-height:300px;">
             <div class="col-auto">
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                     <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">
@@ -106,161 +43,14 @@
                 <div class="tab-content" id="v-pills-tabContent">
                     @* SummaryTabNavDiv *@
                     <div class="SummaryTabNavDiv tab-pane fade  active show" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-                        @*<h3>
-                                Summary
-                            </h3>*@
-                        <div class="card-deck">
 
-                            @* Card: Life style / Personal History *@
-                            <div id="PersonalHistoryDiv" class="card">
-                                <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
-                                    <!-- we wrap header title inside a span tag with utility padding -->
-                                    <div class="card-title text-white"></div>
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        Personal History
-                                        <a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
-                                            <i class="fal fa-edit"></i>
-                                        </a>
-                                    </h5>
-                                    <p class="card-text">
-                                        Blood group: O+ <br />
-                                        Age: 25 <br />
-                                        Smoker: 10 a day <br />
-                                        Drinker: No<br />
-                                        Excercise: Occassionaly<br />
-                                        <i class="fa fa-futbol-o" aria-hidden="true"></i> Sports: Badminton<br />
-                                    </p>
-                                </div>
-                                <div class="card-footer">
-                                    <small class="text-muted">Last updated 21 days ago</small>
-                                </div>
-                            </div>
-
-
-                            @* Card: Key information *@
-                            <div id="KeyInformationDiv" class="card">
-                                <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
-                                    <!-- we wrap header title inside a span tag with utility padding -->
-                                    <div class="card-title text-white"></div>
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        Clinical information
-                                        <a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
-                                            <i class="fal fa-edit"></i>
-                                        </a>
-                                    </h5>
-                                    <p class="card-text">
-                                        Heigh: 1.78 m / 5" 10'<br />
-                                        Weight: 158 lbs / 72 kgs <br />
-                                        BMI: 22<br />
-
-                                        <i class="fa fa-heartbeat" aria-hidden="true"></i>&nbsp;Heartbeat: 80/120 <br />
-                                        Pulse: 70<br />
-
-                                        Colesterol: n/a <br />
-                                        Diabetes: 6.5 (10/09/2020)<br />
-
-                                    </p>
-                                </div>
-                                <div class="card-footer">
-                                    <small class="text-muted">Last updated 7 days ago</small>
-                                </div>
-                            </div>
-
-                            @* Card: Allergy History *@
-                            <div id="AllergyHistoryDiv" class="card">
-                                <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
-                                    <!-- we wrap header title inside a span tag with utility padding -->
-                                    <div class="card-title text-white"></div>
-                                </div>
-                                <div class="card-body">
-                                    <strong>Allergy History</strong>
-                                    <blockquote class="blockquote mb-0">
-                                        <p>Anti-biotics, nuts, eggs, cat</p>
-                                    </blockquote>
-                                    <p>&nbsp;</p>
-                                    <strong>Ailment History</strong>
-                                    <blockquote class="blockquote mb-0">
-                                        <p>Allergy, Diabetes, Hayfever, High Pressure</p>
-                                    </blockquote>
-
-
-                                    <!--
-                                    <h5 class="card-title">
-                                        Allergy History
-                                        <a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
-                                            <i class="fal fa-edit"></i>
-                                        </a>
-                                    </h5>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 dataTable dtr-inline" role="grid" aria-describedby="dt-basic-example_info" style="width: 1543px;">
-                                                <thead class="d-none">
-                                                    <tr role="row">
-                                                        <th></th>
-                                                        <th></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr role="row">
-                                                        <td class="tabindex=" 0">Anti-biotics</td>
-                                                        <td class="text-right">01/05/2020</td>
-                                                    </tr>
-                                                    <tr role="row">
-                                                        <td class="tabindex=" 0">Food: nuts</td>
-                                                        <td class="text-right">01/05/2020</td>
-                                                    </tr>
-                                                    <tr role="row">
-                                                        <td class="tabindex=" 0">Food: Eggs</td>
-                                                        <td class="text-right">01/05/2020</td>
-                                                    </tr>
-                                                    <tr role="row">
-                                                        <td class="tabindex=" 0">Pet: Cat</td>
-                                                        <td class="text-right">01/05/2020</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    -->
-                                    @*Hidden list group*@
-                                    @*<ul class="list-group d-none">
-                                            <li class="list-group-item">
-                                                Anti-biotics
-                                            </li>
-                                            <li class="list-group-item">
-
-                                            </li>
-                                            <li class="list-group-item">
-
-                                            </li>
-                                            <li class="list-group-item">
-
-                                            </li>
-                                        </ul>*@
-                                </div>
-                                <div class="card-footer">
-                                    <small class="text-muted">Last updated 21 days ago</small>
-                                </div>
-                            </div>
-                        </div>
-
-
+                        <partial name="_PatientSummaryMedicalInfo.cshtml" />
 
                     </div>
 
                     @* PrescriptionsTabNavDiv *@
                     <div class="PrescriptionsTabNavDiv tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                        <h3>
-                            Prescriptions
-                        </h3>
-                        <div class="col-12">
-
-                        </div>
-
+                        <partial name="_PatientPrescriptionList.cshtml" />
 
                     </div>
 
@@ -271,74 +61,7 @@
                         </h3>
                         @* Lab Results *@
                         <div class="col-12 mt-3">
-                            <div class="card">
-                                <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
-                                    <!-- we wrap header title inside a span tag with utility padding -->
-                                    <div class="card-title text-white"></div>
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        Lab results
-                                        <a href="#" class="btn btn-primary btn-md btn-icon waves-effect waves-themed float-right" role="button">
-                                            <i class="fal fa-plus"></i>
-                                        </a>
-                                    </h5>
-                                    <div class="col-sm-12">
-                                        <table id="dt-LabResultTable" class="table table-hover table-striped w-100 dataTable dtr-inline" role="grid" aria-describedby="dt-basic-example_info">
-                                            <thead class="d-none">
-                                                <tr role="row">
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr role="row">
-                                                    <td class="tabindex=" 0">Chest X-Ray</td>
-                                                    <td class="text-right">01/05/2020</td>
-                                                    <td class="text-right" style="width:50px;">
-                                                        <a href="#" class="btn btn-primary btn-icon rounded-circle waves-effect waves-themed" role="button">
-                                                            <i class="fal fa-file"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <tr role="row">
-                                                    <td class="tabindex=" 0">Allergen Specific IgE</td>
-                                                    <td class="text-right">01/05/2020</td>
-                                                    <td class="text-right">
-                                                        <a href="#" class="btn btn-primary btn-icon rounded-circle waves-effect waves-themed" role="button">
-                                                            <i class="fal fa-file"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <tr role="row">
-                                                    <td class="tabindex=" 0">Nasal Endoscopy</td>
-                                                    <td class="text-right">01/05/2020</td>
-                                                    <td class="text-right">
-                                                        <a href="#" class="btn btn-primary btn-icon rounded-circle waves-effect waves-themed" role="button">
-                                                            <i class="fal fa-file"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <tr role="row">
-                                                    <td class="tabindex=" 0">CT Scan</td>
-                                                    <td class="text-right">01/05/2020</td>
-                                                    <td class="text-right">
-                                                        <a href="#" class="btn btn-primary btn-icon rounded-circle waves-effect waves-themed" role="button">
-                                                            <i class="fal fa-file"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                </div>
-                                <div class="card-footer">
-                                    <small class="text-muted">Last updated 7 days ago</small>
-                                </div>
-                            </div>
-
+                            <partial name="_PatientLabResults.cshtml" />
                         </div>
 
                     </div>
@@ -346,24 +69,7 @@
                     @* Notes *@
                     <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
                         <div class="col-12 mt-3">
-                            <div class="card m-auto border">
-                                <div class="card-header">
-                                    Notes
-                                </div>
-                                <div class="card-body">
-
-                                    <p class="card-text">
-                                        Dr Salah Uddin, 1 Mar 2020<br />
-                                        Paient has a family history of Heart disease. Both parents had high blood pressure.
-                                    </p>
-                                    <a href="#" class="btn btn-primary waves-effect waves-themed">
-                                        <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Add
-                                    </a>
-                                </div>
-                                <div class="card-footer text-muted py-2">
-                                    2 days ago
-                                </div>
-                            </div>
+                            <partial name="_PatientPrescriptionNotes.cshtml" />
                         </div>
 
                     </div>

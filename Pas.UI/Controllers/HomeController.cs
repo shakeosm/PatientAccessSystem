@@ -20,14 +20,18 @@ namespace Pas.UI.Controllers
         private readonly IAppUserService _appUserService;
         private readonly IUserOrgRoleService _userOrgRoleService;
 
+        public IAppAuthorisationService _appAuthorisationService { get; }
+
         public HomeController(ILogger<HomeController> logger,
                                 UserManager<IdentityUser> userManager,
                                 IAppUserService AppUserService,
+                                IAppAuthorisationService AppAuthorisationService,
                                 IUserOrgRoleService UserOrgRoleService)
         {
             _logger = logger;
             _userManager = userManager;
             _appUserService = AppUserService;
+            _appAuthorisationService = AppAuthorisationService;
             _userOrgRoleService = UserOrgRoleService;
         }
 
@@ -36,17 +40,27 @@ namespace Pas.UI.Controllers
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> Index()
-        {
+        {            
             var userId = _userManager.GetUserId(HttpContext.User);
-            var userEmail = _userManager.GetUserName(HttpContext.User);            
+            var userEmail = _userManager.GetUserName(HttpContext.User);
 
             //var u1 = HttpContext.User.Claims.ToList();
-            //var userClaim = HttpContext.User.FindFirst(ClaimTypes.Email).Value;
+            //var userClaim = HttpContext.User.FindFirst(ClaimTypes.Email).Value;            
 
             AppUserDetailsVM currentUser = new AppUserDetailsVM();
+            
 
             if (userEmail != null) {
-                currentUser = _appUserService.FindByEmail(userEmail);
+                //## if the user is Logged in- check- do we have a value in Cache for this User?
+                currentUser = await _appAuthorisationService.GetActiveUserFromCache(userEmail);
+
+                if (currentUser is null) { 
+                    //## First time Logging in this Session (1 hour)- fetch the record from DataBase
+                    currentUser = _appUserService.FindByEmail(userEmail);
+                    
+                    //## Update the Redis Cache- for this new login
+                    _appAuthorisationService.SetActiveUserInCache(currentUser);
+                }
             
             }
             

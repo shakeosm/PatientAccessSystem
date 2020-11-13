@@ -1,0 +1,185 @@
+﻿<!-- _PatientSummaryMedicalInfo.cshtml -->
+<div class="card-deck">
+
+    @* Card: Life style / Personal History *@
+    <div id="PersonalHistoryDiv" class="card">
+        <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
+            <!-- we wrap header title inside a span tag with utility padding -->
+            <div class="card-title text-white"></div>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title h6">
+                Personal History
+            </h5>
+            <div id="PersonalHistoryDetailsDiv" class="">
+                <div class="row">
+                    <div class="col-4 font-weight-bold">Blood group</div>
+                    <div class="col-8">: O+</div>
+                </div>
+                <div class="row">
+                    <div class="col-4 font-weight-bold">Age</div>
+                    <div class="col-8">: 25 Years</div>
+                </div>
+                <div class="row">
+                    <div class="col-4 font-weight-bold">Smoker</div>
+                    <div class="col-8">: 20 a day</div>
+                </div>
+                <div class="row">
+                    <div class="col-4 font-weight-bold">Drinker</div>
+                    <div class="col-8">: No</div>
+                </div>
+                <div class="row">
+                    <div class="col-4 font-weight-bold">Excercise</div>
+                    <div class="col-8">: Occassionaly</div>
+                </div>
+                <div class="row">
+                    <div class="col-4 font-weight-bold">Sports</div>
+                    <div class="col-8">: Badminton</div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <small class="text-muted">Last updated 21 days ago</small>
+            <a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
+                <i class="fal fa-edit"></i>
+            </a>
+        </div>
+    </div>
+
+
+    @* Card: Key information *@
+    <div id="KeyInformationDiv" class="card">
+        <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
+            <!-- we wrap header title inside a span tag with utility padding -->
+            <div class="card-title text-white"></div>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title h6">
+                Clinical information
+            </h5>
+            <div id="ClinicalInformationDetailsDiv">
+                <div class="row">
+                    <div class="col-4 font-weight-bold">Height</div>
+                    <div class="col-8">: 1.78 m / 5" 10'</div>
+                </div>
+                <div class="row">
+                    <div class="col-4 font-weight-bold">Weight</div>
+                    <div class="col-8">: 158 lbs / 72 kgs</div>
+                </div>
+                <div class="row">
+                    <div class="col-4 font-weight-bold">BMI</div>
+                    <div class="col-8">: 22</div>
+                </div>
+                <div class="row">
+                    <div class="col-4 font-weight-bold">Heartbeat</div>
+                    <div class="col-8">: 80/120</div>
+                </div>
+                <div class="row">
+                    <div class="col-4 font-weight-bold">Pulse</div>
+                    <div class="col-8">: 70</div>
+                </div>
+                <div class="row">
+                    <div class="col-4 font-weight-bold">Colesterol</div>
+                    <div class="col-8">: na</div>
+                </div>
+                <div class="row">
+                    <div class="col-4 font-weight-bold">Diabetes</div>
+                    <div class="col-8">: 6.5 (10/09/2020)</div>
+                </div>
+
+            </div>
+        </div>
+        <div class="card-footer">
+            <small class="text-muted">Last updated 7 days ago</small>
+            <a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
+                <i class="fal fa-edit"></i>
+            </a>
+        </div>
+    </div>
+
+    @* Card: Allergy History *@
+    <div id="AllergyHistoryDiv" class="card">
+        <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
+            <!-- we wrap header title inside a span tag with utility padding -->
+        </div>
+        <div class="card-body">
+            <h5 class="card-title h6">
+                Allergy History
+                <a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
+                    <i class="fal fa-edit"></i>
+                </a>
+            </h5>
+            <blockquote class="blockquote mb-0">
+                <p>Anti-biotics, nuts, eggs, cat</p>
+            </blockquote>
+            <p>&nbsp;</p>
+
+            <h5 class="card-title h6">
+                Ailment History
+            </h5>
+
+            <strong></strong>
+            <blockquote class="blockquote mb-0">
+                <p>Allergy, Diabetes, Hayfever, High Pressure</p>
+            </blockquote>
+
+
+            <!--
+            <h5 class="card-title">
+                Allergy History
+                <a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
+                    <i class="fal fa-edit"></i>
+                </a>
+            </h5>
+            <div class="row">
+                <div class="col-sm-12">
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100 dataTable dtr-inline" role="grid" aria-describedby="dt-basic-example_info" style="width: 1543px;">
+                        <thead class="d-none">
+                            <tr role="row">
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr role="row">
+                                <td class="tabindex=" 0">Anti-biotics</td>
+                                <td class="text-right">01/05/2020</td>
+                            </tr>
+                            <tr role="row">
+                                <td class="tabindex=" 0">Food: nuts</td>
+                                <td class="text-right">01/05/2020</td>
+                            </tr>
+                            <tr role="row">
+                                <td class="tabindex=" 0">Food: Eggs</td>
+                                <td class="text-right">01/05/2020</td>
+                            </tr>
+                            <tr role="row">
+                                <td class="tabindex=" 0">Pet: Cat</td>
+                                <td class="text-right">01/05/2020</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            -->
+            @*Hidden list group*@
+            @*<ul class="list-group d-none">
+                    <li class="list-group-item">
+                        Anti-biotics
+                    </li>
+                    <li class="list-group-item">
+
+                    </li>
+                    <li class="list-group-item">
+
+                    </li>
+                    <li class="list-group-item">
+
+                    </li>
+                </ul>*@
+        </div>
+        <div class="card-footer">
+            <small class="text-muted">Last updated 21 days ago</small>
+        </div>
+    </div>
+</div>

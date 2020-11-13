@@ -1,83 +1,66 @@
-﻿
+﻿@model Pas.Web.ViewModels.AppUserDetailsVM
+@using Pas.Web.ViewModels
+
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_LayoutCustom.cshtml";
+    int rowCounter = 1;
 }
 
 @*  Doctor's Profile    *@
-    <div class="w-100">
-        <div class="card">
-            <div class="card-header">
-                Profile
+<div class="w-100">
+    <div class="card">
+        <div class="card-header">
+            Profile
+        </div>
+        <div class="card-body">
+            <div class="form-row">
+
+                <div class="col-8">
+                    <h5 class="card-title">
+                        <i class="fa fa-user-md mr-2"></i>
+                            @Model.Name
+                    </h5>
+                    <p class="card-text">
+                        <i class="fa fa-hospital-alt mr-2"></i>
+                        Chamber: @Model.CurrentRole.OrganisationName
+                    </p>
+                </div>
+                <div class="col-4">
+                    <img class="float-right"
+                         src="~/images/demo/avatars/avatar-dr-image.png"
+                         alt="Doctor's profile photo" style="width:100px; height:100px;" />
+                </div>
             </div>
-            <div class="card-body">
-                <div class="form-row">
 
-                    <div class="col-8">
-                        <h5 class="card-title">
-                            <i class="fa fa-user-md"></i>
-                            Dr Rawnak Jahan MBBS, MRCOG
-                        </h5>
-                        <p class="card-text">Current chamber: Belle Vue Hospital. Joined on 01/10/2020</p>
-                    </div>
-                    <div class="col-4">
-                        <img class="float-right"
-                             src="~/images/demo/avatars/avatar-dr-image.png"
-                             alt="Doctor's profile photo" style="width:100px; height:100px;" />
-                    </div>
-                </div>
-
-                @*Chambers and Roles *@
-                <div class="col-md-6 col-sm-12">
-                    <div class="card border">
-                        <div class="card-header py-2">
-                            <div class="card-title">
-                                Chambers and roles
-                            </div>
+            @*Chambers and Roles *@
+            <div class="col-md-6 col-sm-12">
+                <div class="card border">
+                    <div class="card-header py-2">
+                        <div class="card-title">
+                            Chambers and roles
                         </div>
-                        <div class="card-body">
-                            <table class="table m-0">
-                                <thead>
+                    </div>
+                    <div class="card-body">
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Hospital</th>
+                                    <th>Role</th>
+                                    <th>Date added</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var item in Model.RolesList)
+                                {
                                     <tr>
-                                        <th>#</th>
-                                        <th>Hospital</th>
-                                        <th>Role</th>
-                                        <th>Date added</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>BelleViu Hospital</td>
-                                        <td>Doctor</td>
-                                        <td>01 Oct 2020</td>
-                                        <td>
-                                            <button type="button" id="RemoveRoleButton"
-                                                    class="btn btn-danger btn-sm float-right"
-                                                    value="">
-                                                <i class="fal fa-trash-alt"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>BelleViu Hospital</td>
-                                        <td>Director</td>
-                                        <td>01 Oct 2020</td>
-                                        <td>
-                                            <button type="button" id="RemoveRoleButton"
-                                                    class="btn btn-danger btn-sm float-right"
-                                                    value="">
-                                                <i class="fal fa-trash-alt"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Royal Hospital</td>
-                                        <td>Doctor</td>
-                                        <td>01 Sep 2020</td>
+                                        <th scope="row">@rowCounter</th>
+                                        <td>@item.OrganisationName</td>
+                                        <td>@item.RoleName</td>
+                                        <td>@item.DateAdded.ToShortDateString()</td>
                                         <td>
                                             <button type="button" id="RemoveRoleButton"
                                                     class="btn btn-danger btn-sm float-right"
@@ -87,213 +70,216 @@
                                         </td>
                                     </tr>
 
-                                </tbody>
-                            </table>
-                            <div class="form-row col-12">   
-                                <button type="button" id="AddNewRoleButton"
-                                        class="btn btn-primary float-left"
-                                        value="">
-                                    <i class="fal fa-check"></i>Add New
-                                </button>
+                                    rowCounter = rowCounter + 1;
+                                }
 
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            </tbody>
+                        </table>
+                        <div class="form-row col-12">
+                            <button type="button" id="AddNewRoleButton"
+                                    class="btn btn-primary"
+                                    value="">
+                                <i class="fal fa-check mr-2"></i>Add New
+                            </button>
 
-                <div class="col-12 mt-3">
-                    <div class="card border">
-                        <div class="card-header py-2">
-                            <div class="card-title">
-                                Prescription Header Preview
-                            </div>
-                        </div>
 
-                        <div class="card-body form-row">
-
-                            <div id="PrescriptionEnglishHeader" class="col-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <p class="card-text">
-                                            Dr Rawnak Jahan <br />
-                                            MBBS, MRCOG (England) <br />
-                                            Belle Vue Hospital<br />
-                                            Gynea, Medicine, Surgery<br />
-                                            Govt Reg: 0123456<br />
-                                        </p>
-                                        <a href="#" class="btn btn-primary btn-pills waves-effect waves-themed" role="button">
-                                            <span class="fal fa-edit mr-1"></span>&nbsp;Edit
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="PrescriptionBanglaHeader" class="col-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <p class="card-text">
-                                            ডাঃ রউনক জাহান এমবিবিএস,  <br />
-                                            এম আর সি ও জি (ইংল্যান্ড) <br />
-                                            গাইনি, মেডিসিন, সার্জারি বিশেষজ্ঞ <br />
-                                            বেল ভিউ হাসপাতাল  <br />
-                                            গভঃ রেজি: ০১২৩৪৫৬
-                                        </p>
-                                        <a href="#" class="btn btn-primary btn-pills waves-effect waves-themed" role="button">
-                                            <span class="fal fa-edit mr-1"></span>&nbsp;Edit
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-12 form-row">
-                @*Proffessional achievement*@
-                <div class="col-md-6 col-sm-12">
-                    <div class="card border">
-                        <div class="card-header py-2">
-                            <div class="card-title">
-                                Professional achievement
-                                @*<a href="#" class="btn btn-default btn-icon rounded-circle waves-effect waves-themed float-right"
-                                   role="button">
-                                    <i class="fal fa-check"></i> Add
-                                </a>*@
+            <div class="col-12 mt-3">
+                <div class="card border">
+                    <div class="card-header py-2">
+                        <div class="card-title">
+                            Prescription Header Preview
+                        </div>
+                    </div>
+
+                    <div class="card-body form-row">
+
+                        <div id="PrescriptionEnglishHeader" class="col-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        Dr Rawnak Jahan <br />
+                                        MBBS, MRCOG (England) <br />
+                                        Belle Vue Hospital<br />
+                                        Gynea, Medicine, Surgery<br />
+                                        Govt Reg: 0123456<br />
+                                    </p>
+                                    <a href="#" class="btn btn-primary btn-pills waves-effect waves-themed" role="button">
+                                        <span class="fal fa-edit mr-1"></span>&nbsp;Edit
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-body">
-
-                            <table id="ProfessionalAchievementTable" class="table m-0">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Title</th>
-                                        <th>Awarding Body</th>
-                                        <th>Country</th>
-                                        <th>Year</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>MBBS</td>
-                                        <td>Dhaka</td>
-                                        <td>Bangladesh</td>
-                                        <td>2009</td>
-                                        <td>
-                                            <button type="button" id="RemoveRoleButton"
-                                                    class="btn btn-danger btn-sm float-right"
-                                                    value="">
-                                                <i class="fal fa-trash-alt"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>MRCOG</td>
-                                        <td>MRCOG</td>
-                                        <td>England</td>
-                                        <td>2020</td>
-                                        <td>
-                                            <button type="button" id="RemoveRoleButton"
-                                                    class="btn btn-danger btn-sm float-right"
-                                                    value="">
-                                                <i class="fal fa-trash-alt"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>MRCOG</td>
-                                        <td>MRCOG</td>
-                                        <td>England</td>
-                                        <td>2018</td>
-                                        <td>
-                                            <button type="button" id="RemoveRoleButton"
-                                                    class="btn btn-danger btn-sm float-right"
-                                                    value="">
-                                                <i class="fal fa-trash-alt"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    
-                                </tbody>
-                            </table>
-
-
+                        <div id="PrescriptionBanglaHeader" class="col-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        ডাঃ রউনক জাহান এমবিবিএস,  <br />
+                                        এম আর সি ও জি (ইংল্যান্ড) <br />
+                                        গাইনি, মেডিসিন, সার্জারি বিশেষজ্ঞ <br />
+                                        বেল ভিউ হাসপাতাল  <br />
+                                        গভঃ রেজি: ০১২৩৪৫৬
+                                    </p>
+                                    <a href="#" class="btn btn-primary btn-pills waves-effect waves-themed" role="button">
+                                        <span class="fal fa-edit mr-1"></span>&nbsp;Edit
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                @*Membership &Aacute; Affiliation*@
-                <div class="col-md-6 col-sm-12">
-                    <div class="card border">
-                        <div class="card-header py-2">
-                            <div class="card-title">
-                                Membership &amp; Affiliation
-                                
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <table id="MembershipAffiliationTable" class="table m-0">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Title</th>
-                                        <th>Organisation</th>
-                                        <th>Year</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>MBBS</td>
-                                        <td>Dhaka</td>
-                                        <td>2009</td>
-                                        <td>
-                                            <button type="button" id="RemoveRoleButton"
-                                                    class="btn btn-danger btn-sm float-right"
-                                                    value="">
-                                                <i class="fal fa-trash-alt"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>MRCOG</td>
-                                        <td>England</td>
-                                        <td>2020</td>
-                                        <td>
-                                            <button type="button" id="RemoveRoleButton"
-                                                    class="btn btn-danger btn-sm float-right"
-                                                    value="">
-                                                <i class="fal fa-trash-alt"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>MRCOG</td>
-                                        <td>England</td>
-                                        <td>2018</td>
-                                        <td>
-                                            <button type="button" id="RemoveRoleButton"
-                                                    class="btn btn-danger btn-sm float-right"
-                                                    value="">
-                                                <i class="fal fa-trash-alt"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
 
+        <div class="col-12 form-row">
+            @*Proffessional achievement*@
+            <div class="col-md-6 col-sm-12">
+                <div class="card border">
+                    <div class="card-header py-2">
+                        <div class="card-title">
+                            Professional achievement
+                            @*<a href="#" class="btn btn-default btn-icon rounded-circle waves-effect waves-themed float-right"
+                                   role="button">
+                                    <i class="fal fa-check"></i> Add
+                                </a>*@
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+                        <table id="ProfessionalAchievementTable" class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Awarding Body</th>
+                                    <th>Country</th>
+                                    <th>Year</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>MBBS</td>
+                                    <td>Dhaka</td>
+                                    <td>Bangladesh</td>
+                                    <td>2009</td>
+                                    <td>
+                                        <button type="button" id="RemoveRoleButton"
+                                                class="btn btn-danger btn-sm float-right"
+                                                value="">
+                                            <i class="fal fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>MRCOG</td>
+                                    <td>MRCOG</td>
+                                    <td>England</td>
+                                    <td>2020</td>
+                                    <td>
+                                        <button type="button" id="RemoveRoleButton"
+                                                class="btn btn-danger btn-sm float-right"
+                                                value="">
+                                            <i class="fal fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td>MRCOG</td>
+                                    <td>MRCOG</td>
+                                    <td>England</td>
+                                    <td>2018</td>
+                                    <td>
+                                        <button type="button" id="RemoveRoleButton"
+                                                class="btn btn-danger btn-sm float-right"
+                                                value="">
+                                            <i class="fal fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+            @*Membership &Aacute; Affiliation*@
+            <div class="col-md-6 col-sm-12">
+                <div class="card border">
+                    <div class="card-header py-2">
+                        <div class="card-title">
+                            Membership &amp; Affiliation
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table id="MembershipAffiliationTable" class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Organisation</th>
+                                    <th>Year</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>MBBS</td>
+                                    <td>Dhaka</td>
+                                    <td>2009</td>
+                                    <td>
+                                        <button type="button" id="RemoveRoleButton"
+                                                class="btn btn-danger btn-sm float-right"
+                                                value="">
+                                            <i class="fal fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>MRCOG</td>
+                                    <td>England</td>
+                                    <td>2020</td>
+                                    <td>
+                                        <button type="button" id="RemoveRoleButton"
+                                                class="btn btn-danger btn-sm float-right"
+                                                value="">
+                                            <i class="fal fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td>MRCOG</td>
+                                    <td>England</td>
+                                    <td>2018</td>
+                                    <td>
+                                        <button type="button" id="RemoveRoleButton"
+                                                class="btn btn-danger btn-sm float-right"
+                                                value="">
+                                            <i class="fal fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
+
+</div>

@@ -35,6 +35,7 @@
   <ItemGroup>
     <Folder Include="Areas\Hospital\Views\" />
     <Folder Include="Models\Identity\" />
+    <Folder Include="wwwroot\images\profile-photos\" />
   </ItemGroup>
 
 

@@ -47,6 +47,7 @@ namespace Pas.Service
             return new AppUserDetailsVM()
             {
                 Address = "",
+                AddressAreaLocality = "Panchlaish, Chattogram",
                 Age = user.Age,
                 BanglaName = user.BanglaName,
                 DateOfBirth  = user.DateOfBirth.Value.ToDD_MM_YYYY(),
@@ -144,14 +145,14 @@ namespace Pas.Service
             }
         }
 
-        public async Task<IEnumerable<UserRole>> GetRolesByUser(int id)
+        public async Task<IEnumerable<UserRoleVM>> GetRolesByUser(int id)
         {
             var userRoles = await _pasContext.UserOrganisationRole
                                 .Include(uor => uor.Organisation)
                                 .Include(uor => uor.Role)
                                 .Where(uor => uor.UserId == id).ToListAsync();
 
-            var userSwitchRoleViewVM = userRoles.Select(ur=> new UserRole { 
+            var userSwitchRoleViewVM = userRoles.Select(ur=> new UserRoleVM { 
                 OrganisationId = ur.OrganisationId,
                 OrganisationName = ur.Organisation.Name,
                 RoleId = ur.RoleId,

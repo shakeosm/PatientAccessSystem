@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Pas.Service;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Pas.Common.Enums;
+using Pas.Common.Extensions;
 using Pas.Service.Interface;
 using Pas.Web.ViewModels;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Pas.UI.Areas.Doctor.Controllers
@@ -10,19 +11,37 @@ namespace Pas.UI.Areas.Doctor.Controllers
     [Area("Doctor")]
     public class HomeController : Controller
     {
+        private readonly IAppUserService _appUserService;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IAppAuthorisationService _appAuthorisationService;
+
         private IPrescriptionService _prescriptionService { get; }
         private IPatientService _patientService { get; }
 
         public HomeController(IPrescriptionService PrescriptionService,
-            IPatientService PatientService)
+                                IPatientService PatientService,
+                                IAppUserService AppUserService,
+                                UserManager<IdentityUser> UserManager,
+                                IAppAuthorisationService AppAuthorisationService)
         {
             _prescriptionService = PrescriptionService;
-            this._patientService = PatientService;
+            _patientService = PatientService;
+            _appUserService = AppUserService;
+            _userManager = UserManager;
+            _appAuthorisationService = AppAuthorisationService;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+
+            AppUserDetailsVM currentUser = await GetCurrentUser();
+
+            if (currentUser.Not_A_Doctor())
+            {
+                return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
+            }
+
             //## This is the Dashboard Page of a Doctor. Can view- Chart, Profile, Search Patients and Create a new Prescription
             PrescriptionCreateInitialVM vm = new PrescriptionCreateInitialVM()
             { 
@@ -34,21 +53,47 @@ namespace Pas.UI.Areas.Doctor.Controllers
                 DoctorDetails = null
             };
 
+            //## Re-factor UserDetails- 'Doctor' type values     
+            SetDoctorsProfileValues(currentUser);            
+
             return View(vm);
         }
 
+        private void SetDoctorsProfileValues(AppUserDetailsVM currentUser)
+        {
+            currentUser.Name = "Dr. " + currentUser.Name;
+            currentUser.AddressAreaLocality = currentUser.CurrentRole.OrganisationName;     //## Current Selected Chamber
+            currentUser.ImageUrl = "user-3.png";
+            ViewBag.UserDetails = currentUser;
+        }
+
+        private async Task<AppUserDetailsVM> GetCurrentUser()
+        {
+            var userEmail = _userManager.GetUserName(HttpContext.User);
+
+            var currentUser = await _appAuthorisationService.GetActiveUserFromCache(userEmail);
+            
+            return currentUser;
+        }
 
         [HttpGet]
         public async Task<IActionResult> SearchPatient()
         {
+            AppUserDetailsVM currentUser = await GetCurrentUser();
+
+            if (currentUser.Not_A_Doctor())
+            {
+                return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
+            }
+
             //## Get Current Doctor's - Regular Patients
-            var regularPatients = await _patientService.GetRegularPatientList(1);
+            var regularPatients = await _patientService.GetRegularPatientList(currentUser.Id);
             
             //## Doctor will Search Patients and Create a new Prescription
             PrescriptionCreateInitialVM vm = new PrescriptionCreateInitialVM()
             {
-                DoctorId = 3,
-                HospitalId = 4,
+                DoctorId = currentUser.Id,
+                HospitalId = currentUser.CurrentRole.OrganisationId,
                 PatientId = 1,
 
                 PatientsList = regularPatients,
@@ -56,6 +101,9 @@ namespace Pas.UI.Areas.Doctor.Controllers
                 HospitalDetails = null,
                 DoctorDetails = null
             };
+            
+            //## Re-factor UserDetails- 'Doctor' type values     
+            SetDoctorsProfileValues(currentUser);
 
             return View(vm);
         }
@@ -86,8 +134,15 @@ namespace Pas.UI.Areas.Doctor.Controllers
         }
 
         [HttpGet]
-        public IActionResult ViewPatient(int id)
+        public async Task<IActionResult> ViewPatient(int id)
         {
+            AppUserDetailsVM currentUser = await GetCurrentUser();
+
+            if (currentUser.Not_A_Doctor())
+            {
+                return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
+            }
+
             //## Doctor will View a Patient Profile- study and then New Prescription
             PrescriptionCreateInitialVM vm = new PrescriptionCreateInitialVM()
             {
@@ -99,12 +154,21 @@ namespace Pas.UI.Areas.Doctor.Controllers
                 DoctorDetails = null
             };
 
+            //## Re-factor UserDetails- 'Doctor' type values     
+            SetDoctorsProfileValues(currentUser);
+
             return View();
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> StartNewPrescription(int Id)
         {
+            var currentUser = await GetCurrentUser();
+            if (currentUser.Not_A_Doctor())
+            {
+                return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
+            }
+
             PrescriptionCreateInitialVM vm = new PrescriptionCreateInitialVM() { 
                 HospitalId = 4 ,
                 DoctorId = 3,

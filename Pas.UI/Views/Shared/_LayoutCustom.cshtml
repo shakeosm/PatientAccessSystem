@@ -1,4 +1,24 @@
-﻿<!DOCTYPE html>
+﻿@using Pas.Web.ViewModels
+@{ 
+
+    var userDetails = (AppUserDetailsVM)ViewBag.UserDetails;
+
+    var profileImageUrl = "/images/profile-photos/doctor.jpg";    //## Default to No-image
+    var areaLocality = "";  //## ie: 'Panchlaish, Chattogram'
+
+    if (userDetails is null)
+    {
+        userDetails = new AppUserDetailsVM()
+        {
+            Name = "Anonymous User",
+        };
+    }
+    else {
+        //profileImageUrl = $"~/images/profile-photos/{userDetails.ImageUrl}";
+        areaLocality = userDetails.AddressAreaLocality;
+    }
+}
+<!DOCTYPE html>
 <!--
 Template Name:  SmartAdmin Responsive WebApp - Template build with Twitter Bootstrap 4
 Version: 4.5.1
@@ -140,14 +160,15 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                         </div>
                     </div>
                     <div class="info-card">
-                        <img src="~/images/demo/avatars/avatar-dr-image.png" class="profile-image rounded-circle" alt="Dr. Rawnak Jahan">
+                        @*<img src="~/images/demo/avatars/avatar-dr-image.png" class="profile-image rounded-circle" alt="Dr. Rawnak Jahan">*@
+                        <img src="@profileImageUrl" class="profile-image rounded-circle" alt="@userDetails.Name">
                         <div class="info-card-text">
                             <a href="#" class="d-flex align-items-center text-white">
                                 <span class="text-truncate text-truncate-sm d-inline-block">
-                                    Dr. Rawnak Jahan
+                                    @userDetails.Name
                                 </span>
                             </a>
-                            <span class="d-inline-block text-truncate text-truncate-sm">Toronto, Canada</span>
+                            <span class="d-inline-block text-truncate text-truncate-sm">@areaLocality</span>
                         </div>
                         <img src="~/images/card-backgrounds/cover-2-lg.png" class="cover" alt="cover">
                         <a href="#" onclick="return false;" class="pull-trigger-btn" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar" data-focus="nav_filter_input">
@@ -194,6 +215,21 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                             </a>
                         </li>
 
+                    </ul>
+                    
+                    <hr />
+
+                    <ul id="js-nav-menu" class="nav-menu">
+                        <li>
+                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" 
+                                  asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button type="submit" class="nav-link btn btn-link text-dark">
+                                    <i class="fal fa-sign-out-alt fa-lg"></i>
+                                    Logout
+                                </button>
+                            </form>
+
+                        </li>
                     </ul>
                 </nav>
                 <!-- END PRIMARY NAVIGATION -->
