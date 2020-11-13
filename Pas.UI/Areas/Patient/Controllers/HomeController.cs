@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pas.Service.Interface;
@@ -11,6 +12,7 @@ using Pas.Web.ViewModels;
 namespace Pas.UI.Areas.Patient.Controllers
 {
     [Area("Patient")]
+    [Authorize]
     public class HomeController : Controller
     {
         private IPatientService _patientService { get; }

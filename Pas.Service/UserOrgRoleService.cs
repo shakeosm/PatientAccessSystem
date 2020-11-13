@@ -20,13 +20,14 @@ namespace Pas.Service
             _dataContext = DataContext;
         }
 
-        public async Task<UserOrganisationRole> Find(int Id)
+        public async Task<UserOrganisationRole> Find(int userId, int userOrganisationRoleId)
         {
             var result = await _dataContext.UserOrganisationRole
                                                 .AsNoTracking()
                                                 .Include(u => u.Organisation)
                                                 .Include(u=> u.Role)
-                                                .FirstAsync(u => u.Id == Id);
+                                                .FirstAsync(u => u.Id == userOrganisationRoleId 
+                                                                && u.UserId == userId);     //## Data RingFencing- Stopping hackers assigning a diff Hospital using UI hack
 
 
             return result;

@@ -11,38 +11,39 @@ using Pas.Service.Interface;
 using Pas.UI.Infrastructure.ApplicationUserClaims;
 using Pas.Web.ViewModels;
 using Pas.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Pas.UI.Controllers
 {
-    public class AppUserController : Controller
+    [Authorize]
+    public class AppUserController : BaseController
     {
-        private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
+        //private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
 
         ///private readonly ApplicationUserClaimsPrincipalFactory _applicationUserClaimsPrincipalFactory;
         private readonly IPatientService _patientService;
-        private readonly IUserOrgRoleService _userOrgRoleService;
-        private readonly ICacheService _cacheService;
-        private readonly IAppAuthorisationService _appAuthorisationService;
-        public readonly UserManager<IdentityUser> _userManager;
+        //private readonly ICacheService _cacheService;
+        //private readonly IUserOrgRoleService _userOrgRoleService;
+        //private readonly IAppAuthorisationService _appAuthorisationService;
+        //public readonly UserManager<IdentityUser> _userManager;
         //private readonly ApplicationUser _userManager;
 
         //public AppUserController(IUserClaimsPrincipalFactory<ApplicationUser> UserClaimsPrincipalFactory
 
-        public AppUserController(IPatientService PatientService
-                                , IUserOrgRoleService UserOrgRoleService
-                                , ICacheService cacheService
-                                , IAppAuthorisationService AppAuthorisationService
-                                , UserManager<IdentityUser> UserManager
-            //,UserManager<ApplicationUser> userManager
-            )
+        public AppUserController(IPatientService PatientService,
+                                UserManager<IdentityUser> UserManager,
+                                IAppUserService AppUserService,
+                                IAppAuthorisationService AppAuthorisationService,
+                                IUserOrgRoleService UserOrgRoleService
+            ) : base(UserManager, AppUserService, AppAuthorisationService, UserOrgRoleService)
         {
             //_userClaimsPrincipalFactory = UserClaimsPrincipalFactory;
             //_applicationUserClaimsPrincipalFactory = UserClaimsPrincipalFactory;
             _patientService = PatientService;
-            _userOrgRoleService = UserOrgRoleService;
-            _cacheService = cacheService;
-            _appAuthorisationService = AppAuthorisationService;
-            _userManager = UserManager;
+            //_userOrgRoleService = UserOrgRoleService;
+            //_cacheService = cacheService;
+            //_appAuthorisationService = AppAuthorisationService;
+            //_userManager = UserManager;
         }
 
         
@@ -53,18 +54,18 @@ namespace Pas.UI.Controllers
             //## The reason for coming here is-> You have multiple ROles, ie: Doctor+Director. 
             //##    Or You wanted to Switch between roles.
 
-            var userEmail = _userManager.GetUserName(HttpContext.User);
+            //var userEmail = GetLoggedInEmail();
 
-            //var userEmail = "shakeosm@gmail.com"; // HttpContext.User.FindFirst(ClaimTypes.Email).Value;
-            if (userEmail is null) {
-                //## User Not Found
-                return RedirectToAction("Login", "Account", new { Area = "Identity" });
-            }
+            ////var userEmail = "shakeosm@gmail.com"; // HttpContext.User.FindFirst(ClaimTypes.Email).Value;
+            //if (userEmail is null) {
+            //    //## User Not Found
+            //    return RedirectToAction("Login", "Account", new { Area = "Identity" });
+            //}
 
-            var currentAppUser = await GetCurrentUser(userEmail);
+            var currentAppUser = await GetCurrentUser();
 
-            //## is it a Patient- who is trying to access this SwitchROle page?
-            if (currentAppUser.HasAdditionalRoles == false) {
+            //## is it a Patient- who is trying to access this SwitchRole page?
+            if (currentAppUser.HasMultipleRoles == false) {
                 return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
             }
 
@@ -94,7 +95,7 @@ namespace Pas.UI.Controllers
                 //IEnumerable<UserRoleVM> userRoleList = MapToUserRoleVM(userRoles);
 
                 UserSwitchRoleViewVM vm = new UserSwitchRoleViewVM() {
-                    UserEmail = userEmail,
+                    UserEmail = currentAppUser.Email,
                     UserId = currentAppUser.Id,
                     UserRoleList = userRoles
                 };
@@ -123,11 +124,10 @@ namespace Pas.UI.Controllers
         public async Task<IActionResult> SwitchRoleToPatient(UserSwitchRoleUpdate vm)
         {
             //## Get the existing UserDetails from Redis Cache- 
-            AppUserDetailsVM cachedUser = await GetCurrentUser(vm.UserEmail);
+            AppUserDetailsVM cachedUser = await GetCurrentUser();
 
             //## This is a Patient- update only ApplicationRole
             cachedUser.ApplicationRole = ApplicationRole.Patient;
-            cachedUser.HasAdditionalRoles = false;  
             _appAuthorisationService.SetActiveUserInCache(cachedUser);
 
             return RedirectToAction("Index", "Home", new { Area = "Patient" });
@@ -138,19 +138,16 @@ namespace Pas.UI.Controllers
         public async Task<IActionResult> SwitchRole(UserSwitchRoleUpdate vm)
         {
             //## Get the existing UserDetails from Redis Cache- 
-            AppUserDetailsVM cachedUser = await GetCurrentUser(vm.UserEmail);
+            AppUserDetailsVM cachedUser = await GetCurrentUser();
 
             //## Check this is not a hacker trying to allocate Roles that doesn't exist
-            var selectedOrgRole = await _userOrgRoleService.Find(vm.UserOrganisationRoleId);
+            var selectedOrgRole = await _userOrgRoleService.Find(cachedUser.Id, vm.UserOrganisationRoleId);
 
-            //TODO: Also check- does current user has a Role in that Organisation? Is it a Genuine User selection or BOT Attack?
-            bool validRoleSelected = await _userOrgRoleService.UserHasRoleInOrganisation(
-                                               selectedOrgRole.UserId, selectedOrgRole.OrganisationId, selectedOrgRole.RoleId);
-
-            if (selectedOrgRole is null || validRoleSelected == false) {
-                return RedirectToAction("Login", "Account", new { Area = "Identity" });
+            if (selectedOrgRole is null) {
+                //## Someone tempered the data- hence no Role found for this User in the UserOrgTable
+                return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
             }
-            
+                        
             //## So- now we know what the User has selected to be                
             cachedUser.ApplicationRole = (ApplicationRole)selectedOrgRole.RoleId;
             //cachedUser.HasAdditionalRoles = true;
@@ -174,9 +171,5 @@ namespace Pas.UI.Controllers
 
         }
 
-        private async Task<AppUserDetailsVM> GetCurrentUser(string userEmail)
-        {
-            return await _appAuthorisationService.GetActiveUserFromCache(userEmail);
-        }
     }
 }

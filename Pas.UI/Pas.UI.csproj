@@ -33,6 +33,8 @@
 
 
   <ItemGroup>
+    <Folder Include="Areas\Director\Data\" />
+    <Folder Include="Areas\Director\Models\" />
     <Folder Include="Areas\Hospital\Views\" />
     <Folder Include="Models\Identity\" />
     <Folder Include="wwwroot\images\profile-photos\" />

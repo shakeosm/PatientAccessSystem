@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pas.Common.Enums;
@@ -11,6 +12,7 @@ using Pas.Web.ViewModels;
 namespace Pas.UI.Areas.Doctor.Controllers
 {
     [Area("Doctor")]
+    [Authorize]
     public class ProfileController : Controller
     {
 

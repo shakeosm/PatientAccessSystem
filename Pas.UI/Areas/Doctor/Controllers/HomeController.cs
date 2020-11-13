@@ -1,34 +1,39 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pas.Common.Enums;
 using Pas.Common.Extensions;
 using Pas.Service.Interface;
+using Pas.UI.Controllers;
 using Pas.Web.ViewModels;
 using System.Threading.Tasks;
 
 namespace Pas.UI.Areas.Doctor.Controllers
 {
     [Area("Doctor")]
-    public class HomeController : Controller
+    [Authorize]
+    public class HomeController : BaseController
     {
-        private readonly IAppUserService _appUserService;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IAppAuthorisationService _appAuthorisationService;
+        //private readonly IAppUserService _appUserService;
+        //private readonly UserManager<IdentityUser> _userManager;
+        //private readonly IAppAuthorisationService _appAuthorisationService;
 
         private IPrescriptionService _prescriptionService { get; }
         private IPatientService _patientService { get; }
 
         public HomeController(IPrescriptionService PrescriptionService,
                                 IPatientService PatientService,
-                                IAppUserService AppUserService,
                                 UserManager<IdentityUser> UserManager,
-                                IAppAuthorisationService AppAuthorisationService)
+                                IAppUserService AppUserService,
+                                IAppAuthorisationService AppAuthorisationService,
+                                IUserOrgRoleService UserOrgRoleService
+            ) : base(UserManager, AppUserService, AppAuthorisationService, UserOrgRoleService)
         {
             _prescriptionService = PrescriptionService;
             _patientService = PatientService;
-            _appUserService = AppUserService;
-            _userManager = UserManager;
-            _appAuthorisationService = AppAuthorisationService;
+            //_appUserService = AppUserService;
+            //_userManager = UserManager;
+            //_appAuthorisationService = AppAuthorisationService;
         }
 
         [HttpGet]
@@ -67,14 +72,14 @@ namespace Pas.UI.Areas.Doctor.Controllers
             ViewBag.UserDetails = currentUser;
         }
 
-        private async Task<AppUserDetailsVM> GetCurrentUser()
-        {
-            var userEmail = _userManager.GetUserName(HttpContext.User);
+        //private async Task<AppUserDetailsVM> GetCurrentUser()
+        //{
+        //    var userEmail = _userManager.GetUserName(HttpContext.User);
 
-            var currentUser = await _appAuthorisationService.GetActiveUserFromCache(userEmail);
+        //    var currentUser = await _appAuthorisationService.GetActiveUserFromCache(userEmail);
             
-            return currentUser;
-        }
+        //    return currentUser;
+        //}
 
         [HttpGet]
         public async Task<IActionResult> SearchPatient()

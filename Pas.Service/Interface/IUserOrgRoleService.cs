@@ -7,7 +7,7 @@ namespace Pas.Service.Interface
 {
     public interface IUserOrgRoleService
     {
-        Task<UserOrganisationRole> Find(int Id);
+        Task<UserOrganisationRole> Find(int userId, int userOrganisationRoleId);
 
         Task<IEnumerable<UserOrganisationRole>> FindRolesByUserId(int appUserId);
         Task<IEnumerable<UserRoleVM>> FindMappedRolesByUserId(int appUserId);

@@ -74,7 +74,7 @@ namespace Pas.Service
                 var userRoles = await _userOrgRoleService.FindMappedRolesByUserId(cachedUser.Id);
 
                 //## Is this a PatientOnly Account? Who has no other Roles anywhere?
-                cachedUser.HasAdditionalRoles = userRoles.Count() >= 1;
+                //cachedUser.HasAdditionalRoles = userRoles.Count() >= 1;
 
                 if (userRoles.Count() < 1) {
                     cachedUser.ApplicationRole = ApplicationRole.Patient;

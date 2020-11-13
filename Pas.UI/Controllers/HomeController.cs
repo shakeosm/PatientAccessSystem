@@ -13,26 +13,27 @@ using Pas.Web.ViewModels;
 
 namespace Pas.UI.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IAppUserService _appUserService;
-        private readonly IUserOrgRoleService _userOrgRoleService;
+        //private readonly UserManager<IdentityUser> _userManager;
+        //private readonly IAppUserService _appUserService;
+        //private readonly IUserOrgRoleService _userOrgRoleService;
 
-        public IAppAuthorisationService _appAuthorisationService { get; }
+        //public IAppAuthorisationService _appAuthorisationService { get; }
 
         public HomeController(ILogger<HomeController> logger,
-                                UserManager<IdentityUser> userManager,
+                                UserManager<IdentityUser> UserManager,
                                 IAppUserService AppUserService,
                                 IAppAuthorisationService AppAuthorisationService,
-                                IUserOrgRoleService UserOrgRoleService)
+                                IUserOrgRoleService UserOrgRoleService
+            ) : base (UserManager, AppUserService, AppAuthorisationService, UserOrgRoleService)
         {
             _logger = logger;
-            _userManager = userManager;
-            _appUserService = AppUserService;
-            _appAuthorisationService = AppAuthorisationService;
-            _userOrgRoleService = UserOrgRoleService;
+            //_userManager = userManager;
+            //_appUserService = AppUserService;
+            //_appAuthorisationService = AppAuthorisationService;
+            //_userOrgRoleService = UserOrgRoleService;
         }
 
         /// <summary>
@@ -41,14 +42,14 @@ namespace Pas.UI.Controllers
         /// <returns></returns>
         public async Task<IActionResult> Index()
         {            
-            var userId = _userManager.GetUserId(HttpContext.User);
-            var userEmail = _userManager.GetUserName(HttpContext.User);
+            //var userId = _userManager.GetUserId(HttpContext.User);
+            //var userEmail = _userManager.GetUserName(HttpContext.User);
 
             //var u1 = HttpContext.User.Claims.ToList();
             //var userClaim = HttpContext.User.FindFirst(ClaimTypes.Email).Value;            
 
             AppUserDetailsVM currentUser = new AppUserDetailsVM();
-            
+            var userEmail = GetLoggedInEmail();
 
             if (userEmail != null) {
                 //## if the user is Logged in- check- do we have a value in Cache for this User?
