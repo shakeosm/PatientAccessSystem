@@ -16,11 +16,13 @@ namespace Pas.Data
         {
         }
 
-        
+        public virtual DbSet<AddressBook> AddressBooks { get; set; }
         public virtual DbSet<AilmentTypes> AilmentTypes { get; set; }
         public virtual DbSet<AllergyTypes> AllergyTypes { get; set; }
         
         public virtual DbSet<CategoryTypes> CategoryTypes { get; set; }
+        public virtual DbSet<City> Cities { get; set; }
+        public virtual DbSet<ClinicalHistory> ClinicalHistory { get; set; }
         public virtual DbSet<DiagnosticTest> DiagnosticTest { get; set; }
         public virtual DbSet<DiagnosticTestHistory> DiagnosticTestHistory { get; set; }
         public virtual DbSet<DoctorSpeciality> DoctorSpeciality { get; set; }
@@ -151,6 +153,16 @@ namespace Pas.Data
             //    entity.Property(e => e.UserName).HasMaxLength(256);
             //});
 
+            
+                 modelBuilder.Entity<AddressBook>(entity =>
+                 {
+                     entity.HasOne(d => d.User)
+                     .WithMany(p => p.AddressBooks)
+                     .HasForeignKey(d => d.Id)
+                     .OnDelete(DeleteBehavior.Cascade);
+                 });          
+
+
             modelBuilder.Entity<CategoryTypes>(entity =>
             {
                 entity.ToTable("CategoryTypes", "Drug");
@@ -160,6 +172,17 @@ namespace Pas.Data
                     .HasMaxLength(100)
                     .IsUnicode(false);
             });
+
+            modelBuilder.Entity<ClinicalHistory>(entity =>
+            {
+                entity.ToTable("ClinicalHistory", "Patient");
+
+                entity.HasOne(d => d.User)
+                     .WithMany(p => p.ClinicalHistories)
+                     .HasForeignKey(d => d.Id)
+                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
 
             modelBuilder.Entity<DiagnosticTest>(entity =>
             {

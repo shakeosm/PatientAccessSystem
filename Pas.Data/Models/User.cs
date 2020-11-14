@@ -13,6 +13,8 @@ namespace Pas.Data.Models
             UserOrganisationRoles = new HashSet<UserOrganisationRole>();
             UserRelated = new HashSet<UserRelated>();
             PatientAilments = new HashSet<PatientAilment>();
+            AddressBooks = new HashSet<AddressBook>();
+            ClinicalHistories = new HashSet<ClinicalHistory>();
         }
         
         public int Title { get; set; }
@@ -55,11 +57,18 @@ namespace Pas.Data.Models
         [Column(TypeName = "datetime2(3)")]
         public DateTime CreatedOn { get; set; }
 
+        public int AddressBookId { get; set; }
+
+
         public virtual ICollection<Organisation> Organisations { get; set; }
         public virtual ICollection<UserOrganisationRole> UserOrganisationRoles { get; set; }
         public virtual ICollection<UserRelated> UserRelated { get; set; }
         public virtual ICollection<PatientAilment> PatientAilments { get; set; }
         public virtual ICollection<PatientAllergy> PatientAllergies { get; set; }
+
+        public virtual ICollection<AddressBook> AddressBooks { get; set; }
+
+        public virtual ICollection<ClinicalHistory> ClinicalHistories { get; set; }
         
     }
 }
