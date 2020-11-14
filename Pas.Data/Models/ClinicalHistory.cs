@@ -18,10 +18,10 @@ namespace Pas.Data.Models
         public int Age { get; set; }
 
         [Column(TypeName = "tinyint")]
-        public int BloodGroup { get; set; }
+        public int? BloodGroupId { get; set; }
 
         [Column(TypeName = "tinyint")]
-        public short Smoker { get; set; }
+        public short? Smoker { get; set; }
 
         public bool Drinker { get; set; }
 
@@ -40,19 +40,19 @@ namespace Pas.Data.Models
         public short Weight { get; set; }
 
         [Column(TypeName = "tinyint")]
-        public short Pulse { get; set; }
+        public short? Pulse { get; set; }
 
         [Column(TypeName = "tinyint")]
-        public short PressureSystolic { get; set; }
+        public short? PressureSystolic { get; set; }
 
         [Column(TypeName = "tinyint")]
-        public short PressureDiastolic { get; set; }
+        public short? PressureDiastolic { get; set; }
 
         [Column(TypeName = "decimal(4,2)")]
-        public decimal Cholesterol { get; set; }
+        public decimal? Cholesterol { get; set; }
 
         [Column(TypeName = "decimal(4,2)")]
-        public decimal Diabetes { get; set; }
+        public decimal? Diabetes { get; set; }
 
         [Column(TypeName = "datetime2(3)")]
         public DateTime ClinicalInfoLastUpdated { get; set; }

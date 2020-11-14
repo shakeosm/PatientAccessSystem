@@ -11,6 +11,9 @@ namespace Pas.Data.Models
     public partial class AddressBook : BaseEntityModel
     {
         [Required]
+        public int UserId { get; set; }
+
+        [Required]
         [Column(TypeName = "nvarchar(100)")]
         public string AddressLine1 { get; set; }
 

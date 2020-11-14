@@ -156,9 +156,11 @@ namespace Pas.Data
             
                  modelBuilder.Entity<AddressBook>(entity =>
                  {
+                     entity.ToTable("AddressBook", "dbo");
+
                      entity.HasOne(d => d.User)
                      .WithMany(p => p.AddressBooks)
-                     .HasForeignKey(d => d.Id)
+                     .HasForeignKey(d => d.UserId)
                      .OnDelete(DeleteBehavior.Cascade);
                  });          
 
@@ -175,12 +177,7 @@ namespace Pas.Data
 
             modelBuilder.Entity<ClinicalHistory>(entity =>
             {
-                entity.ToTable("ClinicalHistory", "Patient");
-
-                entity.HasOne(d => d.User)
-                     .WithMany(p => p.ClinicalHistories)
-                     .HasForeignKey(d => d.Id)
-                     .OnDelete(DeleteBehavior.Cascade);
+                entity.ToTable("ClinicalHistory", "Patient");              
             });
 
 

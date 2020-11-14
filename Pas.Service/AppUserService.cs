@@ -78,20 +78,29 @@ namespace Pas.Service
 
         public async Task<bool> RegisterA_User(User appUser)
         {
-            appUser.AddressBooks.Add(new AddressBook() { 
-                Id = 0,
-                AddressLine1 = "",
-                CityId = 10,
-                LocalArea = ""
-            });
+            //## Insert a New Address Row in the Table
+            //var newAddress = new AddressBook()
+            //{
+            //    //Id = 0,
+            //    AddressLine1 = "",
+            //    CityId = 10,
+            //    LocalArea = ""
+            //};
 
-            appUser.ClinicalHistories.Add(new ClinicalHistory()
+            //await _context.AddressBooks.AddAsync(newAddress);
+            //await _context.SaveChangesAsync();
+
+            //## Get that new RecordId- add to User table
+//            appUser.AddressBookId = newAddress.Id;
+
+            //## Blank ClinicalHistory Record
+            appUser.ClinicalHistory = new ClinicalHistory()
             {
-                Id = 0,
                 Age = appUser.Age,
                 UserId = 0
-            });
+            };
 
+            //## Finally save the User record.
             await _context.User.AddAsync(appUser);
             await _context.SaveChangesAsync();
 
