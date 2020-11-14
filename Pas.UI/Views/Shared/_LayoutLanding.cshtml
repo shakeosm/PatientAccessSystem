@@ -1,19 +1,12 @@
 ﻿<!DOCTYPE html>
-<!--
-Template Name:  SmartAdmin Responsive WebApp - Template build with Twitter Bootstrap 4
-Version: 4.5.1
-Author: Sunnyat A.
-Website: http://gootbootstrap.com
-Purchase: https://wrapbootstrap.com/theme/smartadmin-responsive-webapp-WB0573SK0?ref=myorange
-License: You must have a valid license purchased only from wrapbootstrap.com (link above) in order to legally use this theme for your project.
--->
+
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <title>
-        Login - - SmartAdmin v4.5.1
+        Welcome- Patient Access System
     </title>
-    <meta name="description" content="Login">
+    <meta name="description" content="WebApp Home Page">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, minimal-ui">
     <!-- Call App Mode on ios devices -->
@@ -23,7 +16,8 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
     <!-- base css -->
 
     <link id="vendorsbundle" rel="stylesheet" media="screen, print" href="~/css/vendors.bundle.css">
-    <link id="appbundle" rel="stylesheet" media="screen, print" href="~/css/app.bundle.css">
+    @*<link id="appbundle" rel="stylesheet" media="screen, print" href="~/css/app.bundle.css">*@
+
     <link id="mytheme" rel="stylesheet" media="screen, print" href="#">
     @*<link id="myskin" rel="stylesheet" media="screen, print" href="~/css/skins/skin-master.css">*@
     <!-- Place favicon.ico in the root directory -->
@@ -32,68 +26,94 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
     <link rel="mask-icon" href="~/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
     <link href="~/css/fa-5.0-all.css" rel="stylesheet" />
     @*<link rel="stylesheet" media="screen, print" href="~/css/fa-brands.css">*@
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />    
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <style>
+        a:hover{
+            text-decoration:none;
+        }
+        .page-logo, .page-sidebar, .nav-footer, .bg-brand-gradient {
+            background-image: -webkit-gradient(linear, right top, left top, from(rgba(51, 148, 225, 0.18)), to(transparent));
+            background-image: linear-gradient(270deg, rgba(51, 148, 225, 0.18), transparent);
+            background-color: #584475;
+            width:100%;
+        }
 
+        .height-9 {
+            height: 4rem;
+        }
+        
+        .page-logo-link {
+            padding-top: 1.5em;
+        }
+
+        .page-footer {
+            height: 2.8125rem;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 auto;
+            flex: 0 0 auto;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            background: #fff;
+            color: #4d4d4d;
+            font-size: 0.8125rem;
+            padding: 0 2rem;
+            -webkit-box-ordinal-group: 5;
+            -ms-flex-order: 4;
+            order: 4;
+        }
+
+        bg-fusion-50 {
+            background-color: #909090;
+            color: white;
+        }
+
+        .bg-fusion-50:hover {
+            color: white;
+        }
+
+        .bg-fusion-100 {
+            background-color: #838383;
+            color: white;
+        }
+
+            .bg-fusion-100:hover {
+                color: white;
+            }
+
+        .dropdown-header.bg-trans-gradient {
+            padding: 1.25rem 1.5rem;
+        }
+
+        .card[class*='p-'] .card-header,
+        .card[class*='p-'] .card-body {
+            padding: 0 !important;
+        }
+
+        .subheader-block {
+            display: none;
+        }
+
+        .primary-nav .nav-menu li a > .badge {
+            font-size: 10px !important;
+        }
+
+        .card .card-header,
+        .card .card-body {
+            padding: 1rem;
+        }
+
+
+        .bg-trans-gradient {
+  background: linear-gradient(250deg, #3e93d6, #8a75aa); }
+
+    </style>
 </head>
 <!-- BEGIN Body -->
 <body>
-    <!-- DOC: script to save and load page settings -->
-    <script>
-        /**
-         *	This script should be placed right after the body tag for fast execution
-         *	Note: the script is written in pure javascript and does not depend on thirdparty library
-         **/
-        'use strict';
-
-        var classHolder = document.getElementsByTagName("BODY")[0],
-            /**
-             * Load from localstorage
-             **/
-            themeSettings = (localStorage.getItem('themeSettings')) ? JSON.parse(localStorage.getItem('themeSettings')) :
-                {},
-            themeURL = themeSettings.themeURL || '',
-            themeOptions = themeSettings.themeOptions || '';
-        /**
-         * Load theme options
-         **/
-        if (themeSettings.themeOptions) {
-            classHolder.className = themeSettings.themeOptions;
-            console.log("%c✔ Theme settings loaded", "color: #148f32");
-        }
-        else {
-            console.log("%c✔ Heads up! Theme settings is empty or does not exist, loading default settings...", "color: #ed1c24");
-        }
-        if (themeSettings.themeURL && !document.getElementById('mytheme')) {
-            var cssfile = document.createElement('link');
-            cssfile.id = 'mytheme';
-            cssfile.rel = 'stylesheet';
-            cssfile.href = themeURL;
-            document.getElementsByTagName('head')[0].appendChild(cssfile);
-
-        }
-        else if (themeSettings.themeURL && document.getElementById('mytheme')) {
-            document.getElementById('mytheme').href = themeSettings.themeURL;
-        }
-        /**
-         * Save to localstorage
-         **/
-        var saveSettings = function () {
-            themeSettings.themeOptions = String(classHolder.className).split(/[^\w-]+/).filter(function (item) {
-                return /^(nav|header|footer|mod|display)-/i.test(item);
-            }).join(' ');
-            if (document.getElementById('mytheme')) {
-                themeSettings.themeURL = document.getElementById('mytheme').getAttribute("href");
-            };
-            localStorage.setItem('themeSettings', JSON.stringify(themeSettings));
-        }
-        /**
-         * Reset settings
-         **/
-        var resetSettings = function () {
-            localStorage.setItem("themeSettings", "");
-        }
-
-    </script>
     <div class="page-wrapper auth">
         <div class="page-inner bg-brand-gradient">
             <div class="page-content-wrapper bg-transparent m-0">
@@ -102,7 +122,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                         <div class="page-logo width-mobile-auto m-0 align-items-center justify-content-center p-0 bg-transparent bg-img-none shadow-0 height-9 border-0">
                             <a href="~/" class="page-logo-link press-scale-down d-flex align-items-center">
                                 <img src="~/images/logo.png" alt="Patient Access System- WebApp" aria-roledescription="logo">
-                                <span class="page-logo-text mr-1">Patient Access System</span>
+                                <span class="h4 ml-2 text-white">Patient Access System</span>
                             </a>
                         </div>
                     </div>
@@ -116,10 +136,22 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                             </main>
                         </div>
 
-                        <div class="position-absolute pos-bottom pos-left pos-right p-3 text-center text-white">
+                    </div>
+
+                    <footer class="page-footer invisible d-none" role="contentinfo">
+                        <div class="d-flex align-items-center flex-1 text-muted">
                             @DateTime.Today.Year &copy; Patient Access System&nbsp;<a href='https://www.ZaiyanSystems.com' class='text-white opacity-40 fw-500' title='gotbootstrap.com' target='_blank'>Zaiyan Systems</a>
                         </div>
-                    </div>
+                        <div>
+                            <ul class="list-table m-0">
+                                <li><a href="intel_introduction.html" class="text-secondary fw-700">About</a></li>
+                                <li class="pl-3"><a href="info_app_licensing.html" class="text-secondary fw-700">License</a></li>
+                                <li class="pl-3"><a href="info_app_docs.html" class="text-secondary fw-700">Documentation</a></li>
+                                <li class="pl-3 fs-xl"><a href="https://wrapbootstrap.com/user/MyOrange" class="text-secondary" target="_blank"><i class="fal fa-question-circle" aria-hidden="true"></i></a></li>
+                            </ul>
+                        </div>
+                    </footer>
+            
                 </div>
             </div>
         </div>
@@ -127,7 +159,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 
     <script src="~/js/lib/jquery/dist/jquery.js"></script>
     @*<script src="~/js/app.bundle.js"></script>
-    <script src="~/js/vendors.bundle.js"></script>*@
+        <script src="~/js/vendors.bundle.js"></script>*@
 
     @RenderSection("Scripts", required: false)
 

@@ -7,7 +7,7 @@
     int rowCounter = 1;
 }
 
-<div class="text-center form-row">
+<div class="text-center form-row text-dark">
     <form asp-action="SwitchRole" asp-controller="AppUser" method="post">
 
         @Html.AntiForgeryToken()
@@ -20,7 +20,7 @@
                 @* Patient's Card *@
                 <div class="card">
                     <div class="w-100 bg-fusion-50 rounded-top bg-trans-gradient" style="padding:20px 0;">
-                        <div class="card-title text-white">Patient</div>
+                        <div class="h3 text-white">Patient</div>
                     </div>
                     <div class="card-body">
                         <p class="card-text">Log in as a Patient and view your medical records.</p>
@@ -43,7 +43,7 @@
                 @*# Doctor Card *@
                 <div class="card">
                     <div class="w-100 bg-fusion-50 rounded-top bg-trans-gradient" style="padding:20px 0;">
-                        <div class="card-title text-white">Medical User</div>
+                        <div class="h3 text-white">Medical User</div>
                     </div>
                     <div class="card-body">
                         <p class="card-text">Log in as an Organisational user and manage patient.</p>

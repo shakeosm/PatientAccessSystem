@@ -1,11 +1,22 @@
-﻿<!-- _ProfilePhotoCard.cshtml -->
-<div id="PatientInfoCard" class="card mb-g rounded-top ">
+﻿@using Pas.Common.Enums
+@model Pas.Web.ViewModels.AppUserDetailsVM
+
+@{
+    var patientImageUrl = "/images/profile-photos/patient.jfif";
+    
+    @if (Model.Gender == Gender.Female){
+        patientImageUrl = "/images/profile-photos/patient-female-01.png";
+    }
+}
+<!-- _ProfilePhotoCard.cshtml -->
+<div id="PatientInfoCard" class="card mb-g rounded-top col-sm-6 col-md-12">
     <div class="row no-gutters row-grid">
         <div class="col-12">
             <div class="d-flex flex-column align-items-center justify-content-center p-4">
-                <img src="~/images/demo/avatars/avatar-patient-image.jpg" class="rounded-circle shadow-2 img-thumbnail" style="width:150px;" alt="">
+
+                <img src="@patientImageUrl" class="rounded-circle shadow-2 img-thumbnail" style="width:150px; height:150px;" alt="@Model.Name">
                 <h5 class="mb-0 fw-700 text-center mt-3">
-                    Shawkat Osman<br />শওকত ওসমান 
+                    @Model.Name<br />@Model.BanglaName
                     <small class="text-muted mb-0">Allergy</small>
                 </h5>
 

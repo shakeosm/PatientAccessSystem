@@ -20,7 +20,7 @@ namespace Pas.Data.Models
         public int DoctorId { get; set; }
 
         [Required]
-        public int OrganisationId { get; set; }
+        public int HospitalId { get; set; }
 
         [Required]
         [Column(TypeName = "datetime2(3)")]
@@ -33,7 +33,7 @@ namespace Pas.Data.Models
 
         public virtual ICollection<PrescriptionDiagnosticTest> PrescriptionDiagnosticTest { get; set; }
         public virtual ICollection<PrescriptionDrugs> PrescriptionDrugs { get; set; }
-        public virtual Organisation Organisation { get; set; }
+        public virtual Organisation Hospital { get; set; }
         public virtual User Doctor { get; set; }
         public virtual User Patient { get; set; }
 

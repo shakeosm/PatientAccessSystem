@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 /* #GLOBAL IMPORTS
 ========================================================================== */
 /* #BOOTSTRAP AND MIXINS - Base Unmodified Bootstrap file with theme mixins
@@ -5699,7 +5699,7 @@ $grid-breakpoints: (
   .page-header {
     padding: 0 2rem; }
   .page-content {
-    padding: 1.5rem 2rem; }
+    padding: 1rem; }
     .page-content .panel {
       margin-bottom: 1.5rem; } }
 

@@ -5,6 +5,7 @@ using Pas.Data.Models;
 using Pas.Service.Interface;
 using Pas.Web.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,7 +37,7 @@ namespace Pas.Service
             var newPrescription = new Prescription()
             {
                 DoctorId = vm.DoctorId,
-                OrganisationId = vm.HospitalId,
+                HospitalId = vm.HospitalId,
                 PatientId = vm.PatientId,
             };
 
@@ -65,6 +66,17 @@ namespace Pas.Service
         {
             Prescription result = await _pasContext.Prescription
                                         .FindAsync(id);
+
+            return result;
+        }
+
+        public async Task<IEnumerable<Prescription>> ListByPatient(int id)
+        {
+            var result = await _pasContext.Prescription
+                                        .Include(p=> p.Doctor)
+                                        .Include(p=> p.Hospital)
+                                        .Include(p=> p.PrescriptionDrugs)
+                                        .Where(p=> p.PatientId == id).ToListAsync();
 
             return result;
         }

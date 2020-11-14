@@ -33,5 +33,16 @@ namespace Pas.Web.ViewModels
         
 
         public bool Is_A_Patient() => ApplicationRole == ApplicationRole.Patient;
+
+        public string ProfilePath()
+        {
+            if (ApplicationRole == 0)
+            {
+                return "Patient/Profile";      //### Default to Patient
+            }
+
+            return $"{ApplicationRole.ToString()}/Profile";      //### Default to Patient    
+            
+        }
     }
 }

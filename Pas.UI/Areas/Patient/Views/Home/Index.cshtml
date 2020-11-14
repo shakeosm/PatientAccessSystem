@@ -1,8 +1,173 @@
-﻿
+﻿@model Pas.Web.ViewModels.AppUserDetailsVM
 @{
-    Layout = "/Views/Shared/_LayoutCustom.cshtml";
+    Layout = "/Views/Shared/_LayoutPatient.cshtml";
     ViewData["Title"] = "Patient Dashboard";
 }
- 
 
-@await Html.PartialAsync("_patientProfile")
+@{
+    ViewData["Title"] = "Patient Profile";
+}
+
+<!-- _patientProfileSummary.cshtml -->
+<div id="ProfileMainContainer" class="form-row col-12">
+    @*Left Column*@
+    <div id="ProfileLeftColumn" class="col-xs-12 col-md-4 col-lg-4" style="max-width:300px;">
+        @* Card: Patient Info Card *@
+        @await Html.PartialAsync("Patient/_ProfilePhotoCard", Model)
+
+        @* Card: Contact details *@
+        @await Html.PartialAsync("Patient/_ContantDetailsCard", Model)
+    </div>
+
+    @*Right Column*@
+    <div id="ProfileRightColumn" class="col-xs-12 col-md-8 col-lg-8">
+
+        @* SummaryTabNavDiv *@
+        @await Html.PartialAsync("Patient/_PatientSummaryMedicalInfo", Model)
+
+
+        <div id="TabbedContainerDiv" class="row col-12 invisible d-none" style="min-height:300px;">
+            <div class="col-auto">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">
+                        <i class="fal fa-address-card fs-xl"></i>
+                        <span class="hidden-sm-down ml-1"> Summary</span>
+                    </a>
+                    <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">
+                        <i class="fal fa-file-medical-alt fs-xl"></i>
+                        <span class="hidden-sm-down ml-1"> Prescription</span>
+                    </a>
+                    <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">
+                        <i class="fal fa-first-aid fs-xl"></i>
+                        <span class="hidden-sm-down ml-1"> Lab Results</span>
+                    </a>
+                    <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">
+                        <i class="fa fa-comment fs-xl"></i>
+                        <span class="hidden-sm-down ml-1"> Notes</span>
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="tab-content" id="v-pills-tabContent">
+
+
+                    @* PrescriptionsTabNavDiv *@
+                    <div class="PrescriptionsTabNavDiv tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                        <partial name="_PatientPrescriptionList.cshtml" />
+
+                    </div>
+
+                    @* Lab Results *@
+                    <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                        <h3>
+                            Lab Results
+                        </h3>
+                        @* Lab Results *@
+                        <div class="col-12 mt-3">
+                            <partial name="_PatientLabResults.cshtml" />
+                        </div>
+
+                    </div>
+
+                    @* Notes *@
+                    <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                        <div class="col-12 mt-3">
+                            <partial name="_PatientPrescriptionNotes.cshtml" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+
+            <div class="col-12">
+
+
+                @* Card: Ailment History *@
+                <div class="card-deck mt-3 d-none">
+                    <div class="card">
+                        <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
+                            <!-- we wrap header title inside a span tag with utility padding -->
+                            <div class="card-title text-white"></div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Ailment History
+                                @*<a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
+                                        <i class="fal fa-edit"></i>
+                                    </a>*@
+                            </h5>
+
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Last updated 7 days ago</small>
+                        </div>
+                    </div>
+
+                    @*Current Medication*@
+                    <div class="card">
+                        <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
+                            <!-- we wrap header title inside a span tag with utility padding -->
+                            <div class="card-title text-white"></div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Current medication
+                                @*<a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
+                                        <i class="fal fa-edit"></i>
+                                    </a>*@
+                            </h5>
+                            <table id="dt-CurrentMedicationTable" class="table table-hover table-striped w-100 dataTable dtr-inline" role="grid" aria-describedby="dt-basic-example_info">
+                                <thead class="d-none">
+                                    <tr role="row">
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr role="row">
+                                        <td style="width:50px;"><i class="fal fa-medkit"></i></td>
+                                        <td>Loratidine 10 mg</td>
+                                        <td>Daily: 1</td>
+                                        <td class="text-right">01/05/2020</td>
+                                    </tr>
+                                    <tr role="row">
+                                        <td style="width:50px;"><i class="fal fa-medkit"></i></td>
+                                        <td>Gaviscon</td>
+                                        <td>Daily: 3</td>
+                                        <td class="text-right">01/05/2020</td>
+                                    </tr>
+                                    <tr role="row">
+                                        <td style="width:50px;"><i class="fal fa-medkit"></i></td>
+                                        <td>Ranitidine 10mg</td>
+                                        <td>Daily: 2</td>
+                                        <td class="text-right">01/05/2020</td>
+                                    </tr>
+                                    <tr role="row">
+                                        <td style="width:50px;"><i class="fal fa-medkit"></i></td>
+                                        <td>Dulcolox</td>
+                                        <td>Daily: 2</td>
+                                        <td class="text-right">01/05/2020</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Last updated 1 month ago</small>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            @*Notes*@
+
+
+        </div>
+    </div>
+
+</div>

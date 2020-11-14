@@ -7,77 +7,93 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pas.Service.Interface;
+using Pas.UI.Controllers;
 using Pas.Web.ViewModels;
 
 namespace Pas.UI.Areas.Patient.Controllers
 {
     [Area("Patient")]
     [Authorize]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        private IPatientService _patientService { get; }
+        private IPatientService _patientService { get; }        
 
-        private readonly IAppAuthorisationService _appAuthorisationService;
-        public readonly UserManager<IdentityUser> _userManager;
-        
-        public HomeController(IPatientService PatientService,
-                            IAppAuthorisationService AppAuthorisationService,
-                            UserManager<IdentityUser> UserManager)
+        public HomeController(IPrescriptionService PrescriptionService,
+                                IPatientService PatientService,
+                                UserManager<IdentityUser> UserManager,
+                                IAppUserService AppUserService,
+                                IAppAuthorisationService AppAuthorisationService,
+                                IUserOrgRoleService UserOrgRoleService
+            ) : base(UserManager, AppUserService, AppAuthorisationService, UserOrgRoleService)
         {
             _patientService = PatientService;
-            _appAuthorisationService = AppAuthorisationService;
-            _userManager = UserManager;
-            
         }
 
         public async Task<IActionResult> Index()
         {
             //## Somethig like Patient Dashboard
-            var _userEmail = _userManager.GetUserName(HttpContext.User);
+            //var _userEmail = _userManager.GetUserName(HttpContext.User);
 
-            var currentUser = await _appAuthorisationService.GetActiveUserFromCache(_userEmail);
-            currentUser.AddressAreaLocality = "Panchlaish, Chattogram";
+            var currentUser = await GetCurrentUser();
             
+            //## Re-factor UserDetails- 'Patient' type values     
+            SetUserProfileValues(currentUser);
+
+            return View(currentUser);
+        }
+
+        private void SetUserProfileValues(AppUserDetailsVM currentUser)
+        {
+            currentUser.AddressAreaLocality = "Badurtola, Chottagram";  //TODO: Should read from Database
+            currentUser.ImageUrl = "user-3.png";
             ViewBag.UserDetails = currentUser;
-
-            return View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> FindPatientByEmail(string email)
-        {
-            var patient = await _patientService.FindByEmail(email);
+        //[HttpPost, ValidateAntiForgeryToken]
+        //public async Task<IActionResult> FindPatientByEmail(string email)
+        //{
+        //    var patient = await _patientService.FindByEmail(email);
 
-            return Json(patient);
+        //    return Json(patient);
+        //}
+
+        ////[ValidateAntiForgeryToken]
+        //[HttpPost]
+        //public async Task<IActionResult> FindPatientByMobile(string mobile)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //[HttpGet]
+        //public async Task<IActionResult> Search(string mobile, string shortId, string firstName, string lastName)
+        //{
+        //    PatientSearchVM searchVM = new PatientSearchVM() { FirstName = "Car", LastName = "", ShortId = "",  Mobile = "" };
+
+        //    var searchResult = await _patientService.SearchPatient(searchVM);
+
+        //    return PartialView("Views/Shared/_patientSearchResult.cshtml", searchResult);
+        //    //return View("Views/Shared/_patientSearchResult.cshtml", searchResult);
+        //}
+
+
+        public async Task<IActionResult> Profile()
+        {
+            var currentUser = await GetCurrentUser();
+
+            //## Re-factor UserDetails- 'Patient' type values     
+            SetUserProfileValues(currentUser);
+
+            return View(currentUser);
         }
 
-        //[ValidateAntiForgeryToken]
-        [HttpPost]
-        public async Task<IActionResult> FindPatientByMobile(string mobile)
+        public async Task<IActionResult> EditProfile()
         {
-            throw new NotImplementedException();
-        }
+            var currentUser = await GetCurrentUser();
 
-        [HttpGet]
-        public async Task<IActionResult> Search(string mobile, string shortId, string firstName, string lastName)
-        {
-            PatientSearchVM searchVM = new PatientSearchVM() { FirstName = "Car", LastName = "", ShortId = "",  Mobile = "" };
+            //## Re-factor UserDetails- 'Patient' type values     
+            SetUserProfileValues(currentUser);
 
-            var searchResult = await _patientService.SearchPatient(searchVM);
-
-            return PartialView("Views/Shared/_patientSearchResult.cshtml", searchResult);
-            //return View("Views/Shared/_patientSearchResult.cshtml", searchResult);
-        }
-
-
-        public IActionResult Profile()
-        {
-            return View();
-        }
-
-        public IActionResult EditProfile()
-        {
-            return View();
+            return View(currentUser);
         }
 
         [HttpPost, ValidateAntiForgeryToken]

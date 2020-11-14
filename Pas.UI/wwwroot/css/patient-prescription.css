@@ -1,0 +1,37 @@
+﻿.prescription-card-label {
+    width: 5em;
+    font-weight:bold;
+}
+
+.prescription-card-data {
+    width: 3em;
+}
+
+.prescription-card-label-icon {
+    font-size: 1.5rem;
+    color: Mediumslateblue;
+}
+
+.prescription-container {
+    Background-color: lightgray;
+    padding: 1em;
+    max-width: 500px;
+    min-height: 200px;
+    margin-right: 1em;
+    margin-bottom: 1em;
+    border-radius: 4px;
+}
+
+.prescription-drug-list-container {
+    margin:2em 5%;
+    color: #45a197;
+    background-color: #f7fdfc;
+    border-color: #a3ebe4;
+    position: relative;
+    padding: 1rem 1.25rem;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    box-sizing: content-box;
+
+    width:90%;
+}

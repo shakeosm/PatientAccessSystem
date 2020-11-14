@@ -17,20 +17,23 @@
             <div class="form-row">
 
                 <div class="col-8">
-                    <h5 class="card-title">
-                        <i class="fa fa-user-md mr-2"></i>
-                            @Model.Name
-                    </h5>
-                    <p class="card-text">
-                        <i class="fa fa-hospital-alt mr-2"></i>
-                        Chamber: @Model.CurrentRole.OrganisationName
-                    </p>
+                    <span class="float-left">
+                        <span style="font-size: 3em; color: Mediumslateblue;">
+                            <i class="fa fa-user-md mr-2"></i>
+                        </span>
+                    </span>
+                    <span class="float-left pt-1 ml-1">
+                        <span class="h4">@Model.Name</span><br>
+                        <span class="h5 text-primary">@Model.CurrentRole.OrganisationName</span>
+                    </span>
+                    @*<p class="card-text">
+                        <span style="font-size: 3em; color: Dodgerblue;">
+                            <i class="fa fa-hospital-alt mr-"></i>
+                        </span>
+                        
+                    </p>*@
                 </div>
-                <div class="col-4">
-                    <img class="float-right"
-                         src="~/images/demo/avatars/avatar-dr-image.png"
-                         alt="Doctor's profile photo" style="width:100px; height:100px;" />
-                </div>
+
             </div>
 
             @*Chambers and Roles *@
@@ -49,7 +52,7 @@
                                     <th>Hospital</th>
                                     <th>Role</th>
                                     <th>Date added</th>
-                                    <th>Action</th>
+                                    <th class="text-right">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -192,8 +195,8 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">3</th>
-                                    <td>MRCOG</td>
-                                    <td>MRCOG</td>
+                                    <td>MRCP</td>
+                                    <td>MRCP</td>
                                     <td>England</td>
                                     <td>2018</td>
                                     <td>

@@ -3,7 +3,7 @@
 
     var userDetails = (AppUserDetailsVM)ViewBag.UserDetails;
 
-    var profileImageUrl = "/images/profile-photos/doctor.jpg";    //## Default to No-image
+    var profileImageUrl = "/images/profile-photos/patient.jfif";    //## Default to No-image
     var areaLocality = "";  //## ie: 'Panchlaish, Chattogram'
 
     if (userDetails is null)
@@ -41,8 +41,15 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
     <!-- Remove Tap Highlight on Windows Phone IE -->
     <meta name="msapplication-tap-highlight" content="no">
     <!-- base css -->
-    <link id="vendorsbundle" rel="stylesheet" media="screen, print" href="~/css/vendors.bundle.css">
-    <link id="appbundle" rel="stylesheet" media="screen, print" href="~/css/app.bundle.css">
+    
+    @*The fa prefix has been deprecated in Font-awesome-version 5. The new default is the fas solid style and the fab style for brands.*@
+
+    <!-- For Optimization- try to use Bootstrap Styles later- and avoid the "Vendor- js/css" -->
+    @*<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/css/fontawesome-5.0.10.css" rel="stylesheet" />*@
+
+    <link id="vendorsbundle" rel="stylesheet" media="screen, print" href="~/css/vendors.bundle.css"> @*723KB*@
+    <link id="appbundle" rel="stylesheet" media="screen, print" href="~/css/app.bundle.css"> @*240KB*@
 
     <link id="myskin" rel="stylesheet" media="screen, print" href="~/css/skins/skin-master.css">
 
@@ -54,40 +61,16 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
     <link rel="stylesheet" media="screen, print" href="~/css/fa-brands.css">
 </head>
 <!-- BEGIN Body -->
-<!-- Possible Classes
 
-    * 'header-function-fixed'         - header is in a fixed at all times
-    * 'nav-function-fixed'            - left panel is fixed
-    * 'nav-function-minify'			  - skew nav to maximize space
-    * 'nav-function-hidden'           - roll mouse on edge to reveal
-    * 'nav-function-top'              - relocate left pane to top
-    * 'mod-main-boxed'                - encapsulates to a container
-    * 'nav-mobile-push'               - content pushed on menu reveal
-    * 'nav-mobile-no-overlay'         - removes mesh on menu reveal
-    * 'nav-mobile-slide-out'          - content overlaps menu
-    * 'mod-bigger-font'               - content fonts are bigger for readability
-    * 'mod-high-contrast'             - 4.5:1 text contrast ratio
-    * 'mod-color-blind'               - color vision deficiency
-    * 'mod-pace-custom'               - preloader will be inside content
-    * 'mod-clean-page-bg'             - adds more whitespace
-    * 'mod-hide-nav-icons'            - invisible navigation icons
-    * 'mod-disable-animation'         - disables css based animations
-    * 'mod-hide-info-card'            - hides info card from left panel
-    * 'mod-lean-subheader'            - distinguished page header
-    * 'mod-nav-link'                  - clear breakdown of nav links
-
-    >>> more settings are described inside documentation page >>>
--->
 <body class="mod-bg-1 mod-nav-link ">
-    <!-- DOC: script to save and load page settings -->
-    
+
     <!-- BEGIN Page Wrapper -->
     <div class="page-wrapper">
         <div class="page-inner">
             <!-- BEGIN Left Aside -->
             <aside class="page-sidebar">
                 <div class="page-logo">
-                    <a href="~/" class="page-logo-link press-scale-down d-flex align-items-center position-relative" data-toggle="modal" data-target="#modal-shortcut">
+                    <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative" data-toggle="modal" data-target="#modal-shortcut">
                         <img src="~/images/logo.png" alt="Patient Access System" aria-roledescription="logo">
                         <span class="page-logo-text mr-1">Patient Access System</span>
                         <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
@@ -115,58 +98,68 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                             </a>
                             <span class="d-inline-block">@areaLocality</span>
                         </div>
-                        <img src="~/images/card-backgrounds/cover-2-lg.png" class="cover" alt="cover">
+                        <img src="~/images/card-backgrounds/cover-1-lg.png" class="cover" alt="cover">
                         <a href="#" onclick="return false;" class="pull-trigger-btn" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar" data-focus="nav_filter_input">
                             <i class="fal fa-angle-down"></i>
                         </a>
                     </div>
                     <ul id="js-nav-menu" class="nav-menu">
                         <li>
-                            <a href="~/Doctor" title="Application Intel" data-filter-tags="application intel">
-                                <i class="fal fa-chart-pie fa-2x"></i>
-                                <span class="nav-link-text" data-i18n="nav.application_intel">Dashboard</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="~/Doctor/Profile" title="Theme Settings" data-filter-tags="theme settings">
-                                <i class="fas fa-user-md fa-2x"></i>
+                            <a href="~/Patient" title="Profile" data-filter-tags="Profile">
+                                <i class="fas fa-user fa-2x"></i>
                                 <span class="nav-link-text" data-i18n="nav.theme_settings">Profile</span>
                             </a>
                         </li>
                         <li>
-                            <a href="~/AppUser/SwitchRole" title="Theme Settings" data-filter-tags="theme settings">
+                            <a href="~/Patient/Summary" title="Summary" data-filter-tags="Summary">
+                                <i class="fal fa-address-card fa-2x"></i>
+                                <span class="nav-link-text" data-i18n="nav.application_intel">Summary</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="~/Patient/Prescription" title="Prescription" data-filter-tags="Prescription">
+                                <i class="fal fa-file-medical-alt fa-2x"></i>
+                                <span class="nav-link-text" data-i18n="nav.documentation">Prescription</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="~/Patient/LabResults" title="Lab Results" data-filter-tags="Lab Results">
+                                <i class="fal fa-first-aid fa-2x"></i>
+                                <span class="nav-link-text" data-i18n="nav.documentation">Lab Results</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="~/AppUser/SwitchRole" title="Switch Role" data-filter-tags="Switch Role">
                                 <i class="fas fa-people-arrows fa-2x"></i>
                                 <span class="nav-link-text" data-i18n="nav.theme_settings">Switch Role</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="~/Doctor/Home/SearchPatient" title="Documentation" data-filter-tags="documentation">
-                                <i class="fal fa-hospital-user fa-2x"></i>
-                                <span class="nav-link-text" data-i18n="nav.documentation">Patient Search</span>
-                            </a>
-                        </li>
+
                         <li class="nav-title">
-                            <i class="fal fa-chart-bar fa-2x"></i>&nbsp;Reporting</li>
+                            <i class="fal fa-chart-bar fa-2x"></i>&nbsp;Features
+                        </li>
                         <li>
-                            <a href="#" title="UI Components" data-filter-tags="ui components">
+                            <a href="~/Patient/Feature/1" title="UI Components" data-filter-tags="ui components">
                                 <i class="fas fa-user-injured fa-2x"></i>
-                                <span class="nav-link-text" data-i18n="nav.ui_components">Patients</span>
+                                <span class="nav-link-text" data-i18n="nav.ui_components">Features 1</span>
                             </a>
                         </li>
                         <li>
-                            <a href="~/Doctor/Home/SearchPatient" title="UI Components" data-filter-tags="ui components">
+                            <a href="~/Patient/Feature/2" title="UI Components" data-filter-tags="ui components">
                                 <i class="fal fa-file-prescription fa-2x"></i>
-                                <span class="nav-link-text" data-i18n="nav.ui_components">Prescriptions</span>
+                                <span class="nav-link-text" data-i18n="nav.ui_components">Features 2</span>
                             </a>
                         </li>
 
                     </ul>
-                    
+
                     <hr />
 
                     <ul id="js-nav-menu" class="nav-menu">
                         <li>
-                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" 
+                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
                                   asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                                 <button type="submit" class="nav-link btn btn-link text-dark">
                                     <i class="fal fa-sign-out-alt fa-lg"></i>
@@ -209,7 +202,8 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                 <header class="page-header" role="banner">
                     <!-- we need this logo when user switches to nav-function-top -->
                     <div class="page-logo">
-                        <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative" data-toggle="modal" data-target="#modal-shortcut">
+                        <a href="~/Home/Index" class="page-logo-link press-scale-down d-flex align-items-center position-relative"
+                           data-toggle="modal" data-target="#modal-shortcut">
                             <img src="~/images/logo.png" alt="Patient Access System" aria-roledescription="logo">
                             <span class="page-logo-text mr-1">Patient Access System</span>
                             <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
@@ -260,16 +254,16 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
 
                         <!-- app settings -->
                         @*<div class="hidden-md-down">
-            <a href="#" class="header-icon" data-toggle="modal" data-target=".js-modal-settings">
-                <i class="fal fa-cog"></i>
-            </a>
-        </div>*@
+                                <a href="#" class="header-icon" data-toggle="modal" data-target=".js-modal-settings">
+                                    <i class="fal fa-cog"></i>
+                                </a>
+                            </div>*@
                         <!-- app shortcuts -->
                         <!-- app message -->
                         @*<a href="#" class="header-icon" data-toggle="modal" data-target=".js-modal-messenger">
-            <i class="fal fa-globe"></i>
-            <span class="badge badge-icon">!</span>
-        </a>*@
+                                <i class="fal fa-globe"></i>
+                                <span class="badge badge-icon">!</span>
+                            </a>*@
 
                         <!-- app user menu -->
                         @*@await Html.PartialAsync("_AdminAppUserMenu")*@
@@ -296,68 +290,16 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                 <!-- BEGIN Page Footer -->
                 @await Html.PartialAsync("_AdminFooter")
 
-                <!-- END Page Footer -->                
+                <!-- END Page Footer -->
             </div>
         </div>
     </div>
-    <!-- END Page Wrapper -->
-    <!-- BEGIN Quick Menu -->
-    <!-- to add more items, please make sure to change the variable '$menu-items: number;' in your _page-components-shortcut.scss -->
-    @*@await Html.PartialAsync("_AdminQuickMenu")*@
-    <!-- END Quick Menu -->
-    <!-- BEGIN Messenger -->
-    @*@await Html.PartialAsync("_AdminMessengerMenu")*@
-    <!-- END Messenger -->
-    <!-- BEGIN Page Settings -->
-    
-    @*<div class="modal fade js-modal-settings modal-backdrop-transparent" tabindex="-1" role="dialog" aria-hidden="true">*@
-        @*@await Html.PartialAsync("_AdminPageSettings")*@
-    @*</div>*@
-
-    <!-- END Page Settings -->
-    <!-- base vendor bundle:
-         DOC: if you remove pace.js from core please note on Internet Explorer some CSS animations may execute before a page is fully loaded, resulting 'jump' animations
-                    + pace.js (recommended)
-                    + jquery.js (core)
-                    + jquery-ui-cust.js (core)
-                    + popper.js (core)
-                    + bootstrap.js (core)
-                    + slimscroll.js (extension)
-                    + app.navigation.js (core)
-                    + ba-throttle-debounce.js (core)
-                    + waves.js (extension)
-                    + smartpanels.js (extension)
-                    + src/../jquery-snippets.js (core) -->
 
     <script src="~/js/lib/jquery/dist/jquery.js"></script>
+    @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
     <script src="~/js/app.bundle.js"></script>
     <script src="~/js/vendors.bundle.js"></script>
 
-    <script>
-        $(document).ready(function () {
-
-            $('input[type=radio][name=contactview]').change(function () {
-                if (this.value == 'grid') {
-                    $('#js-contacts .card').removeClassPrefix('mb-').addClass('mb-g');
-                    $('#js-contacts .col-xl-12').removeClassPrefix('col-xl-').addClass('col-xl-4');
-                    $('#js-contacts .js-expand-btn').addClass('d-none');
-                    $('#js-contacts .card-body + .card-body').addClass('show');
-
-                }
-                else if (this.value == 'table') {
-                    $('#js-contacts .card').removeClassPrefix('mb-').addClass('mb-1');
-                    $('#js-contacts .col-xl-4').removeClassPrefix('col-xl-').addClass('col-xl-12');
-                    $('#js-contacts .js-expand-btn').removeClass('d-none');
-                    $('#js-contacts .card-body + .card-body').removeClass('show');
-                }
-
-            });
-
-            //initialize filter
-            initApp.listFilter($('#js-contacts'), $('#js-filter-contacts'));
-        });
-
-    </script>
 </body>
 
     @RenderSection("Scripts", required: false)

@@ -11,6 +11,7 @@
     ViewData["Title"] = "Home";
 
     bool isLoggedIn = SignInManager.IsSignedIn(User);
+    var profilePageUrl = Model.ProfilePath();
     //bool areaName = isLoggedIn == true ? "" 
 }
 
@@ -38,9 +39,10 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <a id="PrintLinkButton" class="nav-link text-dark"
-                       asp-action="Profile" asp-controller="AppUser"
+                       @*asp-action="Profile" asp-controller="AppUser"*@
+                       href="@profilePageUrl" 
                        aria-labelledby="View Profile">
-                        <i class="fas fa-user-md fa-2x mr-1"></i>
+                        <i class="fas fa-user fa-2x mr-1"></i>
                         View Profile
                     </a>
                 </li>

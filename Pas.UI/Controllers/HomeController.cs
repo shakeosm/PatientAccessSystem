@@ -64,7 +64,8 @@ namespace Pas.UI.Controllers
                 }
             
             }
-            
+            //## Set Profile path of this User- So, that user can quickly go to the respective Profile (Doctor/Patient)
+
             //var claimList = ClaimsPrincipal.Current?.Identities.First().Claims.ToList();
             
             return View(currentUser);

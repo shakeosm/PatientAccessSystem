@@ -45,8 +45,8 @@ namespace Pas.Common.Enums
         Patient = 1,
         Doctor = 2,
         Director = 3,        
-        Hospital_SuperUser = 11,
-        Hospital_Technician = 12,
+        Technician = 4,
+        SuperUser = 11,
         App_SuperUser = 99
 
             
