@@ -1,18 +1,19 @@
-﻿@using Microsoft.AspNetCore.Identity
-@*@using Pas.Common.Models.Identity*@
+﻿@model Pas.Web.ViewModels.PatientProfileWrapperVM
 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@using Microsoft.AspNetCore.Identity
+
+@*@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager*@
 
 <!-- _patientProfileSummary.cshtml -->
 <div id="ProfileMainContainer" class="form-row col-12">
     @*Left Column*@
     <div id="ProfileLeftColumn" class="col-xs-6 col-sm-12  col-lg-2">
         @* Card: Patient Info Card *@
-        <partial name="_ProfilePhotoCard.cshtml" />
+        <partial name="_ProfilePhotoCard.cshtml" model="Model.Patient" />
 
         @* Card: Contact details *@
-        <partial name="_ContantDetailsCard.cshtml" />
+        <partial name="_ContantDetailsCard.cshtml" model="Model.Patient.AddressBook" />
     </div>
 
     @*Right Column*@
@@ -44,13 +45,13 @@
                     @* SummaryTabNavDiv *@
                     <div class="SummaryTabNavDiv tab-pane fade  active show" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
 
-                        <partial name="_PatientSummaryMedicalInfo.cshtml" />
+                        <partial name="_PatientClinicalInfo.cshtml" model="Model.ClinicalInfo" />
 
                     </div>
 
                     @* PrescriptionsTabNavDiv *@
                     <div class="PrescriptionsTabNavDiv tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                        <partial name="_PatientPrescriptionList.cshtml" />
+                        <partial name="_PatientPrescriptionList.cshtml" model="Model.PrescriptionList" />
 
                     </div>
 

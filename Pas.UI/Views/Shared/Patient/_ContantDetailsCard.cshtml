@@ -1,4 +1,4 @@
-﻿@model  Pas.Web.ViewModels.AppUserDetailsVM
+﻿@model  Pas.Web.ViewModels.AddressBookVM
 
 <!-- _ContantDetailsCard.cshtml -->
 <div id="ContactDetailsDiv" class="card mb-g rounded-top col-sm-6 col-md-12">
@@ -13,7 +13,7 @@
         <p class="card-text">
             <i class="fa fa-address-book" aria-hidden="true"></i>&nbsp;
 
-            Address: 1069/A jang Shah Majer Lane, Badurtola, Chittagong-4212. <br /><br />
+            Address: @Model.FullAddress() <br /><br />
             <i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;Mobile: @Model.Mobile<br />
             <i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;Email: @Model.Email
         </p>

@@ -14,6 +14,9 @@ namespace Pas.Data.Models
         public int DrugId { get; set; }
 
         [Required]
+        public int DrugBrandId { get; set; }
+
+        [Required]
         public int DosageId { get; set; }
 
         [Required]
@@ -30,6 +33,7 @@ namespace Pas.Data.Models
 
         public virtual DosageTypes Dosage { get; set; }
         public virtual Drugs Drug { get; set; }
+        public virtual DrugBrands DrugBrands { get; set; }
         public virtual ModeOfDelivery ModeOfDelivery { get; set; }
         public virtual Prescription Prescription { get; set; }
     }

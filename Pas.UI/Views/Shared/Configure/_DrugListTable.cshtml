@@ -1,0 +1,51 @@
+﻿@using Pas.Service.Interface
+
+@inject IDrugService DrugService
+
+@{
+    var counter = 1;
+
+    var drugList = await DrugService.ListAll();
+}
+
+<div id="DrugListTableDiv" class="row col-12">
+    <div class="card w-100 text-dark">
+        <div class="card-header py-2">
+            <div class="card-title font-weight-bold">
+                <i class="fal fa-cog fa-lg mr-2"></i>Configure Drugs
+            </div>
+        </div>
+        <div class="card-body">
+            <table id="DrugListTable" class="table table-sm table-bordered table-hover table-striped w-100 dataTable dtr-inline">
+            <thead>
+                <tr role="row">
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th style="width:80px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var drug in drugList)
+                {
+                    <tr>
+                        <td>@counter</td>
+                        <td>@drug.Name</td>
+                        <td>@drug.Category</td>
+                        <td>
+                            <a href="javascript:void(0);" role="button"
+                               date-drug-id="@drug.Id"
+                               class="btn btn-general btn-primary fa-lg">
+                                <i class="fal fa-clipboard-list"></i>
+                            </a>
+                        </td>
+                    </tr>
+
+                    counter += 1;
+                }
+            </tbody>
+        </table>
+        </div>
+    </div>
+    
+</div>

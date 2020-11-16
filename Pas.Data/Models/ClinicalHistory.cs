@@ -13,19 +13,15 @@ namespace Pas.Data.Models
         [Required]
         public int UserId { get; set; }
 
-        [Required]
-        [Column(TypeName = "tinyint")]
-        public int Age { get; set; }
-
         [Column(TypeName = "tinyint")]
         public int? BloodGroupId { get; set; }
 
         [Column(TypeName = "tinyint")]
         public short? Smoker { get; set; }
 
-        public bool Drinker { get; set; }
+        public bool? Drinker { get; set; }
 
-        public bool Excercise  { get; set; }
+        public bool? Excercise  { get; set; }
 
         [Column(TypeName = "varchar(20)")]
         public string Sports { get; set; }
@@ -37,7 +33,7 @@ namespace Pas.Data.Models
         public string Height { get; set; }
 
         [Column(TypeName = "tinyint")]
-        public short Weight { get; set; }
+        public short? Weight { get; set; }
 
         [Column(TypeName = "tinyint")]
         public short? Pulse { get; set; }

@@ -81,6 +81,14 @@ namespace Pas.UI.Areas.Identity.Pages.Account
             [Display(Name = "Gender")]
             public int Gender { get; set; }
 
+            [Required]
+            [Display(Name = "District")]
+            public int DistrictId { get; set; }
+
+            [Required]
+            [Display(Name = "Local area")]
+            public string LocalArea { get; set; }
+
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -157,7 +165,18 @@ namespace Pas.UI.Areas.Identity.Pages.Account
                 Title = input.Title,
                 Gender = input.Gender,
                 FirstName = input.FirstName,
-                LastName = input.LastName,
+                LastName = input.LastName,                
+            };
+            
+            //## Add the minimum values for the Address
+            user.AddressBooks = new List<AddressBook>() {
+                new AddressBook()
+                {
+                    AddressLine1 = "",
+                    CityId = input.DistrictId,
+                    LocalArea = input.LocalArea,
+                    DateCreated = DateTime.Now
+                }
             };
 
             return user;

@@ -17,12 +17,13 @@ namespace Pas.Service.Interface
 
         Task<bool> UnlockUser(User appUser);
         
-        Task<AppUserDetailsVM> Find(int id);
+        Task<AppUserDetailsVM> Find(int id, int currentUserId, bool includeAddressBook = false, bool trackingEnabled = false);
         AppUserDetailsVM FindByEmail(string email);
         Task<AppUserDetailsVM> FindByMobile(string mobile);
         AppUserDetailsVM FindByShortId(string shortId);
         Task<IList<AppUserDetailsVM>> FindByFirstName(string firstName);
         Task<IList<AppUserDetailsVM>> FindByLastName(string lastName);
 
+        Task<IEnumerable<UserRoleVM>> GetRolesByUser(int id);
     }
 }

@@ -16,67 +16,17 @@ namespace Pas.Service
 {
     public class PatientService : IPatientService
     {
+        private readonly ICacheService _cacheService;
+
         private PasContext _pasContext { get; }
-        public PatientService(PasContext PasContext)
+        public PatientService(PasContext PasContext,
+                        ICacheService CacheService)
         {
             _pasContext = PasContext;
+            _cacheService = CacheService;
         }
 
         
-
-        public Task<bool> Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<AppUserDetailsVM> Find(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<AppUserDetailsVM> FindByEmail(string email)
-        {
-            User user = await _pasContext.User.FirstOrDefaultAsync(u => u.Email == email);
-            
-            return MapToPatientDetails(user);
-            
-        }
-
-        AppUserDetailsVM MapToPatientDetails(User user)
-        {
-            return new AppUserDetailsVM()
-            {
-                Address = "",
-                AddressAreaLocality = "Panchlaish, Chattogram",
-                Age = user.Age,
-                BanglaName = user.BanglaName,
-                DateOfBirth  = user.DateOfBirth.Value.ToDD_MM_YYYY(),
-                Gender = (Gender) user.Gender,
-                Id = user.Id,
-                Mobile = user.Mobile,
-                Email = user.Email,
-                Name = $"{user.FirstName} {user.LastName}",
-                ShortId = user.ShortId                
-            };
-        }
-
-        public Task<AppUserDetailsVM> FindByMobile(string mobileNumber)
-        {
-            //var result = _pasContext.User.Where(u => u.FirstName.StartsWith("Car"))
-            //                .Select(p=> new AppUserDetailsVM() { 
-            //                });
-            throw new NotImplementedException();
-        }
-
-        public Task<AppUserDetailsVM> FindByShortId(string ShortId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Update(AppUserDetailsVM AppUserDetailsVM)
-        {
-            throw new NotImplementedException();
-        }
 
         public Task<bool> Update(PrescriptionConfirmSaveVM prescriptionUpdateVM)
         {
@@ -99,44 +49,49 @@ namespace Pas.Service
                                                                 )
                                                             );
 
-            var result = await Search(userSearch);
+            var patientList = await Search(userSearch);
 
-            return result;
+            var mappedResult = MapSeachResultToAppUserViewModel(patientList);
+
+            return mappedResult;
 
             }
 
         public async Task<IEnumerable<AppUserDetailsVM>> GetRegularPatientList(int doctorId)
-        {            
-            Expression<Func<User, bool>> userSearch = u => (u.FirstName.Contains("Ma"));
+        {
 
-            var result = await Search(userSearch);
+            //IEnumerable<AppUserDetailsVM> result = new List<AppUserDetailsVM>();
+            string cacheKey = $"{doctorId}_RegularPatient";
 
-            return result;
+            IEnumerable<AppUserDetailsVM> cachedResult = _cacheService.GetCacheValue<IEnumerable<AppUserDetailsVM>>(cacheKey);    //## Recent-Patients are saved for Doctor Home Page
+
+            if (cachedResult is null) {
+                Expression<Func<User, bool>> userSearch = u => (u.FirstName.Contains("Ma"));    //TODO: Read the Patients - seen by this Doctor
+
+                var searchResult = await Search(userSearch);
+
+                cachedResult = MapSeachResultToAppUserViewModel(searchResult);
+
+                _cacheService.SetCacheValue(cacheKey, cachedResult);
+            }
+
+
+            return cachedResult;
         }
 
         /// <summary>Search Patients as per your Search Expression</summary>
         /// <param name="userSearch">Search expression</param>
         /// <returns>Get PatientList in AppUserDetailsVM</returns>
-        private async Task<IEnumerable<AppUserDetailsVM>> Search(Expression<Func<User, bool>> userSearch)
+        private async Task<List<User>> Search(Expression<Func<User, bool>> userSearch)
         {
             try
             {
-                List<User> result = await _pasContext.User.Where(userSearch).ToListAsync();
+                List<User> result = await _pasContext.User
+                                            .Include(u=> u.AddressBooks)
+                                            .Where(userSearch).ToListAsync();
 
-                IEnumerable<AppUserDetailsVM> resultVM = result.Select(u => new AppUserDetailsVM()
-                {
-                    Id = u.Id,
-                    Name = $"{u.FirstName} {u.LastName}",
-                    BanglaName = u.BanglaName,
-                    Mobile = u.Mobile,
-                    ShortId = u.ShortId,
-                    Age = u.Age,
-                    DateOfBirth = u.DateOfBirth.ToDDMMMYYYY(),
-                    Gender = (Gender)u.Gender,
-                    Address = ""
-                });
 
-                return resultVM;
+                return result;
             }
             catch (Exception ex)
             {
@@ -145,22 +100,96 @@ namespace Pas.Service
             }
         }
 
-        public async Task<IEnumerable<UserRoleVM>> GetRolesByUser(int id)
+
+        /// <summary>This will Map a list of Users to AppUserDetail view Model
+        /// Used in - Doctor/Home/SearchPatient- to list all the Patients in a Table</summary>
+        /// <param name="result">List of Users/Aptients</param>
+        /// <returns>AppUserDetailsVM</returns>
+        private IEnumerable<AppUserDetailsVM> MapSeachResultToAppUserViewModel(IEnumerable<User> result)
         {
-            var userRoles = await _pasContext.UserOrganisationRole
-                                .Include(uor => uor.Organisation)
-                                .Include(uor => uor.Role)
-                                .Where(uor => uor.UserId == id).ToListAsync();
 
-            var userSwitchRoleViewVM = userRoles.Select(ur=> new UserRoleVM { 
-                OrganisationId = ur.OrganisationId,
-                OrganisationName = ur.Organisation.Name,
-                RoleId = ur.RoleId,
-                //RoleName - ur.Role.Name,
-                UserOrganisationRoleId = ur.Id
-            });
+            IEnumerable<AppUserDetailsVM> resultVM = result.Select(u => new AppUserDetailsVM()
+            {
+                Id = u.Id,
+                Name = $"{u.FirstName} {u.LastName}",
+                BanglaName = u.BanglaName,
+                Mobile = u.Mobile,
+                ShortId = u.ShortId,
+                Age = u.Age,
+                DateOfBirth = u.DateOfBirth.ToDDMMMYYYY(),
+                Gender = (Gender)u.Gender,
+                AddressAreaLocality = $"{u.AddressBooks.FirstOrDefault().LocalArea}, {(Common.Enums.City)u.AddressBooks.FirstOrDefault().CityId}"
+                //AddressBook = new AddressBookVM()
+                //{
+                //    AddressLine1 = u.AddressBooks.FirstOrDefault().AddressLine1,
+                //    LocalArea = u.AddressBooks.FirstOrDefault().LocalArea,
+                //    City = ((Common.Enums.City)u.AddressBooks.FirstOrDefault().CityId).ToString(),
+                //}
+            }); ;
 
-            return userSwitchRoleViewVM;
+
+            return resultVM;
+
+        }
+
+
+        public async Task<ClinicalHistoryVM> GetClinicalDetails(int id)
+        {
+            string cacheKey = $"{id}_GetClinicalDetails";
+
+            var cachedResult = _cacheService.GetCacheValue<ClinicalHistoryVM>(cacheKey);
+            if (cachedResult is null)
+            {
+                var search = await _pasContext.ClinicalHistory
+                        .AsNoTracking()
+                        .Include(c => c.User)
+                        .FirstOrDefaultAsync(c => c.UserId == id);
+
+                cachedResult = MapToClinicalHistoryVM(search);
+
+                _cacheService.SetCacheValue(cacheKey, cachedResult);
+            }
+            
+            return cachedResult;
+        }
+
+
+        private ClinicalHistoryVM MapToClinicalHistoryVM(ClinicalHistory ch)
+        {
+            try
+            {
+                ClinicalHistoryVM clinicalHistoryVM = new ClinicalHistoryVM()
+                {
+                    UserId = ch.UserId,
+                    Age = ch.User.Age,
+                    BloodGroupType = ch.BloodGroupId is null ? BloodGroup.Unknown : (BloodGroup)ch.BloodGroupId,
+                    Smoker = ch.Smoker?.ToString(),
+                    Drinker = ch.Drinker?.ToString(),
+                    Excercise = ch.Excercise?.ToString(),
+                    Sports = ch.Sports,
+
+                    BloodPressure = (ch.PressureSystolic is null ? "-" : $"{ch.PressureSystolic} / {ch.PressureDiastolic}"),
+                    Pulse = ch.Pulse.ToString(),
+                    Cholesterol = ch.Cholesterol?.ToString(),
+                    Diabetes = ch.Diabetes?.ToString(),
+                    Height = ch.Height,
+                    Weight = ch.Weight?.ToString(),
+
+                    AllergyInfo = ch.AllergyInfo,
+                    AilmentList = "Ailment section is not filled up yet",
+
+                    ClinicalInfoLastUpdated = ch.ClinicalInfoLastUpdated,
+                    PersonalHistoryLastUpdated = ch.PersonalHistoryLastUpdated
+                };
+
+                return clinicalHistoryVM;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return new ClinicalHistoryVM();
+            }
+
         }
     }
 }

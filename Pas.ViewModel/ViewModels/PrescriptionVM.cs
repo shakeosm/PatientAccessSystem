@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Pas.Web.ViewModels
 {
@@ -72,8 +73,30 @@ namespace Pas.Web.ViewModels
         public int PatientId { get; set; }
     }
 
+    /// <summary>To show the Prescription- to a Doctor or a Patient- to view a Prescription Details</summary>
+    public class PrescriptionViewVM
+    {
+        public int Id { get; set; }
+        public int DoctorId { get; set; }
+        public string DoctorName { get; set; }
+        public int HospitalId { get; set; }
+        public string HospitalName { get; set; }
+        public DateTime DateCreated{ get; set; }
 
+        public IList<DrugItemVM> DrugItems { get; set; }
 
+    }
+
+    public class DrugItemVM
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string BrandName { get; set; }
+        public string Dosage { get; set; }
+        public int Quantity { get; set; }
+        public int Duration { get; set; }
+        public string ModeOfDelivery { get; set; }
+    }
 
 
 

@@ -1,4 +1,4 @@
-﻿@model Pas.Web.ViewModels.AppUserDetailsVM
+﻿@model Pas.Web.ViewModels.PatientProfileWrapperVM
 @{
     Layout = "/Views/Shared/_LayoutPatient.cshtml";
     ViewData["Title"] = "Patient Dashboard";
@@ -13,17 +13,17 @@
     @*Left Column*@
     <div id="ProfileLeftColumn" class="col-xs-12 col-md-4 col-lg-4" style="max-width:300px;">
         @* Card: Patient Info Card *@
-        @await Html.PartialAsync("Patient/_ProfilePhotoCard", Model)
+        @await Html.PartialAsync("Patient/_ProfilePhotoCard", Model.Patient)
 
         @* Card: Contact details *@
-        @await Html.PartialAsync("Patient/_ContantDetailsCard", Model)
+        @await Html.PartialAsync("Patient/_ContantDetailsCard", Model.Patient.AddressBook)
     </div>
 
     @*Right Column*@
     <div id="ProfileRightColumn" class="col-xs-12 col-md-8 col-lg-8">
 
         @* SummaryTabNavDiv *@
-        @await Html.PartialAsync("Patient/_PatientSummaryMedicalInfo", Model)
+        @await Html.PartialAsync("Patient/_PatientClinicalInfo", Model.ClinicalInfo)
 
 
         <div id="TabbedContainerDiv" class="row col-12 invisible d-none" style="min-height:300px;">

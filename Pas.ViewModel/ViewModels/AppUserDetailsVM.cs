@@ -11,13 +11,17 @@ namespace Pas.Web.ViewModels
         public string BanglaName { get; set; }
         public string Mobile { get; set; }
         public string Email { get; set; }
-        public string Address { get; set; }
+        //public string Address { get; set; }
+        
+        /// <summary>This will be used from Doctor/SearchPatient- show in Grid</summary>
         public string AddressAreaLocality { get; set; }
         public int Age { get; set; }
         public Gender Gender { get; set; }
         public string DateOfBirth { get; set; }
         public string ShortId { get; set; }
         public bool HasMultipleRoles { get; set; }
+
+        public AddressBookVM AddressBook { get; set; }
 
         public UserRoleVM  CurrentRole { get; set; }
         public IEnumerable<UserRoleVM> RolesList { get; set; }

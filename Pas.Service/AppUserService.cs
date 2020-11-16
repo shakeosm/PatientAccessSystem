@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pas.Common.Enums;
+using Pas.Common.Extensions;
 using Pas.Data;
 using Pas.Data.Models;
 using Pas.Service.Interface;
@@ -15,24 +16,54 @@ namespace Pas.Service
     public class AppUserService : IAppUserService
     {
         private readonly PasContext _context;
+        private readonly ICacheService _cacheService;
+        private readonly IUniquePatientCodeGenerator _uniquePatientCodeGenerator;
 
-        public AppUserService( PasContext Context)
+        public AppUserService( PasContext Context,
+                                ICacheService CacheService,
+                                IUniquePatientCodeGenerator UniquePatientCodeGenerator)
         {
             _context = Context;
+            _cacheService = CacheService;
+            _uniquePatientCodeGenerator = UniquePatientCodeGenerator;
         }
 
-        public async Task<AppUserDetailsVM> Find(int id)
+        public async Task<AppUserDetailsVM> Find(int id, int currentUserId, bool includeAddressBook = false, bool trackingEnabled = false)
         {
-            var appUser = await _context.User.FindAsync(id);
+            
+            var cacheKey = $"{currentUserId}_{id}_Find_AppUserDetailsVM";    //## Current Doctor-looking-for-Patient-and-Name for that Key
 
-            AppUserDetailsVM result = MapToViewModel(appUser);
-            return result;
+            var cachedResult = _cacheService.GetCacheValue<AppUserDetailsVM>(cacheKey); //## First always check in the Cache- have we read it previosly?
+
+            if (cachedResult is null) {
+
+                //## Search in the Database
+
+                User appUser = new User();
+                if (includeAddressBook)
+                {
+                    appUser = await _context.User
+                                            .AsNoTracking()
+                                            .Include(u=> u.AddressBooks)
+                                            .FirstAsync(u=> u.Id == id);    
+                }
+                else {
+                    appUser = await _context.User.FindAsync(id);    
+                
+                }
+
+                cachedResult = MapToViewModel(appUser);                 //## Map to ViewPage readable format
+                _cacheService.SetCacheValue(cacheKey, cachedResult);    //## Now Cache it for Later use
+            }
+
+            return cachedResult;
         }
 
         public AppUserDetailsVM FindByEmail(string email)
         {
             var appUser = _context.User
                             .Include(p=> p.UserOrganisationRoles)
+                            .Include(p=> p.AddressBooks)
                             .AsNoTracking()
                             .First(p=> p.Email== email);
 
@@ -78,34 +109,29 @@ namespace Pas.Service
 
         public async Task<bool> RegisterA_User(User appUser)
         {
-            //## Insert a New Address Row in the Table
-            //var newAddress = new AddressBook()
-            //{
-            //    //Id = 0,
-            //    AddressLine1 = "",
-            //    CityId = 10,
-            //    LocalArea = ""
-            //};
-
-            //await _context.AddressBooks.AddAsync(newAddress);
-            //await _context.SaveChangesAsync();
-
-            //## Get that new RecordId- add to User table
-//            appUser.AddressBookId = newAddress.Id;
-
             //## Blank ClinicalHistory Record
-            appUser.ClinicalHistory = new ClinicalHistory()
+            appUser.ClinicalHistories = new List<ClinicalHistory>() 
             {
-                Age = appUser.Age,
-                UserId = 0
+                new ClinicalHistory()
+                {
+                    UserId = 0,
+                    //ClinicalInfoLastUpdated = new DateTime(2000, 1, 1),
+                    //PersonalHistoryLastUpdated = new DateTime(2000, 1, 1),
+                }
             };
 
-            //## Finally save the User record.
+            //## Generate a Unique PAS Code for this Patient
+            string pasCode = _uniquePatientCodeGenerator.Get(appUser.Mobile, 10);
+
+            //## Finally save the User record.            
+            appUser.ShortId = pasCode;
             await _context.User.AddAsync(appUser);
             await _context.SaveChangesAsync();
 
             return appUser.Id > 0;
         }
+
+
 
         public async Task<bool> UnlockUser(User appUser)
         {
@@ -126,28 +152,56 @@ namespace Pas.Service
         private AppUserDetailsVM MapToViewModel(User appUser)
         {
             AppUserDetailsVM mappedVM = new AppUserDetailsVM()
-            {
-                Address = "",
+            {                
                 Age = appUser.Age,
                 BanglaName = appUser.BanglaName ?? "",
-                DateOfBirth = appUser.DateOfBirth?.ToString("dd/MM/yyyy"),
+                DateOfBirth = appUser.DateOfBirth?.ToShortDateString(),
                 Email = appUser.Email,
                 Gender = (Gender)appUser.Gender,
                 HasMultipleRoles = appUser.UserOrganisationRoles.Any(),
                 Id = appUser.Id,
                 Mobile = appUser.Mobile,
                 Name = $"{appUser.FirstName} {appUser.LastName}",
-                ShortId = appUser.ShortId ?? "",                
+                ShortId = appUser.ShortId ?? "",  
+                AddressBook = MapToAddressBookVM(appUser.AddressBooks)
             };
+
+            //## Keep the Mobile and Email in the Address book
+            if (appUser.AddressBooks.Count >= 1) {
+                mappedVM.AddressBook.Mobile = appUser.Mobile;
+                mappedVM.AddressBook.Email = appUser.Email;
+            }
 
             return mappedVM;
         }
+
+        private AddressBookVM MapToAddressBookVM(ICollection<AddressBook> addressBooks)
+        {
+            if (addressBooks is null)
+            {
+                return new AddressBookVM();
+            }
+            else {
+                var firstAddress = addressBooks.Select(ab=> new AddressBookVM()
+                {  
+                    AddressLine1 = ab.AddressLine1,
+                    City = ((Common.Enums.City) ab.CityId).ToString(),
+                    LocalArea  =ab.LocalArea,
+                    Id = ab.Id
+                });
+
+                return firstAddress.FirstOrDefault();
+            }
+        }
+
 
         private IList<AppUserDetailsVM> MapToViewModel(IList<User> appUserList)
         {
             var mappedVM = appUserList.Select(u=> new AppUserDetailsVM()
             {
-                Address = "",
+                //Address = (u.AddressBooks.Count() >= 1 ? u.AddressBooks.FirstOrDefault().AddressLine1 : ""),
+                //AddressAreaLocality = (u.AddressBooks.Count() >= 1 ? u.AddressBooks.FirstOrDefault().LocalArea : ""),
+                AddressBook = MapToAddressBookVM(u.AddressBooks),
                 Age = u.Age,
                 BanglaName = u.BanglaName,
                 DateOfBirth = u.DateOfBirth.Value.ToString("dd/MM/yyyy"),
@@ -160,7 +214,28 @@ namespace Pas.Service
                 ShortId = u.ShortId
             }).ToList();
 
+
+
             return mappedVM;
+        }
+
+        public async Task<IEnumerable<UserRoleVM>> GetRolesByUser(int id)
+        {
+            var userRoles = await _context.UserOrganisationRole
+                                .Include(uor => uor.Organisation)
+                                .Include(uor => uor.Role)
+                                .Where(uor => uor.UserId == id).ToListAsync();
+
+            var userSwitchRoleViewVM = userRoles.Select(ur => new UserRoleVM
+            {
+                OrganisationId = ur.OrganisationId,
+                OrganisationName = ur.Organisation.Name,
+                RoleId = ur.RoleId,
+                //RoleName - ur.Role.Name,
+                UserOrganisationRoleId = ur.Id
+            });
+
+            return userSwitchRoleViewVM;
         }
     }
 }

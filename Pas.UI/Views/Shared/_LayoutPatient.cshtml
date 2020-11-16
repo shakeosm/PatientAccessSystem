@@ -1,22 +1,11 @@
 ﻿@using Pas.Web.ViewModels
+
 @{ 
 
     var userDetails = (AppUserDetailsVM)ViewBag.UserDetails;
 
     var profileImageUrl = "/images/profile-photos/patient.jfif";    //## Default to No-image
-    var areaLocality = "";  //## ie: 'Panchlaish, Chattogram'
-
-    if (userDetails is null)
-    {
-        userDetails = new AppUserDetailsVM()
-        {
-            Name = "Anonymous User",
-        };
-    }
-    else {
-        //profileImageUrl = $"~/images/profile-photos/{userDetails.ImageUrl}";
-        areaLocality = userDetails.AddressAreaLocality;
-    }
+                                                                    //var areaLocality = "";  //## ie: 'Panchlaish, Chattogram'
 }
 <!DOCTYPE html>
 <!--
@@ -96,7 +85,7 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                                     @userDetails.Name
                                 </span>
                             </a>
-                            <span class="d-inline-block">@areaLocality</span>
+                            <span class="d-inline-block">@userDetails.AddressBook.LocalArea, @userDetails.AddressBook.City</span>
                         </div>
                         <img src="~/images/card-backgrounds/cover-1-lg.png" class="cover" alt="cover">
                         <a href="#" onclick="return false;" class="pull-trigger-btn" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar" data-focus="nav_filter_input">

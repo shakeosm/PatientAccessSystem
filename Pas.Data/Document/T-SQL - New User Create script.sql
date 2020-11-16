@@ -14,3 +14,10 @@ FROM
 WHERE [dbo].[AspNetUsers].UserName='shakeosm@gmail.com';
 
 
+-- Address in  Address Book.
+insert into    
+	[roogi-test].[dbo].[AddressBook] 
+		(UserId, AddressLine1, LocalArea, CityId, DateCreated)
+select U.Id, '-', '', 10, GETDATE()
+from [User].[User] AS U
+

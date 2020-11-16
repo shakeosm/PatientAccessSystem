@@ -20,7 +20,7 @@ namespace Pas.Service
         private readonly IUserOrgRoleService _userOrgRoleService;
         //private readonly IOrganisationService _organisationService;
         private readonly ICacheService _cacheService;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        //private readonly IHttpContextAccessor httpContextAccessor;
 
         public UserManager<IdentityUser> _userManager { get; }
 

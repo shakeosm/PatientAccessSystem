@@ -1,22 +1,24 @@
-﻿
+﻿@model Pas.Web.ViewModels.DoctorViewPatientWrapperVM
 @{
     ViewData["Title"] = "Patient Profile";
 }
-    <ol class="breadcrumb bg-primary-300 d-none">
-        <li class="breadcrumb-item">
-            <a href="#" class="text-white">
-                <i class="fal fa-home mr-1"></i> Home
-            </a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="#" class="text-white">Library</a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="#" class="text-white">Web</a>
-        </li>
-        <li class="breadcrumb-item active text-white">Data</li>
-    </ol>
+<ol class="breadcrumb bg-primary-300 d-none">
+    <li class="breadcrumb-item">
+        <a href="#" class="text-white">
+            <i class="fal fa-home mr-1"></i> Home
+        </a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="#" class="text-white">Library</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="#" class="text-white">Web</a>
+    </li>
+    <li class="breadcrumb-item active text-white">Data</li>
+</ol>
 
+<!-- Doctor/Home/ViewPatient/ -->
+<div id="PatientProfileViewDiv" class="col-12">
     <div class="card">
         <div class="card-header">
             Patient Profile
@@ -24,9 +26,11 @@
         <div class="card-body">
             @*asp-action="StartNewPrescription" asp-controller="Home" asp-area="Doctor"*@
 
-            @await Html.PartialAsync("_patientProfile")
+            @await Html.PartialAsync("Patient/_patientProfileSummary", Model.PatientProfileWrapper)
 
         </div>
     </div>
+
+</div>
 
 

@@ -46,7 +46,6 @@ namespace Pas.UI.Areas.Patient.Controllers
 
         private void SetUserProfileValues(AppUserDetailsVM currentUser)
         {
-            currentUser.AddressAreaLocality = "Badurtola, Chottagram";  //TODO: Should read from Database
             currentUser.ImageUrl = "user-3.png";
             ViewBag.UserDetails = currentUser;
         }

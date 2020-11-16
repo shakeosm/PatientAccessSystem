@@ -34,17 +34,25 @@ namespace Pas.UI.Areas.Patient.Controllers
             //## Somethig like Patient Dashboard
             //var _userEmail = _userManager.GetUserName(HttpContext.User);
 
-            var currentUser = await GetCurrentUser();
+            AppUserDetailsVM currentUser = await GetCurrentUser();
+            ClinicalHistoryVM clinicalInfo = await _patientService.GetClinicalDetails(currentUser.Id);
             
+
+            PatientProfileWrapperVM vm = new PatientProfileWrapperVM() {
+                Patient = currentUser,  //## This is Patient Profile... Patient/Home/Index Page
+                ClinicalInfo = clinicalInfo,
+                LabResults =null,   //## Not required in Profile Page
+                PrescriptionList = null,   //## Not required in Profile Page 
+            };
+
             //## Re-factor UserDetails- 'Patient' type values     
             SetUserProfileValues(currentUser);
 
-            return View(currentUser);
+            return View(vm);
         }
 
         private void SetUserProfileValues(AppUserDetailsVM currentUser)
-        {
-            currentUser.AddressAreaLocality = "Badurtola, Chottagram";  //TODO: Should read from Database
+        {            
             currentUser.ImageUrl = "user-3.png";
             ViewBag.UserDetails = currentUser;
         }

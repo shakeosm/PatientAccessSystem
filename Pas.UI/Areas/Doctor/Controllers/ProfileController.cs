@@ -54,7 +54,6 @@ namespace Pas.UI.Areas.Doctor.Controllers
         private void SetDoctorsProfileValues(AppUserDetailsVM currentUser)
         {
             currentUser.Name = "Dr. " + currentUser.Name;
-            currentUser.AddressAreaLocality = currentUser.CurrentRole.OrganisationName;     //## Current Selected Chamber
             currentUser.ImageUrl = "user-3.png";
             ViewBag.UserDetails = currentUser;
         }

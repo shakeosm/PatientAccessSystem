@@ -31,7 +31,9 @@ namespace Pas.Data
         public virtual DbSet<DrugDosageType> DrugDosageType { get; set; }
         public virtual DbSet<DrugModeOfDelivery> DrugModeOfDelivery { get; set; }
         public virtual DbSet<Drugs> Drugs { get; set; }
+        public virtual DbSet<DrugBrands> DrugBrands { get; set; }
         public virtual DbSet<IndicationTypes> IndicationTypes { get; set; }
+        public virtual DbSet<Manufacturer> Manufacturers { get; set; }
         public virtual DbSet<ModeOfDelivery> ModeOfDelivery { get; set; }
         public virtual DbSet<Organisation> Organisation { get; set; }
         public virtual DbSet<PatientAilment> PatientAilmentTypes { get; set; }
@@ -177,9 +179,8 @@ namespace Pas.Data
 
             modelBuilder.Entity<ClinicalHistory>(entity =>
             {
-                entity.ToTable("ClinicalHistory", "Patient");              
+                entity.ToTable("ClinicalHistory", "Patient");                
             });
-
 
             modelBuilder.Entity<DiagnosticTest>(entity =>
             {
@@ -326,6 +327,14 @@ namespace Pas.Data
                     .HasConstraintName("FK_Drugs_DrugCategoryTypes_DrugCategoryTypeId");
             });
 
+            modelBuilder.Entity<DrugBrands>(entity =>
+            {
+                entity.ToTable("DrugBrands", "Drug");
+            
+            });
+
+            
+
             modelBuilder.Entity<IndicationTypes>(entity =>
             {
                 entity.ToTable("IndicationTypes", "Drug");
@@ -344,6 +353,12 @@ namespace Pas.Data
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+
+            modelBuilder.Entity<Manufacturer>(entity =>
+            {
+                entity.ToTable("Manufacturer", "dbo");
             });
 
             modelBuilder.Entity<Organisation>(entity =>
@@ -433,6 +448,12 @@ namespace Pas.Data
                     .HasForeignKey(d => d.DrugId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PrescriptionDrugs_Drugs");
+
+                entity.HasOne(d => d.DrugBrands)
+                    .WithMany(p => p.PrescriptionDrugs)
+                    .HasForeignKey(d => d.DrugBrandId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PrescriptionDrugs_DrugBrands");
 
                 entity.HasOne(d => d.ModeOfDelivery)
                     .WithMany(p => p.PrescriptionDrugs)

@@ -1,8 +1,13 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿<!--    
+    ########## NOT IN USE
+    -->
+
+
+@using Microsoft.AspNetCore.Identity
 @*@using Pas.Common.Models.Identity*@
 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@*@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager*@
 
 @{
     ViewData["Title"] = "Patient Profile";
@@ -25,7 +30,7 @@
     @* SummaryTabNavDiv *@
     <div class="SummaryTabNavDiv">
 
-        <partial name="Views/Shared/Patient/_PatientSummaryMedicalInfo.cshtml" />
+        <partial name="Views/Shared/Patient/_PatientClinicalInfo.cshtml.cshtml" />
 
     </div>
 
