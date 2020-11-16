@@ -1,4 +1,5 @@
 ﻿using Pas.Common.Enums;
+using Pas.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -38,7 +39,7 @@ namespace Pas.Web.ViewModels
         public DateTime ClinicalInfoLastUpdated { get; set; }
 
         public string AllergyInfo { get; set; }
-        public string AilmentList { get; set; }
+        public IEnumerable<PatientAilmentType> AilmentList { get; set; }
 
         public IEnumerable<DrugDetailsVM> DrugList { get; set; }
     }

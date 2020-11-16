@@ -17,7 +17,7 @@ namespace Pas.Service.Interface
 
         Task<bool> UnlockUser(User appUser);
         
-        Task<AppUserDetailsVM> Find(int id, int currentUserId, bool includeAddressBook = false, bool trackingEnabled = false);
+        Task<AppUserDetailsVM> Find(int id, bool includeAddressBook = false, bool trackingEnabled = false);
         AppUserDetailsVM FindByEmail(string email);
         Task<AppUserDetailsVM> FindByMobile(string mobile);
         AppUserDetailsVM FindByShortId(string shortId);

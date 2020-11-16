@@ -52,12 +52,12 @@ namespace Pas.UI.Areas.Doctor.Controllers
             //## This is the Dashboard Page of a Doctor. Can view- Chart, Profile, Search Patients and Create a new Prescription
             PrescriptionCreateInitialVM vm = new PrescriptionCreateInitialVM()
             { 
-                DoctorId = 3,
-                HospitalId = 4,
+                DoctorId = currentUser.Id,
+                HospitalId = currentUser.CurrentRole.OrganisationId,
                 PatientId = 1,
 
-                HospitalDetails = null,
-                DoctorDetails = null
+                //HospitalDetails = null,
+                //DoctorDetails = null
             };
 
             //## Re-factor UserDetails- 'Doctor' type values     
@@ -155,7 +155,7 @@ namespace Pas.UI.Areas.Doctor.Controllers
                 return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
             }
 
-            AppUserDetailsVM patientDetails = await _appUserService.Find(id, currentUser.Id, true);
+            AppUserDetailsVM patientDetails = await _appUserService.Find(id, true);
             ClinicalHistoryVM patientClinicalInfo = await _patientService.GetClinicalDetails(id);
 
             DoctorViewPatientWrapperVM vm = new DoctorViewPatientWrapperVM() { 
@@ -184,15 +184,15 @@ namespace Pas.UI.Areas.Doctor.Controllers
             }
 
             PrescriptionCreateInitialVM vm = new PrescriptionCreateInitialVM() { 
-                HospitalId = 4 ,
-                DoctorId = 3,
-                PatientId = 1
+                HospitalId = currentUser.CurrentRole.OrganisationId,
+                DoctorId = currentUser.Id,
+                PatientId = Id
             };
 
             //## Create a new Record in the Prescription Table- with Patient, Doctor and Hospital Id- 
             // then capture the remaining info from the UI
 
-            int prescriptionId = await _prescriptionService.CreateInitialDefault(vm);
+            int prescriptionId = 1003;  // await _prescriptionService.CreateInitialDefault(vm);
 
             return RedirectToAction("Create", "Prescription", new { id = prescriptionId });
         }
@@ -207,6 +207,15 @@ namespace Pas.UI.Areas.Doctor.Controllers
 
             return View(searchResult);
             
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Drugs()
+        {
+            
+            
+            return View();
+
         }
     }
 }

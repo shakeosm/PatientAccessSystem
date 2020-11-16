@@ -17,7 +17,7 @@ namespace Pas.Service.Interface
         
         Task<bool> Delete(int id);
 
+        Task<IList<IndicationTypes>> ListAllIndicationTypes();
 
-        
     }
 }

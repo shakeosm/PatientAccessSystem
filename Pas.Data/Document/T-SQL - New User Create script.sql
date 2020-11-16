@@ -21,3 +21,12 @@ insert into
 select U.Id, '-', '', 10, GETDATE()
 from [User].[User] AS U
 
+--## Brands Drugs
+INSERT INTO    
+	[roogi-test].[Drug].[DrugBrands] 
+		(DrugId, BrandName, ManufacturerId, DateAdded)
+SELECT D.Id, D.Name, 1, GETDATE()
+FROM [Drug].[Drugs]D
+
+
+

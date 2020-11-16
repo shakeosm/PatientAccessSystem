@@ -36,7 +36,7 @@ namespace Pas.Data
         public virtual DbSet<Manufacturer> Manufacturers { get; set; }
         public virtual DbSet<ModeOfDelivery> ModeOfDelivery { get; set; }
         public virtual DbSet<Organisation> Organisation { get; set; }
-        public virtual DbSet<PatientAilment> PatientAilmentTypes { get; set; }
+        public virtual DbSet<PatientAilmentType> PatientAilmentTypes { get; set; }
         public virtual DbSet<PatientAllergy> PatientAllergies { get; set; }
         public virtual DbSet<Prescription> Prescription { get; set; }
         public virtual DbSet<PrescriptionDiagnosticTest> PrescriptionDiagnosticTest { get; set; }
@@ -164,9 +164,14 @@ namespace Pas.Data
                      .WithMany(p => p.AddressBooks)
                      .HasForeignKey(d => d.UserId)
                      .OnDelete(DeleteBehavior.Cascade);
-                 });          
+                 });
 
+            modelBuilder.Entity<AilmentTypes>(entity =>
+            {
+                entity.ToTable("AilmentTypes", "dbo");                
+            });
 
+            
             modelBuilder.Entity<CategoryTypes>(entity =>
             {
                 entity.ToTable("CategoryTypes", "Drug");
@@ -422,9 +427,9 @@ namespace Pas.Data
                     .HasConstraintName("FK_PrescriptionDiagnosticTest_Prescription");
             });
 
-            modelBuilder.Entity<PatientAilment>(entity =>
+            modelBuilder.Entity<PatientAilmentType>(entity =>
             {
-                entity.ToTable("PatientAilment", "Patient");
+                entity.ToTable("PatientAilmentType", "Patient");                                   
             });
 
 

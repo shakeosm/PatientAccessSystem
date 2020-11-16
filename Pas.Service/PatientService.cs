@@ -145,7 +145,7 @@ namespace Pas.Service
                         .Include(c => c.User)
                         .FirstOrDefaultAsync(c => c.UserId == id);
 
-                cachedResult = MapToClinicalHistoryVM(search);
+                cachedResult = await MapToClinicalHistoryVM(search);
 
                 _cacheService.SetCacheValue(cacheKey, cachedResult);
             }
@@ -154,7 +154,7 @@ namespace Pas.Service
         }
 
 
-        private ClinicalHistoryVM MapToClinicalHistoryVM(ClinicalHistory ch)
+        private async Task<ClinicalHistoryVM> MapToClinicalHistoryVM(ClinicalHistory ch)
         {
             try
             {
@@ -175,12 +175,13 @@ namespace Pas.Service
                     Height = ch.Height,
                     Weight = ch.Weight?.ToString(),
 
-                    AllergyInfo = ch.AllergyInfo,
-                    AilmentList = "Ailment section is not filled up yet",
+                    AllergyInfo = ch.AllergyInfo,                    
 
                     ClinicalInfoLastUpdated = ch.ClinicalInfoLastUpdated,
                     PersonalHistoryLastUpdated = ch.PersonalHistoryLastUpdated
                 };
+
+                clinicalHistoryVM.AilmentList = await GetPatientAilments(ch.UserId);    // "Ailment section is not filled up yet",
 
                 return clinicalHistoryVM;
             }
@@ -190,6 +191,56 @@ namespace Pas.Service
                 return new ClinicalHistoryVM();
             }
 
+        }
+
+        public async Task<IEnumerable<PatientAilmentType>> GetPatientAilments(int id)
+        {
+            string cacheKey = $"GetPatientAilments_{id}";
+
+            var ailments = _cacheService.GetCacheValue<IEnumerable<PatientAilmentType>>(cacheKey);
+            
+            if (ailments is null) {
+                ailments = await _pasContext.PatientAilmentTypes.Where(pa => pa.PatientId == id).ToListAsync();
+                
+                _cacheService.SetCacheValue(cacheKey, ailments);                
+            }
+
+            return ailments;
+        }
+
+        public async Task<IEnumerable<DrugDetailsVM>> GetRecentMedication(int id)
+        {
+            string cacheKey = $"GetRecentMedication{id}";
+
+            var medicationList = _cacheService.GetCacheValue<IEnumerable<DrugDetailsVM>> (cacheKey);
+            if (medicationList is null)
+            {
+                var patientMedications = await _pasContext.PrescriptionDrugs
+                                                    .Where(pd=> pd.Prescription.PatientId == id)
+                                                    .ToListAsync();
+
+                medicationList = MapToMedicationListVM(patientMedications);
+                _cacheService.SetCacheValue(cacheKey, medicationList);
+
+            }
+
+            return medicationList;
+        }
+
+        /// <summary>This will Map list of Medications to MedicationListVM- 
+        /// which will be used in Patient's Profile- as a Doctor/Patient or while creating a Prescription</summary>
+        /// <param name="patientMedications">List of Prescription Drugs</param>
+        /// <returns></returns>
+        private IEnumerable<DrugDetailsVM> MapToMedicationListVM(IEnumerable<PrescriptionDrugs> patientMedications)
+        {
+            var mappedResult = patientMedications.Select(pm=> new DrugDetailsVM()
+            { 
+                Name = pm.DrugBrands.BrandName,
+                Dosage = pm.Dosage.Name,
+                Id = pm.DrugId
+            });
+
+            return mappedResult;
         }
     }
 }

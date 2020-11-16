@@ -6,9 +6,9 @@ using System.Text;
 
 namespace Pas.Data.Models
 {
-    public partial class PatientAilment : BaseEntityModel
+    public partial class PatientAilmentType : BaseEntityModel
     {
-        public PatientAilment()
+        public PatientAilmentType()
         {
 
         }
@@ -21,14 +21,14 @@ namespace Pas.Data.Models
 
         [Required]
         [Column(TypeName = "datetime2(3)")]
-        public DateTime DateAddedd { get; set; }
+        public DateTime DateAdded { get; set; }
 
         [Column(TypeName = "datetime2(3)")]
         public DateTime DateRemoved { get; set; }
 
         public virtual User Patient { get; set; }
 
-        public virtual AilmentTypes AilmentTypes { get; set; }
+        public virtual AilmentTypes AilmentType { get; set; }
 
 
     }

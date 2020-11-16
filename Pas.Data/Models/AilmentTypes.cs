@@ -9,7 +9,7 @@ namespace Pas.Data.Models
     {
         public AilmentTypes()
         {
-            PatientAilmentTypes = new HashSet<PatientAilment>();
+            PatientAilmentTypes = new HashSet<PatientAilmentType>();
         }
 
         [Required]
@@ -21,6 +21,6 @@ namespace Pas.Data.Models
         
         public bool? IsDeleted { get; set; }
 
-        public virtual ICollection<PatientAilment> PatientAilmentTypes{ get; set; }
+        public virtual ICollection<PatientAilmentType> PatientAilmentTypes{ get; set; }
     }
 }

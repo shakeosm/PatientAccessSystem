@@ -13,11 +13,14 @@ namespace Pas.Service
 {
     public class PrescriptionService : IPrescriptionService
     {
+        private readonly ICacheService _cacheService;
+
         public PasContext _pasContext { get; }
 
-        public PrescriptionService(PasContext PasContext)
+        public PrescriptionService(PasContext PasContext, ICacheService CacheService)
         {
             _pasContext = PasContext;
+            _cacheService = CacheService;
         }
 
         /// <summary>
@@ -64,21 +67,39 @@ namespace Pas.Service
 
         public async Task<Prescription> Find(int id)
         {
-            Prescription result = await _pasContext.Prescription
-                                        .FindAsync(id);
+            string cacheKey = $"Prescription_{id}";
+            var prescription = _cacheService.GetCacheValue<Prescription>(cacheKey);
 
-            return result;
+            if (prescription is null) {
+                prescription = await _pasContext.Prescription.FindAsync(id);
+            
+                _cacheService.SetCacheValue(cacheKey, prescription);
+            }
+
+
+            return prescription;
         }
 
         public async Task<IEnumerable<Prescription>> ListByPatient(int id)
         {
-            var result = await _pasContext.Prescription
-                                        .Include(p=> p.Doctor)
-                                        .Include(p=> p.Hospital)
-                                        .Include(p=> p.PrescriptionDrugs)
-                                        .Where(p=> p.PatientId == id).ToListAsync();
 
-            return result;
+            string cacheKey = $"prescriptionList_{id}";
+            var prescriptionList = _cacheService.GetCacheValue<List<Prescription>>(cacheKey);
+
+            if (prescriptionList is null)
+            {
+                prescriptionList = await _pasContext.Prescription
+                                        .Include(p => p.Doctor)
+                                        .Include(p => p.Hospital)
+                                        .Include(p => p.PrescriptionDrugs)
+                                        .Where(p => p.PatientId == id).ToListAsync();
+
+                _cacheService.SetCacheValue(cacheKey, prescriptionList);
+            }
+
+            
+
+            return prescriptionList;
         }
 
         //private async Task<PrescriptionAddVM> MapToCreateViewModel(Prescription prescription)

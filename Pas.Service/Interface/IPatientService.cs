@@ -18,5 +18,9 @@ namespace Pas.Service.Interface
 
         Task<IEnumerable<AppUserDetailsVM>> GetRegularPatientList(int doctorId);
         Task<ClinicalHistoryVM> GetClinicalDetails(int id);
+
+        Task<IEnumerable<PatientAilmentType>> GetPatientAilments(int id);
+
+        Task<IEnumerable<DrugDetailsVM>> GetRecentMedication(int id);
     }
 }

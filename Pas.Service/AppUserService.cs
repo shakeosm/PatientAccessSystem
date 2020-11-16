@@ -28,12 +28,16 @@ namespace Pas.Service
             _uniquePatientCodeGenerator = UniquePatientCodeGenerator;
         }
 
-        public async Task<AppUserDetailsVM> Find(int id, int currentUserId, bool includeAddressBook = false, bool trackingEnabled = false)
+        public async Task<AppUserDetailsVM> Find(int id, bool includeAddressBook = false, bool trackingEnabled = false)
         {
             
-            var cacheKey = $"{currentUserId}_{id}_Find_AppUserDetailsVM";    //## Current Doctor-looking-for-Patient-and-Name for that Key
+            var cacheKey = $"Find_AppUserDetailsVM_{id}";    //## Current Doctor-looking-for-Patient-and-Name for that Key
 
             var cachedResult = _cacheService.GetCacheValue<AppUserDetailsVM>(cacheKey); //## First always check in the Cache- have we read it previosly?
+            if (cachedResult?.AddressBook is null && includeAddressBook)
+            {
+                cachedResult = null;
+            }
 
             if (cachedResult is null) {
 
@@ -152,18 +156,23 @@ namespace Pas.Service
         private AppUserDetailsVM MapToViewModel(User appUser)
         {
             AppUserDetailsVM mappedVM = new AppUserDetailsVM()
-            {                
-                Age = appUser.Age,
-                BanglaName = appUser.BanglaName ?? "",
-                DateOfBirth = appUser.DateOfBirth?.ToShortDateString(),
-                Email = appUser.Email,
-                Gender = (Gender)appUser.Gender,
-                HasMultipleRoles = appUser.UserOrganisationRoles.Any(),
+            {
                 Id = appUser.Id,
-                Mobile = appUser.Mobile,
+                Title = ((Title)appUser.Title).ToString(),
                 Name = $"{appUser.FirstName} {appUser.LastName}",
+                BanglaName = appUser.BanglaName ?? "",
+
+                Age = appUser.Age,
+                DateOfBirth = appUser.DateOfBirth?.ToShortDateString(),                
+                Gender = (Gender)appUser.Gender,                
+                
+                Mobile = appUser.Mobile,
+                Email = appUser.Email,
+
                 ShortId = appUser.ShortId ?? "",  
-                AddressBook = MapToAddressBookVM(appUser.AddressBooks)
+                AddressBook = MapToAddressBookVM(appUser.AddressBooks),
+
+                HasMultipleRoles = appUser.UserOrganisationRoles.Any()
             };
 
             //## Keep the Mobile and Email in the Address book

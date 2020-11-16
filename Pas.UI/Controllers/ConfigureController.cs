@@ -22,5 +22,16 @@ namespace Pas.UI.Controllers
             //## Show list of All Drugs            
             return View();
         }
+
+        /// <summary>Show the Details fo a Specific Drug item</summary>
+        /// <param name="id">Drug Id</param>
+        /// <returns></returns>
+        public IActionResult Drug(int id)
+        {
+            //## Show list of All Drugs            
+            return View();
+        }
+
+
     }
 }

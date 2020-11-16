@@ -12,7 +12,7 @@ namespace Pas.Data.Models
             Organisations = new HashSet<Organisation>();
             UserOrganisationRoles = new HashSet<UserOrganisationRole>();
             UserRelated = new HashSet<UserRelated>();
-            PatientAilments = new HashSet<PatientAilment>();
+            PatientAilments = new HashSet<PatientAilmentType>();
             AddressBooks = new HashSet<AddressBook>();
             ClinicalHistories = new HashSet<ClinicalHistory>();
         }
@@ -60,7 +60,7 @@ namespace Pas.Data.Models
         public virtual ICollection<Organisation> Organisations { get; set; }
         public virtual ICollection<UserOrganisationRole> UserOrganisationRoles { get; set; }
         public virtual ICollection<UserRelated> UserRelated { get; set; }
-        public virtual ICollection<PatientAilment> PatientAilments { get; set; }
+        public virtual ICollection<PatientAilmentType> PatientAilments { get; set; }
         public virtual ICollection<PatientAllergy> PatientAllergies { get; set; }
 
         public virtual ICollection<AddressBook> AddressBooks { get; set; }

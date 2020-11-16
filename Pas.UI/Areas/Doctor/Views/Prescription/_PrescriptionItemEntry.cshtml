@@ -1,0 +1,169 @@
+﻿@using Pas.Service.Interface
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@inject IDrugService DrugService
+
+@{ 
+    //var drugList = await DrugService.ListAll();
+    //var indicationList = await DrugService.ListAllIndicationTypes();
+}
+
+    <div id="PrescriptionFormDiv" class="form-row col-12 ml-2 bg-white border rounded p-3">
+        <div id="DrugAndBrandsRowDiv" class="form-row col-md-6 col-sm-12">
+            <div class="col-12">
+                <div class="form-group row">
+                    <label for="DrugListSelect" class="col-sm-2 form-label">Drug:</label>
+                    <div class="col-sm-10">
+                        @*<input type="email" class="form-control" id="inputEmail3" placeholder="Email">*@
+                        <select id="DrugListSelect" class="form-control" size="10">
+                            <option value="" selected>Select a Drug</option>
+                            <option value="value">text</option>
+                            <option value="value">wewew</option>
+                            <option value="value">dsds</option>
+                            <option value="value">zdsf</option>
+                            <option value="value">xcs</option>
+                            <option value="value">vdghg</option>
+                            <option value="value">yuyd</option>
+                            <option value="value">dfdf</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="BrandListSelect" class="col-sm-2 form-label">Brand:</label>
+                    <div class="col-sm-10">
+                        @*<input type="email" class="form-control" id="inputEmail3" placeholder="Email">*@
+                        <select id="BrandListSelect" class="form-control" size="4">
+                            <option value="value">Generic</option>
+                            <option value="value">GSK Brand</option>
+                            <option value="value">pFizer</option>
+                            <option value="value">Rinen</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="DosageAndDeliveryRowDiv" class="form-row col-12 mt-3">
+                <div class="form-group row col-12">
+                    <label for="XXX" class="col-sm-2 form-label"></label>
+                    <div class="form-row col-sm-10">
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" class="custom-control-input" id="defaultInline2Radio1" name="inlineDefaultRadiosExample" checked="">
+                            <label class="custom-control-label" for="defaultInline2Radio1">Tablet</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" class="custom-control-input" id="defaultInline2Radio2" name="inlineDefaultRadiosExample" />
+                            <label class="custom-control-label" for="defaultInline2Radio2">Caplet</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" class="custom-control-input" id="defaultInline2Radio3" name="inlineDefaultRadiosExample" />
+                            <label class="custom-control-label" for="defaultInline2Radio3">Capsule</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" class="custom-control-input" id="defaultInline2Radio4" name="inlineDefaultRadiosExample" />
+                            <label class="custom-control-label" for="defaultInline2Radio4">Syrup</label>
+                        </div>
+
+                        <div class="col-12 help-block">Mode of Delivery</div>
+                    </div>
+                </div>
+
+                <div class="form-group row col-12">
+                    <div class="form-row col-12">
+                        <label for="XXXY" class="col-sm-2 form-label"></label>
+                        <div class="form-row col-sm-10">
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" class="custom-control-input" id="defaultInline2Radio5" name="DosageRadioOption" checked="">
+                                <label class="custom-control-label" for="defaultInline2Radio5">10 mg</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" class="custom-control-input" id="defaultInline2Radio6" name="DosageRadioOption">
+                                <label class="custom-control-label" for="defaultInline2Radio6">15 mg</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" class="custom-control-input" id="defaultInline2Radio7" name="DosageRadioOption" />
+                                <label class="custom-control-label" for="defaultInline2Radio7">20 mg</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" class="custom-control-input" id="defaultInline2Radio8" name="DosageRadioOption" />
+                                <label class="custom-control-label" for="defaultInline2Radio8">30 mg</label>
+                            </div>
+
+                            <div class="col-12 help-block">Drug Dosage</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row col-12 mt-3">
+                        <div class="form-group row col-12">
+                            <label for="QuantityInput" class="col-sm-2 form-label">Quantity / Duration</label>
+                            <div class="col-sm-5">
+                                <input type="number" class="form-control form-control-sm" id="QuantityInput" placeholder="Quantity">
+                                <span class="help-block">Quantity per day</span>
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="number" class="form-control form-control-sm" id="DurationInput" placeholder="number of days">
+                                <span class="help-block">How many days to continue</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<div class="form-row col-12 mt-3">
+                        <div class="form-group row col-12">
+                            <label for="DurationInput" class="col-sm-2 form-label">Duration</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control form-control-sm" id="DurationInput" placeholder="number of days">
+                                <span class="help-block">How many days to continue</span>
+                            </div>
+                        </div>
+                    </div>*@
+
+                    <div class="form-row col-12 mt-3">
+                        <div class="form-group row col-12">
+                            <label for="NotesInput" class="col-sm-2 form-label">Notes</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" id="NotesInput" rows="3" placeholder="Treatment notes"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="BottomRowDiv" class="row-border col-12 mt-1">
+
+
+                    <div class="form-group row">
+                        <div class="col-sm-2">Checkbox</div>
+                        <div class="col-sm-10">
+                            <div class="custom-control custom-checkbox my-1 mr-sm-2">
+                                <input type="checkbox" class="custom-control-input" id="FollowUpVisitCheckbox">
+                                <label class="custom-control-label" for="FollowUpVisitCheckbox">Follow up Visit</label>
+                            </div>   
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <form id="PrescriptionCreateForm" action="Create" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="button" class="btn btn-primary waves-effect waves-themed">Add this Drug</button>
+                            <button type="button" class="btn btn-primary waves-effect waves-themed">Save Prescription</button>                            
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div id="PrescriptionDrugTable" class="form-row col-md-6 col-sm-12">
+            <h3>Right column</h3>
+
+        </div>
+
+
+
+    </div>        
+
+<hr />
+    

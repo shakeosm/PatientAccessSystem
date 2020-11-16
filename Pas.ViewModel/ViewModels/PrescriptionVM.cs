@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pas.Data.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Pas.Web.ViewModels
@@ -6,23 +7,24 @@ namespace Pas.Web.ViewModels
     public class PrescriptionCreateVM
     {
         public int Id { get; set; }
-        public HospitalDetailsVM HospitalDetails { get; set; }
-        public DoctorDetailsVM DoctorDetails { get; set; }
+        public AppUserDetailsVM Doctor { get; set; }
         public AppUserDetailsVM PatientDetails { get; set; }
 
-        public int IndicatioId { get; set; }
-        public IList<IndicationVM> indicationList { get; set; }
+        public int IndicationId { get; set; }
+        public IList<IndicationTypes> indicationList { get; set; }
         
-        public IList<DrugDetailsVM> DrugList { get; set; }
+        public IEnumerable<DrugDetailsVM> DrugList { get; set; }
 
         public IList<DiagnosticTestDetailsVM> DiagnosticTestList { get; set; }
 
-        //## Need while posting
-        public int PreviousPrescriptionId { get; set; }
-
-        public bool IsRepeatingVisit { get; set; }
-
-        public string Notes { get; set; }
+        public IList<string> PreviousNotes { get; set; }
+        
+        public IEnumerable<PatientAilmentType> Ailments { get; set; }
+        
+        /// <summary>List of known Allergies- from [Patient].[ClinicalHistory]</summary>
+        public string AllergyList { get; set; }
+        
+        public IEnumerable<DrugDetailsVM> RecentMedication { get; set; }
     }
 
     /// <summary>This is for POST method
@@ -34,10 +36,7 @@ namespace Pas.Web.ViewModels
         public int Id { get; set; }
         public int IndicatioId { get; set; }
 
-        //## Need while posting
-        public int PreviousPrescriptionId { get; set; }
-
-        public bool IsRepeatingVisit { get; set; }
+        public bool IsFollowUpVisit { get; set; }
 
         public string Notes { get; set; }
     }

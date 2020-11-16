@@ -26,8 +26,9 @@ namespace Pas.Data.Models
         [Column(TypeName = "datetime2(3)")]
         public DateTime DateCreated { get; set; }
 
-        [Column(TypeName = "varchar(500)")]
+        [Column(TypeName = "nvarchar(1000)")]
         public string Notes { get; set; }
+
         public bool? IsRepeatingVisit { get; set; }
         public int? PreviousPrescriptionId { get; set; }
 

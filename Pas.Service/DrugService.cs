@@ -79,5 +79,21 @@ namespace Pas.Service
         {
             throw new NotImplementedException();
         }
+
+        public async Task<IList<IndicationTypes>> ListAllIndicationTypes()
+        {
+            string cacheKey = "ListAllIndicationTypes";
+            var indicationTypes = _cacheService.GetCacheValue<List<IndicationTypes>>(cacheKey);
+
+            if (indicationTypes is null)
+            {
+                indicationTypes = await _context.IndicationTypes.ToListAsync();
+
+                _cacheService.SetCacheValue(cacheKey, indicationTypes);
+                
+            }
+
+            return indicationTypes;
+        }
     }
 }

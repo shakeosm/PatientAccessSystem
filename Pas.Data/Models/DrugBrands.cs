@@ -18,7 +18,7 @@ namespace Pas.Data.Models
         public int DrugId { get; set; }
 
         [Required]
-        [Column(TypeName = "varchar(20)")]
+        [Column(TypeName = "varchar(50)")]
         public string BrandName { get; set; }
 
         [Required]
