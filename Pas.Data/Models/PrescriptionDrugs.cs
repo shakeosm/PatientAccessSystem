@@ -17,13 +17,19 @@ namespace Pas.Data.Models
         public int DrugBrandId { get; set; }
 
         [Required]
-        public int DosageId { get; set; }
+        public int StrengthTypeId { get; set; }
 
         [Required]
         public int ModeOfDeliveryId { get; set; }
 
         [Required]
-        public short Quantity { get; set; }
+        public short QuantityPerDay { get; set; }
+        
+        [Required]
+        public short QuantityPerDose { get; set; }
+
+        [Required]
+        public short MealsCondition { get; set; }
 
         [Required]
         public short DurationDays { get; set; }
@@ -31,7 +37,7 @@ namespace Pas.Data.Models
         [Column(TypeName = "nvarchar(100)")]
         public string Notes { get; set; }
 
-        public virtual DosageTypes Dosage { get; set; }
+        public virtual StrengthType StrengthType { get; set; }
         public virtual Drugs Drug { get; set; }
         public virtual DrugBrands DrugBrands { get; set; }
         public virtual ModeOfDelivery ModeOfDelivery { get; set; }

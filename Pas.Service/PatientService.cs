@@ -236,7 +236,7 @@ namespace Pas.Service
             var mappedResult = patientMedications.Select(pm=> new DrugDetailsVM()
             { 
                 Name = pm.DrugBrands.BrandName,
-                Dosage = pm.Dosage.Name,
+                Dosage = pm.StrengthType.Name,
                 Id = pm.DrugId
             });
 

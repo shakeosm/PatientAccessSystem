@@ -1,14 +1,18 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 using Pas.Data.Models;
 
 namespace Pas.Data
 {
     public partial class PasContext : DbContext
     {
+        //public IConfiguration _configuration;
+
         public PasContext()
         {
+            //_configuration = Configuration;
         }
 
         public PasContext(DbContextOptions<PasContext> options)
@@ -27,8 +31,8 @@ namespace Pas.Data
         public virtual DbSet<DiagnosticTestHistory> DiagnosticTestHistory { get; set; }
         public virtual DbSet<DoctorSpeciality> DoctorSpeciality { get; set; }
         public virtual DbSet<Doctors> Doctors { get; set; }
-        public virtual DbSet<DosageTypes> DosageTypes { get; set; }
-        public virtual DbSet<DrugDosageType> DrugDosageType { get; set; }
+        public virtual DbSet<StrengthType> DosageTypes { get; set; }
+        public virtual DbSet<DrugStrengthType> DrugDosageType { get; set; }
         public virtual DbSet<DrugModeOfDelivery> DrugModeOfDelivery { get; set; }
         public virtual DbSet<Drugs> Drugs { get; set; }
         public virtual DbSet<DrugBrands> DrugBrands { get; set; }
@@ -38,6 +42,7 @@ namespace Pas.Data
         public virtual DbSet<Organisation> Organisation { get; set; }
         public virtual DbSet<PatientAilmentType> PatientAilmentTypes { get; set; }
         public virtual DbSet<PatientAllergy> PatientAllergies { get; set; }
+        public virtual DbSet<PatientIndications> PatientIndications { get; set; }
         public virtual DbSet<Prescription> Prescription { get; set; }
         public virtual DbSet<PrescriptionDiagnosticTest> PrescriptionDiagnosticTest { get; set; }
         public virtual DbSet<PrescriptionDrugs> PrescriptionDrugs { get; set; }
@@ -45,13 +50,15 @@ namespace Pas.Data
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserOrganisationRole> UserOrganisationRole { get; set; }
         public virtual DbSet<UserRelated> UserRelated { get; set; }
+        public virtual DbSet<VitalsHistory>  VitalsHistories{ get; set; }        
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=(LocalDb)\\MSSQLLocalDB;Initial Catalog=roogi-test;Trusted_Connection=True;");
+                throw new NotImplementedException("override void OnConfiguring-> optionsBuilder.IsConfigured = false");
+                //optionsBuilder.UseSqlServer("Server=(LocalDb)\\MSSQLLocalDB;Initial Catalog=roogi-test;Trusted_Connection=True;");
+                //optionsBuilder.UseSqlServer(_configuration.GetConnectionString("PasData"));
             }
         }
 
@@ -272,7 +279,7 @@ namespace Pas.Data
                     .HasConstraintName("FK_Doctors_DoctorSpeciality");
             });
 
-            modelBuilder.Entity<DosageTypes>(entity =>
+            modelBuilder.Entity<StrengthType>(entity =>
             {
                 entity.ToTable("DosageTypes", "Drug");
 
@@ -282,7 +289,7 @@ namespace Pas.Data
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<DrugDosageType>(entity =>
+            modelBuilder.Entity<DrugStrengthType>(entity =>
             {
                 entity.ToTable("DrugDosageType", "Drug");
 
@@ -438,13 +445,18 @@ namespace Pas.Data
                 entity.ToTable("PatientAllergy", "Patient");
             });
 
+            modelBuilder.Entity<PatientIndications>(entity =>
+            {
+                entity.ToTable("PatientIndications", "Patient");
+            });
+
             modelBuilder.Entity<PrescriptionDrugs>(entity =>
             {
                 entity.ToTable("PrescriptionDrugs", "Patient");
 
-                entity.HasOne(d => d.Dosage)
+                entity.HasOne(d => d.StrengthType)
                     .WithMany(p => p.PrescriptionDrugs)
-                    .HasForeignKey(d => d.DosageId)
+                    .HasForeignKey(d => d.StrengthTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PrescriptionDrugs_DosageTypes");
 
@@ -557,7 +569,14 @@ namespace Pas.Data
                     .HasForeignKey(d => d.RelatedUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UserRelated_User");
+            });      
+            
+            modelBuilder.Entity<VitalsHistory>(entity =>
+            {
+                entity.ToTable("VitalsHistory", "Patient");                
             });
+
+
 
             OnModelCreatingPartial(modelBuilder);
         }

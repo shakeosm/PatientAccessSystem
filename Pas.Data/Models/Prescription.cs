@@ -11,6 +11,7 @@ namespace Pas.Data.Models
         {
             PrescriptionDiagnosticTest = new HashSet<PrescriptionDiagnosticTest>();
             PrescriptionDrugs = new HashSet<PrescriptionDrugs>();
+            PatientIndications = new HashSet<PatientIndications>();
         }
 
         [Required]
@@ -34,9 +35,12 @@ namespace Pas.Data.Models
 
         public virtual ICollection<PrescriptionDiagnosticTest> PrescriptionDiagnosticTest { get; set; }
         public virtual ICollection<PrescriptionDrugs> PrescriptionDrugs { get; set; }
+        public virtual ICollection<PatientIndications> PatientIndications { get; set; }
         public virtual Organisation Hospital { get; set; }
         public virtual User Doctor { get; set; }
-        public virtual User Patient { get; set; }
+        public virtual User Patient { get; set; }        
+        public virtual VitalsHistory VitalsHistory { get; set; }
+
 
     }
 }

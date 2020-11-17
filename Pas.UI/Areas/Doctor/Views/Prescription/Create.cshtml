@@ -3,7 +3,7 @@
 
 @{
     ViewData["Title"] = "Prescription Create";
-    var patient = Model.PatientDetails;
+    //var patient = Model.PatientDetails;
 }
 
 <div class="alert alert-info mb-2 col-12 h3">
@@ -11,97 +11,18 @@
     New Prescription
 </div>
 
-<div id="PatientHistory" class="form-row w-100 mb-2 bg-white border rounded ml-2 pt-2">
+@await Html.PartialAsync("_PrescriptionHeader", @Model.PatientDetails)
 
-    <!-- Name/Age/Sex amd Address -->
-    <div id="LeftColumn" class="col-sm-12 col-md-6 pl-3">
-        <div id="PersonalDetails" class="">
-            <div class="">
-                <div class="h2">@patient.Title @patient.Name / @patient.Age / @patient.Gender</div>
-                <div class="h3 text-primary">@patient.AddressBook.FullAddress()</div>
-            </div>
-        </div>
-
-        <div id="ClinicalHistory" class="col-12">
-            <!-- Vitals -->
-            <div id="PatientHistoryTopRow" class="col-12 form-row mb-3">
-                <div class="flex-column vital-info-box shadow-sm">
-                    <span class="vital-info-box-header">Blood</span>
-                    <h1 class="font-large">O+</h1>
-                </div>
-                <div class="flex-column vital-info-box shadow-sm">
-                    <span class="vital-info-box-header">Blood pressure</span>
-                    <h1 class="font-large">120/80</h1>
-                </div>
-                <div class="flex-column vital-info-box shadow-sm">
-                    <span class="vital-info-box-header">Pulse</span>
-                    <h1 class="font-large">70</h1>
-                </div>
-                <div class="flex-column vital-info-box shadow-sm">
-                    <span class="vital-info-box-header">RBS</span>
-                    <h1 class="font-large">6.5 mmol/L</h1>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Allergy, Ailments and Recent Medication -->
-    <div id="RightColumn" class="col-sm-12 col-md-6">
-        <div id="PatientAllergies" class="col-12 mb-3">
-            <span class="font-weight-bolder d-block mb-2">
-                <i class="fas fa-allergies fa-lg mr-2"></i>
-                Allergies:
-            </span>
-            <span class="alert alert-warning p-2 mr-1">Cat</span>
-            <span class="alert alert-warning p-2 mr-1">Nuts</span>
-            <span class="alert alert-warning p-2 mr-1">Gluten</span>
-            <span class="alert alert-warning p-2 mr-1">Anit-biotics</span>
-        </div>
-
-        <div id="PatientAllergies" class="col-12 mb-3">
-            <span class="font-weight-bolder d-block mb-2">
-                <i class="fas fa-procedures fa-lg mr-2"></i>Ailments:
-            </span>
-            <span class="alert alert-danger p-2 mr-1">Migrane</span>
-            <span class="alert alert-danger p-2 mr-1">Blood pressure</span>
-            <span class="alert alert-danger p-2 mr-1">Arthrities</span>
-        </div>
-
-        <div id="PatientAllergies" class="col-12 mb-3">
-            <span class="font-weight-bolder d-block mb-2">
-                <i class="fas fa-prescription fa-lg mr-2"></i>Recent Medication:
-            </span>
-            <span class="alert alert-info p-2 mr-1">Iboprofen 200mg</span>
-            <span class="alert alert-info p-2 mr-1">Renitidine 10mg</span>
-            <span class="alert alert-info p-2 mr-1">Diclofenac emulsun</span>
-        </div>
-
-    </div>
-
-
-    <div class="row">
-
-        <div id="PatientHistorySecondRow" class="col-12 mt-2 form-row pt-2 pb-4 border-bottom">
-
-
-        </div>
-    </div>
-</div>
-
-
-<hr />
 @await Html.PartialAsync("_PrescriptionItemEntry", @Model.Id)
+
+<form id="PrescriptionCreateForm" action="Create" method="post">
+    @Html.AntiForgeryToken()    
+</form>
 
 @section Scripts{
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            $('#DrugListSelect').select2();
-        });
-
-    </script>
+    <script src="~/js/prescription/prescription-create.js"></script>
 
 }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Pas.Data.Models
 {
-    public partial class DrugDosageType : BaseEntityModel
+    public partial class DrugStrengthType : BaseEntityModel
     {
         
         [Required]
@@ -14,7 +14,7 @@ namespace Pas.Data.Models
         public int DosageTypeId { get; set; }
         public bool? IsDeleted { get; set; }
 
-        public virtual DosageTypes DosageType { get; set; }
+        public virtual StrengthType DosageType { get; set; }
         public virtual Drugs Drug { get; set; }
     }
 }

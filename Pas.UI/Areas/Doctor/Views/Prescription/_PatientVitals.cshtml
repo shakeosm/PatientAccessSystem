@@ -1,0 +1,53 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<!-- _PatientVitals -->
+<div id="PatientVitalsInfoDeiv" class="bg-white border rounded p-2 mt-2" >
+    <table class="table table-sm w-100">
+        <tr>
+            <th>Temperature</th>
+            <th>Pulse</th>
+            <th colspan="2" class="text-center">Blood Pressure</th>
+            <th>Weight</th>
+            <th></th>
+        </tr>
+        <tr>
+            <td>
+                <div class="input-group mb-3">
+                    <input id="TemperatureInput" class="form-control" type="number" aria-label="Patient body temperature" placeholder="Celcius" />                    
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-temperature-high"></i>                            
+                        </span>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="input-group mb-3">
+                    <input id="PulseInput" class="form-control" type="number" aria-label="Patient blood pulse" placeholder="bpm" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-wave-square"></i>
+                        </span>
+                    </div>
+                </div>
+            
+            </td>
+            <td><input id="BoodPressureDiastolicInput" class="form-control" type="number" placeholder="Diastolic" /></td>
+            <td><input id="BoodPressureSystolicInput" class="form-control" type="number" placeholder="Systolic"/></td>
+            <td>
+                <div class="input-group mb-3">
+                    <input id="WeightInput" class="form-control" type="number" aria-label="Patient weight" placeholder="kilogram" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-weight"></i>
+                        </span>
+                    </div>
+                </div>
+            </td>            
+            <td>
+                <button type="button" class="btn btn-primary waves-effect waves-themed">Save</button>
+            </td>            
+        </tr>
+    </table>
+</div>
