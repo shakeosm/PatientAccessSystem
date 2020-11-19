@@ -1,4 +1,5 @@
-﻿using Pas.Data.Models;
+﻿using Pas.Common.Enums;
+using Pas.Data.Models;
 using Pas.Web.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,6 +19,12 @@ namespace Pas.Service.Interface
         Task<bool> Delete(int id);
 
         Task<IList<IndicationTypes>> ListAllIndicationTypes();
+        
+        Task<IList<AdviseInstructions>> ListAllDrugTips(Tips tips);
+        
+        Task<IList<Manufacturer>> ListAllMenufacturer();
+        
+        Task<IList<Symptoms>> ListAllSymptoms();
 
     }
 }

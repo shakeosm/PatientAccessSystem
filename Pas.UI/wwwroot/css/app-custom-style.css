@@ -14,6 +14,9 @@
 }
 
 
+.btn-drug-template {
+    width: 80px !important;
+}
 
 .loaderbody {
     width: 100%;

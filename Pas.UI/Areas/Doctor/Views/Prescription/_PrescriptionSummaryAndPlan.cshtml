@@ -1,29 +1,79 @@
 ﻿<!--    _PrescriptionSummaryAndPlan -->
+@* This will initially be invisible.. once the Drug Item entry is done- Doctor will complete this area *@
 
     <div id="PrescriptionSummaryNotesDiv" class="form-row col-12 mt-1 d-none">
-        <div class="form-group row col-12">
+        <!-- Follow up Visit -->
+        <div class="form-group row col-12 mb-3">
+            <div class="col-sm-2 form-label">Follow up Visit</div>
+            <div class="col-sm-10">
+                <div class="custom-control custom-checkbox my-1 mr-sm-2">
+                    <input type="checkbox" class="custom-control-input" id="FollowUpVisitCheckbox">
+                    <label class="custom-control-label" for="FollowUpVisitCheckbox">No</label>
+                </div>
+                    <span class="help-block">Is this a Follow up visit?</span>
+            </div>
+        </div>
+
+        <!-- Referred Patient -->
+        <div class="form-row col-12 mb-3">
+            <div class="form-group form-row col-12">
+                <label for="ReferredPatientCheckBox" class="col-sm-2 form-label">Referred?</label>
+
+                <div class="form-group form-row col-10">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="ReferredPatientCheckBox">
+                                    <label class="custom-control-label" for="ReferredPatientCheckBox">No</label>
+                                </div>
+                            </div>
+                            <div class="input-group-text text-success">
+                                <i class="fal fa-retweet fa-lg"></i>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control" aria-label="text input with checkbox" 
+                               id="ReferredDoctorNameInput" disabled
+                               placeholder="Referred Doctor Name">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Overall Notes -->
+        <div class="form-group row col-12 mb-3">
             <label for="PrescriptionNotesInput" class="col-sm-2 form-label">Overall Notes</label>
             <div class="col-sm-10">
                 <textarea class="form-control" id="PrescriptionNotesInput" rows="3" placeholder="Overall summary / treatment notes"></textarea>
             </div>
         </div>
 
-        <div class="form-group row col-12">
-            <div class="col-sm-2">Checkbox</div>
+        <!-- Advise -->
+        <div class="form-group row col-12 mb-3">
+            <label for="AdviseInput" class="col-sm-2 form-label">Advise</label>
             <div class="col-sm-10">
-                <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                    <input type="checkbox" class="custom-control-input" id="FollowUpVisitCheckbox">
-                    <label class="custom-control-label" for="FollowUpVisitCheckbox">Follow up Visit</label>
-                </div>
+                <textarea class="form-control" id="AdviseInput" rows="3" placeholder="Important health and medical tips"></textarea>
             </div>
         </div>
 
-        <div id="NavigationButtonsDiv" class="col-12 mt-3">
+        <!-- Plans -->
+        <div class="form-group row col-12 mb-3">
+            <label for="PlanInputBox" class="col-sm-2 form-label">Plans</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" id="PlanInputBox" rows="3" placeholder="Date and Plans for next visit"></textarea>
+            </div>
+        </div>
+
+
+
+        <div id="NavigationButtonsDiv" class="col-12 mb-3">
             <button type="button" id="FinishAndPrintButton" class="btn btn-primary waves-effect waves-themed float-left">Finish &amp; Print</button>
             <button type="button" id="PreviousStepButton" class="btn btn-primary waves-effect waves-themed mt-2 float-right">Back: Drug item entry</button>
         </div>
 
         <div class="col-12">
-            
+
         </div>
     </div>

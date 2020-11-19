@@ -15,8 +15,16 @@
 
 @await Html.PartialAsync("_PrescriptionItemEntry", @Model.Id)
 
+@await Html.PartialAsync("_NewDrugDoseTemplate")
+
+@await Html.PartialAsync("_AddNewDrugBrand")
+
+@await Html.PartialAsync("_AddNewAdviseInstruction")
+
+@await Html.PartialAsync("_PatientVitalsModal")
+
 <form id="PrescriptionCreateForm" action="Create" method="post">
-    @Html.AntiForgeryToken()    
+    @Html.AntiForgeryToken()
 </form>
 
 @section Scripts{

@@ -1,0 +1,83 @@
+﻿@using Pas.Service.Interface
+
+@inject IDrugService DrugService
+
+@{
+
+    var manufacturerList = await DrugService.ListAllMenufacturer();
+    var selectListSource = new SelectList(manufacturerList, "Id", "Name");
+}
+
+<!--    _AddNewDrugBrand Popup Modal    -->
+
+<div id="NewDrugBrandPopupDiv">
+    <div class="modal fade" id="NewDrugBrandEntryPopupModal" tabindex="-1" role="dialog" aria-label="New Drug Brand Template Popup" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Migraine: New Drug Brand</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <div class="modal-body">
+                    <!--    Drug: Generic List  -->
+                    <div class="col-12 mb-2">
+                        <label for="DrugListSelect" class="col-12 form-label">Drug</label>
+                        <div class="col-12">
+                            <select id="DrugListSelect_XXX" class="form-control">
+                                <option value="">Select a Drug</option>
+                                <option value="value">Amlodipine</option>
+                                <option value="value">Acrivastine</option>
+                                <option value="value">Codeine</option>
+                                <option value="value">Duloxetine</option>
+                                <option value="value">Enalapril</option>
+                                <option value="value">Fluticasone nasal spray and drops</option>
+                                <option value="value">Hyoscine hydrobromide</option>
+                                <option value="value">Lorazepam</option>
+                                <option value="value">Lorazepam</option>
+                                <option value="value">Metformin</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Brand Name   -->
+                    <div id="DrugIntakeypeDiv" class="col-12 mb-3">
+                        <label for="DrugNewBrandNameInput" class="col-sm-3 form-label">Brand Name</label>
+                        <div class="col-12">
+                            <input type="text" class="form-control form-control" id="DrugNewBrandNameInput"
+                                   placeholder="new brand">
+
+                        </div>
+                    </div>
+
+                    <!-- manufacturer Name   -->
+                    <div id="DrugIntakeypeDiv" class="col-12 mb-3">
+                        <label for="DrugNewBrandNameInput" class="col-12 form-label">Manufacturer</label>
+                        <div class="col-12">
+                            @Html.DropDownList("DrugNewBrandNameInput", selectListSource, "Select manufacturer",
+                                new { id = "ManufacturerListSelect", @class = "form-control" })
+
+                            @*<select id="BrandListSelect" class="form-control" size="4">
+                    <option value="value">ACI Ltd.</option>
+                    <option value="value">ACME Laboratories Ltd.</option>
+                    <option value="value">Aristopharma Ltd.</option>
+                    <option value="value">Solpadeine Max</option>
+                    <option value="value">Migraleve Migraine Pink & Yellow Complete</option>
+                </select>*@
+
+                        </div>
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

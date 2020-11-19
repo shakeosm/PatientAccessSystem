@@ -5,48 +5,24 @@
 <div id="PatientVitalsInfoDeiv" class="bg-white border rounded p-2 mt-2" >
     <table class="table table-sm w-100">
         <tr>
-            <th>Temperature</th>
-            <th>Pulse</th>
-            <th colspan="2" class="text-center">Blood Pressure</th>
-            <th>Weight</th>
+            <th><i class="fas fa-temperature-high mr-1 fa-lg"></i>Temperature</th>
+            <th><i class="fas fa-wave-square mr-1 fa-lg"></i>Pulse</th>
+            <th>Blood Pressure</th>
+            <th><i class="fas fa-weight mr-1 fa-lg"></i>Weight</th>
+            <th><i class="fas fa-ruler-combined mr-1 fa-lg"></i>Height</th>
             <th></th>
         </tr>
-        <tr>
+        <tr class="font-weight-bolder text-info">
+            <td>36.8 Celcius</td>
+            <td>70 bpm</td>
+            <td>120/80</td>
+            <td>72 kgs</td> 
+            <td>5" 10'</td>            
             <td>
-                <div class="input-group mb-3">
-                    <input id="TemperatureInput" class="form-control" type="number" aria-label="Patient body temperature" placeholder="Celcius" />                    
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <i class="fas fa-temperature-high"></i>                            
-                        </span>
-                    </div>
-                </div>
-            </td>
-            <td>
-                <div class="input-group mb-3">
-                    <input id="PulseInput" class="form-control" type="number" aria-label="Patient blood pulse" placeholder="bpm" />
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <i class="fas fa-wave-square"></i>
-                        </span>
-                    </div>
-                </div>
-            
-            </td>
-            <td><input id="BoodPressureDiastolicInput" class="form-control" type="number" placeholder="Diastolic" /></td>
-            <td><input id="BoodPressureSystolicInput" class="form-control" type="number" placeholder="Systolic"/></td>
-            <td>
-                <div class="input-group mb-3">
-                    <input id="WeightInput" class="form-control" type="number" aria-label="Patient weight" placeholder="kilogram" />
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <i class="fas fa-weight"></i>
-                        </span>
-                    </div>
-                </div>
-            </td>            
-            <td>
-                <button type="button" class="btn btn-primary waves-effect waves-themed">Save</button>
+                <button id="PatientVitalEntryModalButton" type="button" class="btn btn-primary waves-effect waves-themed"
+                        data-toggle="tooltip" data-placement="top" title="Enter the vitals record">
+                    <i class="fal fa-check-square fa-lg"></i>
+                </button>
             </td>            
         </tr>
     </table>

@@ -13,6 +13,7 @@ namespace Pas.Data.Models
             DrugModeOfDelivery = new HashSet<DrugModeOfDelivery>();
             PrescriptionDrugs = new HashSet<PrescriptionDrugs>();
             DrugBrands = new HashSet<DrugBrands>();
+            DrugIndicationTypes = new HashSet<DrugIndicationTypes>();
         }
 
         [Column(TypeName = "datetime2(3)")]
@@ -35,6 +36,7 @@ namespace Pas.Data.Models
         public virtual ICollection<DrugModeOfDelivery> DrugModeOfDelivery { get; set; }
         public virtual ICollection<PrescriptionDrugs> PrescriptionDrugs { get; set; }
         public virtual ICollection<DrugBrands> DrugBrands { get; set; }
+        public virtual ICollection<DrugIndicationTypes> DrugIndicationTypes { get; set; }
     }
 
 }

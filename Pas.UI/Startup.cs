@@ -164,7 +164,7 @@ namespace Pas.UI
             services.AddSession(options =>
             {
                 // Set a short timeout for easy testing.
-                options.IdleTimeout = TimeSpan.FromMinutes(60);
+                options.IdleTimeout = TimeSpan.FromMinutes(240);
                 options.Cookie.Name = "PasDB.SessionCookie";
                 // You might want to only set the application cookies over a secure connection:
                 // options.Cookie.SecurePolicy = CookieSecurePolicy.Always;

@@ -21,6 +21,7 @@ namespace Pas.Data
         }
 
         public virtual DbSet<AddressBook> AddressBooks { get; set; }
+        public virtual DbSet<AdviseInstructions> AdviseInstructions { get; set; }
         public virtual DbSet<AilmentTypes> AilmentTypes { get; set; }
         public virtual DbSet<AllergyTypes> AllergyTypes { get; set; }
         
@@ -37,6 +38,7 @@ namespace Pas.Data
         public virtual DbSet<Drugs> Drugs { get; set; }
         public virtual DbSet<DrugBrands> DrugBrands { get; set; }
         public virtual DbSet<IndicationTypes> IndicationTypes { get; set; }
+        public virtual DbSet<DrugIndicationTypes> DrugIndicationTypes { get; set; }
         public virtual DbSet<Manufacturer> Manufacturers { get; set; }
         public virtual DbSet<ModeOfDelivery> ModeOfDelivery { get; set; }
         public virtual DbSet<Organisation> Organisation { get; set; }
@@ -47,6 +49,7 @@ namespace Pas.Data
         public virtual DbSet<PrescriptionDiagnosticTest> PrescriptionDiagnosticTest { get; set; }
         public virtual DbSet<PrescriptionDrugs> PrescriptionDrugs { get; set; }
         public virtual DbSet<Role> Role { get; set; }
+        public virtual DbSet<Symptoms> Symptoms { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserOrganisationRole> UserOrganisationRole { get; set; }
         public virtual DbSet<UserRelated> UserRelated { get; set; }
@@ -172,6 +175,11 @@ namespace Pas.Data
                      .HasForeignKey(d => d.UserId)
                      .OnDelete(DeleteBehavior.Cascade);
                  });
+
+            modelBuilder.Entity<AdviseInstructions>(entity =>
+            {
+                entity.ToTable("AdviseInstructions", "dbo");                
+            });
 
             modelBuilder.Entity<AilmentTypes>(entity =>
             {
@@ -349,12 +357,17 @@ namespace Pas.Data
 
             modelBuilder.Entity<IndicationTypes>(entity =>
             {
-                entity.ToTable("IndicationTypes", "Drug");
+                entity.ToTable("IndicationTypes", "dbo");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<DrugIndicationTypes>(entity =>
+            {
+                entity.ToTable("DrugIndicationTypes", "drug");
             });
 
             modelBuilder.Entity<ModeOfDelivery>(entity =>
@@ -493,6 +506,11 @@ namespace Pas.Data
                     .IsRequired()
                     .HasMaxLength(30)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Symptoms>(entity =>
+            {
+                entity.ToTable("Symptoms", "dbo");
             });
 
             modelBuilder.Entity<User>(entity =>

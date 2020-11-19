@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Pas.Common.Enums;
 using Pas.Data;
 using Pas.Data.Models;
 using Pas.Service.Interface;
@@ -94,6 +95,60 @@ namespace Pas.Service
             }
 
             return indicationTypes;
+        }
+
+        public async Task<IList<Manufacturer>> ListAllMenufacturer()
+        {
+            string cacheKey = "ListAllMenufacturer";
+            var manufacturerList = _cacheService.GetCacheValue<List<Manufacturer>>(cacheKey);
+
+            if (manufacturerList is null)
+            {
+                manufacturerList = await _context.Manufacturers
+                                                    .OrderBy(m=> m.Name)
+                                                    .ToListAsync();
+
+                _cacheService.SetCacheValue(cacheKey, manufacturerList);
+
+            }
+
+            return manufacturerList;
+        }
+
+        public async Task<IList<AdviseInstructions>> ListAllDrugTips(Tips tips)
+        {
+            string cacheKey = $"ListAllDrugTips_{tips}";
+
+            var drugTips = _cacheService.GetCacheValue<List<AdviseInstructions>>(cacheKey);
+
+            if (drugTips is null)
+            {
+                drugTips = await _context.AdviseInstructions
+                                                .Where(m => m.TypeId == (int)tips)
+                                                .ToListAsync();
+
+                _cacheService.SetCacheValue(cacheKey, drugTips);
+
+            }
+
+            return drugTips;
+        }
+
+        public async Task<IList<Symptoms>> ListAllSymptoms()
+        {
+            string cacheKey = $"ListAllSymptoms";
+
+            var symptomList = _cacheService.GetCacheValue<List<Symptoms>>(cacheKey);
+
+            if (symptomList is null)
+            {
+                symptomList = await _context.Symptoms.ToListAsync();
+
+                _cacheService.SetCacheValue(cacheKey, symptomList);
+
+            }
+
+            return symptomList;
         }
     }
 }

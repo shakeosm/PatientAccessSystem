@@ -10,212 +10,197 @@
 @{
     //var drugList = await DrugService.ListAll();
     //var indicationList = await DrugService.ListAllIndicationTypes();
+    var instructionList = await DrugService.ListAllDrugTips(Tips.Instructions);
+    var instructionListSource = new SelectList(instructionList, "Id", "DescriptionBangla");
+
+    var symptomList = await DrugService.ListAllSymptoms();
+    var symptomListSource = new SelectList(symptomList, "Id", "Description");
 }
 
     <div id="PrescriptionFormDiv" class="form-row col-12 ml-2 bg-white border rounded p-3">
         <div id="DrugAndBrandsRowDiv" class="form-row col-md-6 col-sm-12">
-            <div id="PrescriptionItemEntryTopDiv" class="">
-                <div class="col-12">
+            <div id="PrescriptionItemEntryTopDiv" class="form-row">
 
-                    <!--    Drug: Generic List  -->
-                    <div class="form-group row mb-2">
-                        <label for="DrugListSelect" class="col-sm-2 form-label">Drug</label>
-                        <div class="col-sm-10 pl-0">
-                            @*<input type="email" class="form-control" id="inputEmail3" placeholder="Email">*@
-                            <select id="DrugListSelect" class="form-control" size="10">
-                                <option value="" selected>Select a Drug</option>
-                                <option value="value">text</option>
-                                <option value="value">wewew</option>
-                                <option value="value">dsds</option>
-                                <option value="value">zdsf</option>
-                                <option value="value">xcs</option>
-                                <option value="value">vdghg</option>
-                                <option value="value">yuyd</option>
-                                <option value="value">dfdf</option>
-                            </select>
-                        </div>
+                <!-- CC: Chief Complaints -->
+                @*https://stackoverflow.com/questions/34624034/select-tag-helper-in-asp-net-core-mvc*@
+                <div class="form-row col-12 mb-3">
+                    <label for="ChiefComplaintTextArea" class="col-sm-2 form-label">Chief complaints</label>
+                    <div class="col-sm-10">
+                        @Html.DropDownList("ChiefComplaintList", symptomListSource, "Select a CC",
+                                new { id = "ChiefComplaintList", @class = "form-control", 
+                                    multiple = "multiple", placeholder="Select a CC", style="width:100%;" })
+                        @*<select id="ChiefComplaintList" asp-items="symptomListSource" class="form-control">
+            <option value="">Select a CC</option>
+        </select>*@
+                        <span class="help-block">Select at least on CC</span>
                     </div>
 
-                    <!--    Drug: Brand List  -->
-                    <div class="form-group row">
-                        <label for="BrandListSelect" class="col-sm-2 form-label">Brand</label>
-                        <div class="col-sm-10 pl-0">
-                            @*<input type="email" class="form-control" id="inputEmail3" placeholder="Email">*@
-                            <select id="BrandListSelect" class="form-control" size="4">
-                                <option value="value">Generic</option>
-                                <option value="value">GSK Brand</option>
-                                <option value="value">pFizer</option>
-                                <option value="value">Rinen</option>
+                </div>
+
+                <!-- Diagnosis entry-->
+                <div class="form-row col-12 mb-3">
+                    <label for="DiagnosisListSelect" class="col-sm-2 form-label">Diagnosis</label>
+                    <div class="col-sm-10">
+                        <select id="DiagnosisListSelect" class="form-control" style="width:100%;">
+                            <option value="" selected>Select a Diagnosis</option>
+                            <option value="1">Headache</option>
+                            <option value="2">Migrain</option>
+                            <option value="3">Scietic</option>
+                            <option value="4">Ulcer</option>
+                        </select>
+                        <div class="form-row col-12 mt-2">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-danger waves-effect waves-themed">
+                                    <input type="radio" name="options" id="DiagnoisisOption1" checked="checked"> Headache
+                                </label>
+                                <label class="btn btn-outline-danger waves-effect waves-themed active">
+                                    <input type="radio" name="options" id="DiagnoisisOption2"> Migrain
+                                </label>
+                                <label class="btn btn-outline-danger waves-effect waves-themed active">
+                                    <input type="radio" name="options" id="DiagnoisisOption3"> Ulcer
+                                </label>
+                            </div>
+
+                            <a href="#" class="btn btn-primary position-absolute pos-right"
+                               data-toggle="tooltip" data-placement="left" title="Remove diagnosis">
+                                <i class="fal fa-trash-alt fa-lg"></i>
+                            </a>
+                        </div>
+                        <span class="help-block"></span>
+                    </div>
+
+                </div>
+
+                <!--    Suggested: Drug Brand Set -->
+                <div class="form-group row col-12">
+                    <label for="BrandListSelect" class="col-sm-2 form-label">Suggested Drugs</label>
+                    <div class="col-sm-10 pl-0">
+                        @*<input type="email" class="form-control" id="inputEmail3" placeholder="Email">*@
+                        <select id="BrandListSelect" class="form-control" size="4">
+                            <option value="value">GSK Brand- Ibuprofen</option>
+                            <option value="value">Nurofen Migraine Pain relief</option>
+                            <option value="value">pFizer - Codeine</option>
+                            <option value="value">Solpadeine Max</option>
+                            <option value="value">Migraleve Migraine Pink & Yellow Complete</option>
+                        </select>
+
+                        <button type="button" id="AddNewDrugBrandButton" class="btn btn-primary waves-effect waves-themed mt-2"
+                                data-toggle="tooltip" data-placement="right" title="Add a new Drug Brand">
+                            <i class="fal fa-notes-medical fa-lg mr-2"></i>Add new Brand
+                        </button>
+                    </div>
+                </div>
+
+                <!--    Drug: Tempalate List  -->
+                <div class="form-group row col-12 mb-2">
+                    <label for="DrugDoseTemplateListSelect" class="col-sm-2 form-label">Template</label>
+                    <div class="col-sm-10 pl-0">
+                        <div class="input-group">
+                            <select id="DrugDoseTemplateListSelect" class="form-control">
+                                <option value="value">10mg-3Tabs-14D </option>
+                                <option value="value">15mg-3Tabs-14D </option>
+                                <option value="value">20mg-3Tabs-14D </option>
+
                             </select>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <a href="#" role="button"
+                                       id="AddNewDrugDosageTemplateButton" class="btn p-0"
+                                       data-toggle="tooltip" data-placement="top" title="Add a new Template">New</a>
+                                    @*Opens the Popup modal from partial page: _NewDrugDoseTemplate*@
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!--    DosageAndDeliveryRowDiv -->
+                <!--    Instructions/Tips  -->
+                <div class="form-group row col-12 mb-2">
+                    <label for="DrugInstructionSelectList" class="col-sm-2 form-label">Instructions</label>
+                    <div class="col-sm-10 pl-0">
+                        <div class="input-group">
+                            @Html.DropDownList("DrugInstructionSelectList", instructionListSource, "Select an instruction",
+                                new { id = "DrugInstructionSelectList", @class = "form-control" })
+
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <a href="#" role="button"
+                                       id="AddNewDrugInstructionButton" class="btn p-0"
+                                       data-toggle="tooltip" data-placement="bottom" title="Add a new instruction">New</a>
+                                    @*Opens the Popup modal from partial page: _NewDrugDoseTemplate*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Example of Dosage instruction  -->
+                <div class="form-row col-12 mb-3">
+                    <label for="QuantityInput" class="col-sm-2 form-label"></label>
+                    <div class="col-sm-12">
+                        <div class="alert alert-info">Nurofen Migraine Pain Relief- Tablet 10mg (1 + 0 + 0 + 1) for 14 Days</div>
+                    </div>
+
+                </div>
+
+
+
                 <div id="DosageAndDeliveryRowDiv" class="form-row col-12 mt-3">
-                    <div class="form-group row col-12 mb-3">
-                        <label for="DrugIntakeRadioOption" class="col-sm-2 form-label">Intake Type</label>
-                        <div class="form-row col-sm-10">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-info waves-effect waves-themed active">
-                                    <input type="radio" name="DrugIntakeRadioOption"
-                                           class="drug-intake-radio-option drug-intake-solid"
-                                           value="1"
-                                           id="DrugIntakeTablet" checked="checked"> Tablet
-                                </label>
-                                <label class="btn btn-info waves-effect waves-themed">
-                                    <input type="radio" name="DrugIntakeRadioOption"
-                                           class="drug-intake-radio-option drug-intake-solid"
-                                           value="3"
-                                           id="DrugIntakeCaplet"> Caplet
-                                </label>
-                                <label class="btn btn-info waves-effect waves-themed">
-                                    <input type="radio" name="DrugIntakeRadioOption"
-                                           class="drug-intake-radio-option drug-intake-solid"
-                                           value="2"
-                                           id="DrugIntakeCapsue"> Capsule
-                                </label>
-                                <label class="btn btn-info waves-effect waves-themed">
-                                    <input type="radio" name="DrugIntakeRadioOption" class="drug-intake-radio-option"
-                                           value="4"
-                                           id="DrugIntakeSyrup"> Syrup
-                                </label>
-                                <label class="btn btn-info waves-effect waves-themed">
-                                    <input type="radio" name="DrugIntakeRadioOption" class="drug-intake-radio-option"
-                                           value="6"
-                                           id="DrugIntakemulgel"> Emulgel
-                                </label>
-                                <label class="btn btn-info waves-effect waves-themed">
-                                    <input type="radio" class="drug-intake-radio-option" name="DrugIntakeRadioOption" id="DrugIntakePowder"> Powder
-                                </label>
 
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Is Related to Meal ? -->
+                    <div class="form-row col-12 mt-3 d-none invisible">
+                        <div class="form-group form-row col-12">
+                            <label for="RelatedToMealCheckBox" class="col-sm-2 form-label">Related to Meal?</label>
 
-
-                    <div class="form-group row col-12">
-
-                        <!-- Drug Strength, ie: 10mg / 20mg   -->
-                        <div id="DrugStrengthRowDiv" class="form-row col-12">
-                            <label for="DrugStrengthInputOption_mcg" class="col-sm-2 form-label">Strength</label>
-                            <div class="form-row col-sm-10">
-
+                            <div class="form-group form-row col-10">
+                                <!-- Related to Meal -->
                                 <div class="input-group">
-                                    <input type="number" class="form-control" aria-label="Text input with radio button" id="DrugStrengthInput">
-                                    <div class="input-group-append">
+                                    <div class="input-group-prepend">
                                         <div class="input-group-text">
-                                            <!-- Drug strength- Solid category -->
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" id="DrugStrengthInputOption_mcg" name="DrugStrengthInputRadio" class="custom-control-input">
-                                                <label class="custom-control-label" for="DrugStrengthInputOption_mcg">mcg</label>
+
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="RelatedToMealCheckBox">
+                                                <label class="custom-control-label" for="RelatedToMealCheckBox">No</label>
                                             </div>
-                                            <div class="custom-control custom-radio ml-2">
-                                                <input type="radio" id="DrugStrengthInputOption_mg" name="DrugStrengthInputRadio" class="custom-control-input">
-                                                <label class="custom-control-label" for="DrugStrengthInputOption_mg">mg</label>
-                                            </div>
-                                            <div class="custom-control custom-radio ml-2">
-                                                <input type="radio" id="DrugStrengthInputOption_gm" name="DrugStrengthInputRadio" class="custom-control-input">
-                                                <label class="custom-control-label" for="DrugStrengthInputOption_gm">gram</label>
-                                            </div>
+                                        </div>
+                                        <div class="input-group-text text-success">
+                                            <i class="fal fa-utensils fa-lg"></i>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-12 help-block">Drug Strength, ie: 10mg</div>
-                            </div>
-                        </div>
+                                    <div id="MealsBeforeAfterOptionsDiv" class="btn-group btn-group-toggle ml-2 invisible" data-toggle="buttons">
+                                        <label class="btn btn-info waves-effect waves-themed active">
+                                            <input type="radio" name="RelatedToMealsOptions"
+                                                   value="1"
+                                                   id="RelatedToMealsYesOption" checked="checked"> Before
+                                        </label>
+                                        <label class="btn btn-info waves-effect waves-themed">
+                                            <input type="radio" name="RelatedToMealsOptions"
+                                                   value="2"
+                                                   id="RelatedToMealsNoOption"> After
+                                        </label>
 
-                        <!-- Quantity / Duration -->
-                        <div class="form-row col-12 mt-3">
-                            <div class="form-group form-row col-12">
-                                <label for="QuantityInput" class="col-sm-2 form-label">Quantity / Duration</label>
-                                <div class="col-sm-2">
-                                    @Html.DropDownList("QuantityPerDose",
-                                        Html.GetEnumSelectList<DoseSolid>(),
-                                        "Select Dose", new
-                                             {
-                                                 id = "DoseSolidSelect",
-                                                 @class = "form-control",
-                                        @dataToggle = "tooltip",
-                                                 @dataPlacement = "top",
-                                                 @title = "pcs or spoons"
-                                             })
-
-                                    @*<select id="QuantityPerDose" class="form-control" asp-items="@Html.GetEnumSelectList(typeof(DoseSolid))">
-                                <option selected="selected" value="">Please select</option>
-                            </select>*@
-
-                                    <span class="help-block">Dose quantity</span>
-                                </div>
-
-                                <div class="col-sm-4">
-                                    <input type="number" class="form-control form-control-sm" id="QuantityPerDay" placeholder="Quantity">
-                                    <span class="help-block">Dose per day</span>
-                                </div>
-
-                                <div class="col-sm-4">
-                                    <input type="number" class="form-control form-control-sm" id="DurationDays"
-                                           data-toggle="tooltip" data-placement="top" title="Enter 0 as TBC"
-                                           placeholder="number of days">
-                                    <span class="help-block">Recommended days of course; 0 = TBC</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Is Related to Meal ? -->
-                        <div class="form-row col-12 mt-3">
-                            <div class="form-group form-row col-12">
-                                <label for="RelatedToMealCheckBox" class="col-sm-2 form-label">Related to Meal?</label>
-
-                                <div class="form-group form-row col-10">
-                                    <!-- Related to Meal -->
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" class="custom-control-input" id="RelatedToMealCheckBox">
-                                                    <label class="custom-control-label" for="RelatedToMealCheckBox">No</label>
-                                                </div>
-                                            </div>
-                                            <div class="input-group-text text-success">
-                                                <i class="fal fa-utensils fa-lg"></i>
-                                            </div>
-                                        </div>
-                                        <div id="MealsBeforeAfterOptionsDiv" class="btn-group btn-group-toggle ml-2 invisible" data-toggle="buttons">
-                                            <label class="btn btn-info waves-effect waves-themed active">
-                                                <input type="radio" name="RelatedToMealsOptions"
-                                                       value="1"
-                                                       id="RelatedToMealsYesOption" checked="checked"> Before
-                                            </label>
-                                            <label class="btn btn-info waves-effect waves-themed">
-                                                <input type="radio" name="RelatedToMealsOptions"
-                                                       value="2"
-                                                       id="RelatedToMealsNoOption"> After
-                                            </label>
-
-                                        </div>
-                                        @*<input type="text" class="form-control" aria-label="text input with checkbox" id="checkbox-group-2">*@
                                     </div>
+                                    @*<input type="text" class="form-control" aria-label="text input with checkbox" id="checkbox-group-2">*@
                                 </div>
                             </div>
-
                         </div>
 
-                        <!--    Additional instruction and Save / Next Buttons  -->
-                        <div id="AdditionalInstructionDiv" class="form-row col-12 mt-3">
-                            <div class="form-group row col-12">
-                                <label for="DrugNotes" class="col-sm-2 form-label">Additional instruction</label>
-                                <div class="col-sm-10">
-                                    <input type="tel" class="form-control" id="DrugNotes" rows="3"
-                                           placeholder="Extra tips/notes for this Drug item" />
+                    </div>
 
-                                    <button type="button" id="AddDrugItemButton" class="btn btn-primary waves-effect waves-themed mt-2 float-left">Add this Drug</button>
-                                    <button type="button" id="NextStepSummaryButton" class="btn btn-primary waves-effect waves-themed mt-2 float-right">Next: Summary and Plan</button>
-                                </div>
+                    <!--    Additional instruction and Save / Next Buttons  -->
+                    <div id="AdditionalInstructionDiv" class="form-row col-12 mt-3 d-none invisible">
+                        <div class="form-group row col-12">
+                            <label for="DrugNotes" class="col-sm-2 form-label">Additional instruction</label>
+                            <div class="col-sm-10">
+                                <input type="tel" class="form-control" id="DrugNotes" rows="3"
+                                       placeholder="Extra tips/notes for this Drug item" />
+
+                                <button type="button" id="AddDrugItemButton" class="btn btn-primary waves-effect waves-themed mt-2 float-left">Add this Drug</button>
+                                <button type="button" id="NextStepSummaryButton" class="btn btn-primary waves-effect waves-themed mt-2 float-right">Next: Summary and Plan</button>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
             </div>
@@ -227,8 +212,8 @@
         </div> <!-- end of DrugAndBrandsRowDiv -->
 
 
-        <div id="PrescriptionDrugTable" class="form-row col-md-6 col-sm-12">
-            <!-- Prescription Right COlumn - showing currently added Drug items in a table -->
+        <div id="PrescriptionDrugTable" class="col-md-6 col-sm-12 border rounded">
+            <!-- Prescription Right Column - showing currently added Drug items in a table -->
             @await Html.PartialAsync("_PrescriptionRightColumn")
 
         </div>
