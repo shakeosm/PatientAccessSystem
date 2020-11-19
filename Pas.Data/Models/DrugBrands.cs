@@ -13,6 +13,8 @@ namespace Pas.Data.Models
         public DrugBrands()
         {
             PrescriptionDrugs = new HashSet<PrescriptionDrugs>();
+            BrandForIndications = new HashSet<BrandForIndications>();
+            BrandDoseTemplates = new HashSet<BrandDoseTemplate>();            
         }
         [Required]
         public int DrugId { get; set; }
@@ -35,7 +37,9 @@ namespace Pas.Data.Models
         public virtual Manufacturer Manufacturer { get; set; }
         
         public virtual ICollection<PrescriptionDrugs> PrescriptionDrugs { get; set; }
-       
+        public virtual ICollection<BrandForIndications> BrandForIndications { get; set; }
+        public virtual ICollection<BrandDoseTemplate> BrandDoseTemplates { get; set; }
+
         //public virtual Manu User { get; set; }
     }
 }

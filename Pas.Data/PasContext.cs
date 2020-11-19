@@ -37,8 +37,11 @@ namespace Pas.Data
         public virtual DbSet<DrugModeOfDelivery> DrugModeOfDelivery { get; set; }
         public virtual DbSet<Drugs> Drugs { get; set; }
         public virtual DbSet<DrugBrands> DrugBrands { get; set; }
+        public virtual DbSet<BrandDoseTemplate> BrandDoseTemplates { get; set; }
+        public virtual DbSet<BrandForIndications> BrandForIndications { get; set; }
         public virtual DbSet<IndicationTypes> IndicationTypes { get; set; }
         public virtual DbSet<DrugIndicationTypes> DrugIndicationTypes { get; set; }
+        public virtual DbSet<IntakePattern> IntakePatterns { get; set; }
         public virtual DbSet<Manufacturer> Manufacturers { get; set; }
         public virtual DbSet<ModeOfDelivery> ModeOfDelivery { get; set; }
         public virtual DbSet<Organisation> Organisation { get; set; }
@@ -368,6 +371,32 @@ namespace Pas.Data
             modelBuilder.Entity<DrugIndicationTypes>(entity =>
             {
                 entity.ToTable("DrugIndicationTypes", "drug");
+            });
+
+            modelBuilder.Entity<IntakePattern>(entity =>
+            {
+                entity.ToTable("IntakePattern", "drug");
+            });
+
+
+            modelBuilder.Entity<BrandForIndications>(entity =>
+            {
+                entity.ToTable("BrandForIndications", "drug");
+
+                entity.HasOne(d => d.DrugBrands)
+                    .WithMany(p => p.BrandForIndications)
+                    .HasForeignKey(d => d.DrugBrandId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+
+                entity.HasOne(d => d.IndicationType)
+                    .WithMany(p => p.BrandForIndications)
+                    .HasForeignKey(d => d.IndicationTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+
+            });
+            modelBuilder.Entity<BrandDoseTemplate>(entity =>
+            {
+                entity.ToTable("BrandDoseTemplate", "drug"); 
             });
 
             modelBuilder.Entity<ModeOfDelivery>(entity =>

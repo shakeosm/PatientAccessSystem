@@ -5,10 +5,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pas.Data.Models
 {
+    //## NOT USED ANYMORE-- use [BrandForIndications]
     public partial class DrugIndicationTypes : BaseEntityModel
     {         
         [Required]
         public int DrugId { get; set; } 
+
+        [Required]
+        public int DrugBrandId { get; set; } 
         
         [Required]
         public int IndicationTypesId { get; set; } 

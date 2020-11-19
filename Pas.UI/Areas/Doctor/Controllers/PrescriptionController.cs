@@ -7,6 +7,7 @@ using Pas.UI.Controllers;
 using Pas.Web.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+//using System.Web.Mvc;
 
 namespace Pas.UI.Areas.Doctor.Controllers
 {
@@ -108,6 +109,78 @@ namespace Pas.UI.Areas.Doctor.Controllers
             //currentUser.AddressBook.LocalArea = currentUser.CurrentRole.OrganisationName;     //## Current Selected Chamber
             currentUser.ImageUrl = "user-3.png";
             ViewBag.UserDetails = currentUser;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ListAllBrandsForDiagnosis(int id)
+        {
+            if (id < 1)
+                return Json("ListAllBrandsForDiagnosis- id = NULL");
+
+            var result = await _drugService.ListAllBrandsForDiagnosis(id);
+
+            return Json(result);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Insert_DrugBrandForDiagnosis(DrugBrandsForDiagnosisVM vm)
+        {
+            if (vm is null)
+                return Json("error");
+
+            AppUserDetailsVM currentUser = await GetCurrentUser();
+
+            var result = await _drugService.Insert_DrugBrandForDiagnosis(vm, currentUser.Id);
+
+            return Json(result);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Insert_BrandDoseTemplate(BrandDoseTemplateCreateVM vm)
+        {
+            return Json("success 101 " + vm.Duration);
+
+            //## This will create a Template for a Specific Drug Brand. ie: 'Ibuprofen 200mg Tablet 4 Times a Day for 7 days'
+            if (vm is null)
+                return Json("error");
+
+            AppUserDetailsVM currentUser = await GetCurrentUser();
+
+            var result = await _drugService.Insert_BrandDoseTemplate(vm, currentUser.Id);
+
+            return Json(result);
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult> ListAllInvestigationsForDiagnosis(int id)
+        {
+            return Json("Not implemented: ListAllInvestigationsForDiagnosis"); //TODO
+
+            if (id < 1)
+                return Json(null);
+
+            var result = await _drugService.ListAllInvestigationsForDiagnosis(id);
+            return Json(result);
+        }
+
+        /// <summary>
+        /// This will load the templates for these selected DrugBrand.
+        /// Templates- will offera combination of medicine intake patterns, ie: (1+0+1), (1+1+1)
+        /// </summary>
+        /// <param name="id">Drug Brand id</param>
+        /// <returns>List of Templates</returns>
+        [HttpGet]
+        public async Task<ActionResult> ListAllDrugPatternTemplates(int id)
+        {
+
+            return Json("Not implemented: ListAllDrugPatternTemplates"); //TODO
+
+            if (id < 1)
+                return Json(null);
+
+            var result = await _drugService.ListAllDrugPatternTemplates(id);
+            return Json(result);
         }
     }
 }

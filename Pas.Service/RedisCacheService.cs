@@ -8,7 +8,7 @@ namespace Pas.Service
     public class RedisCacheService : ICacheService
     {
         private readonly IConnectionMultiplexer _connectionMultiplexer;
-        private const int TIME_OUT = 60;
+        private const int TIME_OUT = 240;
         public RedisCacheService(IConnectionMultiplexer connectionMultiplexer)
         {
             _connectionMultiplexer = connectionMultiplexer;

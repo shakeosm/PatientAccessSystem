@@ -7,9 +7,10 @@
 
 @inject IDrugService DrugService
 
-@{
-    //var drugList = await DrugService.ListAll();
-    //var indicationList = await DrugService.ListAllIndicationTypes();
+@{    
+    var diagnosisList = await DrugService.ListAllIndicationTypes();
+    var diagnosisListSource = new SelectList(diagnosisList, "Id", "Name");
+
     var instructionList = await DrugService.ListAllDrugTips(Tips.Instructions);
     var instructionListSource = new SelectList(instructionList, "Id", "DescriptionBangla");
 
@@ -38,30 +39,39 @@
                 </div>
 
                 <!-- Diagnosis entry-->
-                <div class="form-row col-12 mb-3">
+                <div class="form-row col-12 mb-3 height-10">
                     <label for="DiagnosisListSelect" class="col-sm-2 form-label">Diagnosis</label>
                     <div class="col-sm-10">
-                        <select id="DiagnosisListSelect" class="form-control" style="width:100%;">
-                            <option value="" selected>Select a Diagnosis</option>
-                            <option value="1">Headache</option>
-                            <option value="2">Migrain</option>
-                            <option value="3">Scietic</option>
-                            <option value="4">Ulcer</option>
-                        </select>
+                        @Html.DropDownList("DiagnosisListSelect", diagnosisListSource, null,
+                               new
+                               {
+                                   id = "DiagnosisListSelect",
+                                   @class = "form-control",
+                                   placeholder= "Select a Diagnosis",
+                                   style = "width:100%;"
+                               })
+                        @*<select id="DiagnosisListSelect" class="form-control" style="width:100%;">
+            <option value="" selected>Select a Diagnosis</option>
+            <option value="1">Headache</option>
+            <option value="2">Migrain</option>
+            <option value="3">Scietic</option>
+            <option value="4">Ulcer</option>
+        </select>*@
                         <div class="form-row col-12 mt-2">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-danger waves-effect waves-themed">
-                                    <input type="radio" name="options" id="DiagnoisisOption1" checked="checked"> Headache
-                                </label>
-                                <label class="btn btn-outline-danger waves-effect waves-themed active">
-                                    <input type="radio" name="options" id="DiagnoisisOption2"> Migrain
-                                </label>
-                                <label class="btn btn-outline-danger waves-effect waves-themed active">
-                                    <input type="radio" name="options" id="DiagnoisisOption3"> Ulcer
-                                </label>
+                            <div id="SelectedDiagnosisOptions" class="btn-group btn-group-toggle" data-toggle="buttons">
+                                @*<label class="btn btn-outline-danger waves-effect waves-themed">
+                                    <input type="radio" name="options" id="DiagnoisisOption_1111" checked="checked"> -
+                                </label>*@
+                                @*<label class="btn btn-outline-danger waves-effect waves-themed active">
+                    <input type="radio" name="options" id="DiagnoisisOption2"> Migrain
+                </label>
+                <label class="btn btn-outline-danger waves-effect waves-themed active">
+                    <input type="radio" name="options" id="DiagnoisisOption3"> Ulcer
+                </label>*@
                             </div>
 
-                            <a href="#" class="btn btn-primary position-absolute pos-right"
+                            <a id="RemoveDiagnosisLinkButton" href="#" class="btn btn-primary position-absolute pos-right"
+                               role="button"
                                data-toggle="tooltip" data-placement="left" title="Remove diagnosis">
                                 <i class="fal fa-trash-alt fa-lg"></i>
                             </a>
@@ -97,10 +107,7 @@
                     <div class="col-sm-10 pl-0">
                         <div class="input-group">
                             <select id="DrugDoseTemplateListSelect" class="form-control">
-                                <option value="value">10mg-3Tabs-14D </option>
-                                <option value="value">15mg-3Tabs-14D </option>
-                                <option value="value">20mg-3Tabs-14D </option>
-
+                                <option value="">Select a Drug</option>
                             </select>
                             <div class="input-group-append">
                                 <div class="input-group-text">

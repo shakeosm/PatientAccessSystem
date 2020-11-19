@@ -11,6 +11,7 @@ namespace Pas.Data.Models
         {
             DrugModeOfDelivery = new HashSet<DrugModeOfDelivery>();
             PrescriptionDrugs = new HashSet<PrescriptionDrugs>();
+            BrandDoseTemplates = new HashSet<BrandDoseTemplate>();
         }
 
         [Required]
@@ -21,5 +22,7 @@ namespace Pas.Data.Models
 
         public virtual ICollection<DrugModeOfDelivery> DrugModeOfDelivery { get; set; }
         public virtual ICollection<PrescriptionDrugs> PrescriptionDrugs { get; set; }
+        public virtual ICollection<BrandDoseTemplate> BrandDoseTemplates { get; set; }
+
     }
 }

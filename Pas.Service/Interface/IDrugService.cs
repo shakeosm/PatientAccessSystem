@@ -25,6 +25,13 @@ namespace Pas.Service.Interface
         Task<IList<Manufacturer>> ListAllMenufacturer();
         
         Task<IList<Symptoms>> ListAllSymptoms();
-
+        Task<IList<DrugBrandsForDiagnosisVM>> ListAllBrandsForDiagnosis(int id = 0);      
+        Task<IList<DrugIntakePatternsForDiagnosisVM>> ListAllDrugPatternTemplates(int id);
+        Task<IList<InvestigationForDiagnosisVM>> ListAllInvestigationsForDiagnosis(int id);
+        Task<IList<IntakePattern>> ListAllIntakePatterns ();
+        
+        Task<int> Insert_DrugBrandForDiagnosis(DrugBrandsForDiagnosisVM vm, int userId);
+        Task<int> Insert_BrandDoseTemplate(BrandDoseTemplateCreateVM vm, int userId);
+        
     }
 }
