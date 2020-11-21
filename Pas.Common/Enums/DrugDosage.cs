@@ -8,10 +8,10 @@ namespace Pas.Common.Enums
 {
     public enum DoseSolid
     {
-        Half = 0,
-        One,
-        Two,
-        Three
+        Half = 50,
+        One = 1,
+        Two = 2,
+        Three = 3
     }
 
     public enum DoseLiquid

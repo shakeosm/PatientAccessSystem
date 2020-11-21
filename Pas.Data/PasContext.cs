@@ -53,6 +53,7 @@ namespace Pas.Data
         public virtual DbSet<PrescriptionDrugs> PrescriptionDrugs { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Symptoms> Symptoms { get; set; }
+        public virtual DbSet<StrengthType> StrengthTypes { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserOrganisationRole> UserOrganisationRole { get; set; }
         public virtual DbSet<UserRelated> UserRelated { get; set; }
@@ -540,6 +541,11 @@ namespace Pas.Data
             modelBuilder.Entity<Symptoms>(entity =>
             {
                 entity.ToTable("Symptoms", "dbo");
+            });
+
+            modelBuilder.Entity<StrengthType>(entity =>
+            {
+                entity.ToTable("StrengthType", "drug");
             });
 
             modelBuilder.Entity<User>(entity =>

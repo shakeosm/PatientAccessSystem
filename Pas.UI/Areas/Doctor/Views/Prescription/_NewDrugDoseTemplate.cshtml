@@ -1,10 +1,14 @@
 ﻿@using Pas.Service.Interface
-
+@using Pas.Common.Enums
 @inject IDrugService DrugService
 
 @{
+
     var intakePattern = await DrugService.ListAllIntakePatterns();
     var intakePatternSource = new SelectList(intakePattern, "Id", "Pattern");
+
+    var modeOfDeliveries = await DrugService.LisAllModeOfDeliveries();
+    var modeOfDeliverySource = new SelectList(modeOfDeliveries, "Id", "Name");
 }
 
 
@@ -28,39 +32,41 @@
                     <div id="DrugIntakeypeDiv" class="form-group row col-12 mb-3">
                         <label for="DrugIntakeRadioOption" class="col-sm-2 form-label">Intake Type</label>
                         <div class="form-row col-sm-10">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-primary waves-effect waves-themed btn-drug-template active">
+
+                            @Html.DropDownList("ModeOfDeliverySelectList", modeOfDeliverySource, "Select a pattern",
+                                new { id = "ModeOfDeliverySelectList", @class = "form-control" })
+
+                            <div class="btn-group btn-group-toggle d-none invisible" data-toggle="buttons">
+                                <label class="btn btn-primary waves-effect waves-themed btn-drug-template active flex-column">
                                     <input type="radio" name="DrugIntakeRadioOption"
                                            class="drug-intake-radio-option drug-intake-solid"
                                            value="1"
                                            id="DrugIntakeTablet" checked="checked"> Tablet
                                 </label>
-                                <label class="btn btn-primary waves-effect waves-themed btn-drug-template">
+                                <label class="btn btn-primary waves-effect waves-themed btn-drug-template flex-column">
                                     <input type="radio" name="DrugIntakeRadioOption"
                                            class="drug-intake-radio-option drug-intake-solid"
                                            value="3"
                                            id="DrugIntakeCaplet"> Caplet
                                 </label>
-                                <label class="btn btn-primary waves-effect waves-themed btn-drug-template">
+                                <label class="btn btn-primary waves-effect waves-themed btn-drug-template flex-column">
                                     <input type="radio" name="DrugIntakeRadioOption"
                                            class="drug-intake-radio-option drug-intake-solid"
                                            value="2"
                                            id="DrugIntakeCapsue"> Capsule
                                 </label>
-
-                            </div>
-                            <div class="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                                <label class="btn btn-primary waves-effect waves-themed btn-drug-template">
+                                <div class="col-lg-12 w-100"></div>
+                                <label class="btn btn-primary waves-effect waves-themed btn-drug-template flex-column">
                                     <input type="radio" name="DrugIntakeRadioOption" class="drug-intake-radio-option"
                                            value="4"
                                            id="DrugIntakeSyrup"> Syrup
                                 </label>
-                                <label class="btn btn-primary waves-effect waves-themed btn-drug-template">
+                                <label class="btn btn-primary waves-effect waves-themed btn-drug-template flex-column">
                                     <input type="radio" name="DrugIntakeRadioOption" class="drug-intake-radio-option"
                                            value="6"
                                            id="DrugIntakemulgel"> Emulgel
                                 </label>
-                                <label class="btn btn-primary waves-effect waves-themed btn-drug-template">
+                                <label class="btn btn-primary waves-effect waves-themed btn-drug-template flex-column">
                                     <input type="radio" class="drug-intake-radio-option" name="DrugIntakeRadioOption" id="DrugIntakePowder"> Powder
                                 </label>
                             </div>
@@ -78,15 +84,21 @@
                                     <div class="input-group-text">
                                         <!-- Drug strength- Solid category -->
                                         <div class="custom-control custom-radio">
-                                            <input type="radio" id="DrugStrengthInputOption_mcg" name="DrugStrengthInputRadio" class="custom-control-input">
+                                            <input type="radio" id="DrugStrengthInputOption_mcg" name="DrugStrengthInputRadio"
+                                                   class="custom-control-input"
+                                                   value="mcg">
                                             <label class="custom-control-label" for="DrugStrengthInputOption_mcg">mcg</label>
                                         </div>
                                         <div class="custom-control custom-radio ml-2">
-                                            <input type="radio" id="DrugStrengthInputOption_mg" name="DrugStrengthInputRadio" class="custom-control-input">
+                                            <input type="radio" id="DrugStrengthInputOption_mg" name="DrugStrengthInputRadio"
+                                                   class="custom-control-input"
+                                                   value="mg">
                                             <label class="custom-control-label" for="DrugStrengthInputOption_mg">mg</label>
                                         </div>
                                         <div class="custom-control custom-radio ml-2">
-                                            <input type="radio" id="DrugStrengthInputOption_gm" name="DrugStrengthInputRadio" class="custom-control-input">
+                                            <input type="radio" id="DrugStrengthInputOption_gm" name="DrugStrengthInputRadio"
+                                                   class="custom-control-input"
+                                                   value="gram">
                                             <label class="custom-control-label" for="DrugStrengthInputOption_gm">gram</label>
                                         </div>
                                     </div>
@@ -102,27 +114,27 @@
                         <div class="col-sm-10">
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-info waves-effect waves-themed active">
-                                    <input type="radio" name="DrugIntakeRadioOption"
+                                    <input type="radio" name="DrugDoseQtyRadioOption"
                                            class="drug-intake-radio-option drug-intake-solid"
-                                           value="1"
+                                           value="50"
                                            id="DrugIntakeTablet"> Half
                                 </label>
                                 <label class="btn btn-info waves-effect waves-themed">
-                                    <input type="radio" name="DrugIntakeRadioOption"
+                                    <input type="radio" name="DrugDoseQtyRadioOption"
                                            class="drug-intake-radio-option drug-intake-solid"
-                                           value="2"
+                                           value="1"
                                            id="DrugDoseOptionOne" checked="checked"> One
                                 </label>
                                 <label class="btn btn-info waves-effect waves-themed">
-                                    <input type="radio" name="DrugIntakeRadioOption"
+                                    <input type="radio" name="DrugDoseQtyRadioOption"
                                            class="drug-intake-radio-option drug-intake-solid"
-                                           value="3"
+                                           value="2"
                                            id="DrugIntakeCaplet"> Two
                                 </label>
                                 <label class="btn btn-info waves-effect waves-themed">
-                                    <input type="radio" name="DrugIntakeRadioOption"
+                                    <input type="radio" name="DrugDoseQtyRadioOption"
                                            class="drug-intake-radio-option drug-intake-solid"
-                                           value="2"
+                                           value="3"
                                            id="DrugIntakeCapsue"> Three
                                 </label>
 
@@ -159,28 +171,28 @@
                         <div class="col-sm-10">
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-success waves-effect waves-themed active">
-                                    <input type="radio" name="DrugIntakeRadioOption"
+                                    <input type="radio" name="DoseFrequencyRadioOption"
                                            class="drug-intake-radio-option drug-intake-solid"
                                            value="1"
-                                           id="DrugIntakeTablet" checked="checked"> One
+                                           id="DailyFrequency1D" checked="checked"> One
                                 </label>
                                 <label class="btn btn-success waves-effect waves-themed">
-                                    <input type="radio" name="DrugIntakeRadioOption"
+                                    <input type="radio" name="DoseFrequencyRadioOption"
+                                           class="drug-intake-radio-option drug-intake-solid"
+                                           value="2"
+                                           id="DailyFrequency2Times"> Two
+                                </label>
+                                <label class="btn btn-success waves-effect waves-themed">
+                                    <input type="radio" name="DoseFrequencyRadioOption"
                                            class="drug-intake-radio-option drug-intake-solid"
                                            value="3"
-                                           id="DrugIntakeCaplet"> Two
+                                           id="DailyFrequency3Times"> Three
                                 </label>
                                 <label class="btn btn-success waves-effect waves-themed">
-                                    <input type="radio" name="DrugIntakeRadioOption"
+                                    <input type="radio" name="DoseFrequencyRadioOption"
                                            class="drug-intake-radio-option drug-intake-solid"
-                                           value="2"
-                                           id="DrugIntakeCapsue"> Three
-                                </label>
-                                <label class="btn btn-success waves-effect waves-themed">
-                                    <input type="radio" name="DrugIntakeRadioOption"
-                                           class="drug-intake-radio-option drug-intake-solid"
-                                           value="2"
-                                           id="DrugIntakeCapsue"> Four
+                                           value="4"
+                                           id="DailyFrequency4Times"> Four
                                 </label>
 
                             </div>

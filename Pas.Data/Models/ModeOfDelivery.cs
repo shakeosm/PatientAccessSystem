@@ -20,6 +20,9 @@ namespace Pas.Data.Models
         
         public bool? IsDeleted { get; set; }
 
+        [Column(TypeName = "tinyint")]
+        public int? RowOrder { get; set; }
+
         public virtual ICollection<DrugModeOfDelivery> DrugModeOfDelivery { get; set; }
         public virtual ICollection<PrescriptionDrugs> PrescriptionDrugs { get; set; }
         public virtual ICollection<BrandDoseTemplate> BrandDoseTemplates { get; set; }

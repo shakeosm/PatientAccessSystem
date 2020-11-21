@@ -137,17 +137,15 @@ namespace Pas.UI.Areas.Doctor.Controllers
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Insert_BrandDoseTemplate(BrandDoseTemplateCreateVM vm)
-        {
-            return Json("success 101 " + vm.Duration);
-
+        {            
             //## This will create a Template for a Specific Drug Brand. ie: 'Ibuprofen 200mg Tablet 4 Times a Day for 7 days'
-            if (vm is null)
+            if (vm is null || vm.StrengthTypeText is null || vm.ModeOfDeliveryId == 0 || vm.DrugBrandId == 0 || vm.Duration == 0)
                 return Json("error");
 
             AppUserDetailsVM currentUser = await GetCurrentUser();
 
             var result = await _drugService.Insert_BrandDoseTemplate(vm, currentUser.Id);
-
+                                    
             return Json(result);
         }
 

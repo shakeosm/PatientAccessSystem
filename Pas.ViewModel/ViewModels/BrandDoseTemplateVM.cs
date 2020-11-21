@@ -11,6 +11,9 @@
 
         public int StrengthTypeId { get; set; }
 
+        /// <summary>This will take the StrngthType in Text format (From UI) and read the Id from Table</summary>
+        public string StrengthTypeText { get; set; }
+
         public short Dose { get; set; }
 
         public short Frequency { get; set; }

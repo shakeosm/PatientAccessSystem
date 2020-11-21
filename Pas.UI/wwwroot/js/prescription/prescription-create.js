@@ -239,65 +239,60 @@ $(document).ready(function () {
     //## Create New Brand Dose Template
     $("#CreateBrandDoseTemplateButton").click(function () {
 
-        var postUrl = "/Doctor/Prescription/Insert_BrandDoseTemplate";
-        $.ajax({
+        var postUrl = "/Doctor/Prescription/Insert_BrandDoseTemplate";        
+
+        var modeOfDelivery = $("#ModeOfDeliverySelectList").val();
+        var drugBrandId = $("#BrandListSelect").val();
+        var doseStrength = $("input[name='DrugStrengthInputRadio']:checked").val();
+        var strengthTypeText = $("#DrugStrengthInput").val() + " " + doseStrength;
+        var drugDoseQty = $("input[name='DrugDoseQtyRadioOption']:checked").val();
+        var doseFrequency = $("input[name='DoseFrequencyRadioOption']:checked").val();
+        var durationDays = $("#DurationDays").val();
+        var intakePatternId = $("#IntakePatternSourceSelect").val();
+
+        axios({
+            method: 'post',
+            headers: { "RequestVerificationToken": token },
             url: postUrl,
-            type: "POST",
-            dataType: 'json',
             data: {
-                __RequestVerificationToken: token,  //# AntiForgeryToken
-                "DrugBrandId": '1',
-                "ModeOfDeliveryId": '2',
-                "StrengthTypeId": '1',
-                "Dose": '1',
-                "Frequency": '1',
-                "Duration": '1',
-                "IntakePatternId": '1'
-            },
-            success: function (result) {
-                debugger;
-                alert("response -" + result);
-                //if (result >= 1) {
-                //    //$("#DiagnosisListSelect").append();                    
-                //    $("#BrandListSelect").append(new Option(newBrandName, result))
-                //} else {
-                //    swal({
-                //        title: "Update Failed!",
-                //        text: "System has failed to save this new Brand Details. Please reload the page and try again!",
-                //        icon: "warning",
-                //    });
-                //}
-
-                //$("#NewDrugBrandEntryPopupModal").modal("hide");
-
-            },
-            error: function (err) {
-                console.log(err.statusText);
-                return false;
+                "DrugBrandId": "1",
+                "ModeOfDeliveryId": "2",
+                "StrengthTypeText": "2",
+                "Dose": "3",
+                "Frequency": "4",
+                "Duration": "5",
+                "IntakePatternId": "6"
             }
-        });
-        /*
-        axios.post(postUrl, {
-            "RequestVerificationToken": token,  //# AntiForgeryToken
-            "DrugBrandId": '1',
-            "ModeOfDeliveryId": '2',
-            "StrengthTypeId": '1',
-            "Dose": '1',
-            "Frequency": '1',
-            "Duration": '1',
-            "IntakePatternId": '1'
+        }).then(function (response) {
+            debugger;
+            if (response.data !== "error") {
+                var resultList = string.split(response.data, ";");
+                var newPatternId = resultList[0];
+                var pattern = resultList[1];
+
+                console.log(response.data);
+                $("#NewDrugDoseTemplatePopupModal").modal("hide")
+                alert("response -" + response.data[0] + "-" + newPatternId);    
+                $("#DrugDoseTemplateListSelect").append($('<option></option>').attr('value', newPatternId).text(pattern));
+                $("#DrugDoseTemplateListSelect").val(newPatternId);
+            } else {
+                $("#NewDrugDoseTemplatePopupModal").modal("hide")
+                OnFail_DrugDoseTemplate_Create();
+            }
+            
         })
-            .then(function (response) {
-                debugger;
-            console.log(response);
-            alert("response -" + response);
-        })
-        .catch(function (error) {
-            console.log(error);
-            alert("error -" + error);
+            .catch(function (error) {
+                OnFail_DrugDoseTemplate_Create();
             });
-            */
     });
+
+    function OnFail_DrugDoseTemplate_Create() {
+        swal({
+            title: "Update Failed!",
+            text: "System has failed to save this new Drug Dose template. Please reload the page and try again!",
+            icon: "warning",
+        });
+    }
 
     //## TODO : WHen removing an item from the Current Prescription
     $(".remove-prescription-item").click(function () {
