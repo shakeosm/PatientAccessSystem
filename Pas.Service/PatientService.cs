@@ -88,6 +88,7 @@ namespace Pas.Service
             {
                 List<User> result = await _pasContext.User
                                             .Include(u=> u.AddressBooks)
+                                            .AsNoTracking()
                                             .Where(userSearch).ToListAsync();
 
 
@@ -200,7 +201,10 @@ namespace Pas.Service
             var ailments = _cacheService.GetCacheValue<IEnumerable<PatientAilmentType>>(cacheKey);
             
             if (ailments is null) {
-                ailments = await _pasContext.PatientAilmentTypes.Where(pa => pa.PatientId == id).ToListAsync();
+                ailments = await _pasContext.PatientAilmentTypes
+                                            .AsNoTracking()
+                                            .Where(pa => pa.PatientId == id)
+                                            .ToListAsync();
                 
                 _cacheService.SetCacheValue(cacheKey, ailments);                
             }
@@ -216,6 +220,9 @@ namespace Pas.Service
             if (medicationList is null)
             {
                 var patientMedications = await _pasContext.PrescriptionDrugs
+                                                    .Include(pd=> pd.BrandDoseTemplate)
+                                                    .ThenInclude(p=> p.StrengthType)
+                                                    .AsNoTracking()
                                                     .Where(pd=> pd.Prescription.PatientId == id)
                                                     .ToListAsync();
 
@@ -236,8 +243,8 @@ namespace Pas.Service
             var mappedResult = patientMedications.Select(pm=> new DrugDetailsVM()
             { 
                 Name = pm.DrugBrands.BrandName,
-                Dosage = pm.StrengthType.Name,
-                Id = pm.DrugId
+                Dosage = pm.BrandDoseTemplate.StrengthType.Name,
+                Id = pm.DrugBrandId
             });
 
             return mappedResult;

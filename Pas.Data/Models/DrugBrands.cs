@@ -29,7 +29,7 @@ namespace Pas.Data.Models
 
         public DateTime DateAdded { get; set; }
 
-        public bool IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; }
 
 
         public virtual Drugs Drug { get; set; }

@@ -10,6 +10,10 @@ namespace Pas.Data.Models
 
     public partial class BrandDoseTemplate : BaseEntityModel
     {
+        public BrandDoseTemplate()
+        {
+            PrescriptionDrugs = new HashSet<PrescriptionDrugs>();
+        }
         [Required]
         public int DrugBrandId { get; set; }
 
@@ -39,10 +43,14 @@ namespace Pas.Data.Models
 
         public bool? IsDeleted { get; set; }
 
+        [Column(TypeName = "varchar(50)")]
+        public string TemplateText { get; set; }
 
-        public virtual DrugBrands DrugBrands { get; set; }
+
+        public virtual DrugBrands DrugBrand { get; set; }
         public virtual ModeOfDelivery ModeOfDelivery { get; set; }        
         public virtual StrengthType StrengthType { get; set; }
         public virtual IntakePattern IntakePattern { get; set; }               
+        public virtual ICollection<PrescriptionDrugs> PrescriptionDrugs { get; set; }               
     }
 }

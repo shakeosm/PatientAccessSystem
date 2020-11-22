@@ -142,28 +142,7 @@
                             </div>
                             <span class="help-block">Tablet</span>
                         </div>
-                        <div class="d-none">
-
-
-                            @*<input type="number" class="form-control form-control-sm" id="DoseSizeInput" placeholder="Dose size">*@
-                            @*@Html.DropDownList("QuantityPerDose",
-                                Html.GetEnumSelectList<DoseSolid>(),
-                                "Select Dose", new
-                                     {
-                                         id = "DoseSolidSelect",
-                                         @class = "form-control",
-                                @dataToggle = "tooltip",
-                                         @dataPlacement = "top",
-                                         @title = "pcs or spoons"
-                                     })*@
-
-                            @*<select id="QuantityPerDose" class="form-control" asp-items="@Html.GetEnumSelectList(typeof(DoseSolid))">
-                                    <option selected="selected" value="">Please select</option>
-                                </select>*@
-
-                        </div>
-
-                    </div>
+                     </div>
 
                     <!-- Daily Frequence -->
                     <div class="form-row col-12 mb-3">
@@ -225,7 +204,7 @@
                     </div>
 
                     <!-- Example of Dosage instruction  -->
-                    <div class="form-row col-12 mb-3">
+                    <div class="form-row col-12">
                         <label for="QuantityInput" class="col-sm-2 form-label"></label>
                         <div class="col-sm-12">
                             <div class="alert alert-success">Example: <br /><span id="NewDrugDoseTemplateExampleSpan">Paracetemol Tablet</span> 10mg (1 + 0 + 0 + 1) for 14 Days</div>

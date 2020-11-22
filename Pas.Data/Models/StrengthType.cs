@@ -10,7 +10,6 @@ namespace Pas.Data.Models
         public StrengthType()
         {
             DrugDosageType = new HashSet<DrugStrengthType>();
-            PrescriptionDrugs = new HashSet<PrescriptionDrugs>();
             BrandDoseTemplates = new HashSet<BrandDoseTemplate>();
         }
 
@@ -19,7 +18,6 @@ namespace Pas.Data.Models
         public string Name { get; set; }
 
         public virtual ICollection<DrugStrengthType> DrugDosageType { get; set; }
-        public virtual ICollection<PrescriptionDrugs> PrescriptionDrugs { get; set; }
         public virtual ICollection<BrandDoseTemplate> BrandDoseTemplates { get; set; }
     }
 }

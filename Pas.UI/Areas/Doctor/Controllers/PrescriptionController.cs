@@ -115,9 +115,21 @@ namespace Pas.UI.Areas.Doctor.Controllers
         public async Task<ActionResult> ListAllBrandsForDiagnosis(int id)
         {
             if (id < 1)
-                return Json("ListAllBrandsForDiagnosis- id = NULL");
+                return Json("error");
 
             var result = await _drugService.ListAllBrandsForDiagnosis(id);
+
+            return Json(result);
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult> ListAllBrandsDoseTemplates(int id)
+        {
+            if (id < 1)
+                return Json("error");
+
+            IList<BrandDoseTemplateViewVM> result = await _drugService.ListAllBrandsDoseTemplates(id);
 
             return Json(result);
         }

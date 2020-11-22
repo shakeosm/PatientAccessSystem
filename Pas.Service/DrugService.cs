@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Pas.Common.Constants;
 using Pas.Common.Enums;
 using Pas.Data;
 using Pas.Data.Models;
@@ -154,18 +155,20 @@ namespace Pas.Service
 
         public async Task<IList<DrugBrandsForDiagnosisVM>> ListAllBrandsForDiagnosis(int diagnosisId = 0)
         {
-            string cacheKey = $"ListAllBrandsForDiagnosis_{diagnosisId}";
+            string cacheKey = $"{CacheKey.BrandsForDiagnosis}_{diagnosisId}";
 
             var brandList = _cacheService.GetCacheValue<List<DrugBrandsForDiagnosisVM>>(cacheKey);
+            bool applyFilter = diagnosisId > 0;
 
             if (brandList is null)
             {
                 try
                 {
-                    Expression<Func<BrandForIndications, bool>> searchPredicate = p => (diagnosisId > 0 && p.IndicationTypeId == diagnosisId);
+                    Expression<Func<BrandForIndications, bool>> searchPredicate = p => (applyFilter && p.IndicationTypeId == diagnosisId) || true;
 
                     var result = await _context.BrandForIndications
                                                 .Where(searchPredicate)
+                                                .AsNoTracking()
                                                 .Include(d=> d.DrugBrands)
                                                 .ToListAsync();
                 
@@ -270,54 +273,106 @@ namespace Pas.Service
 
         public async Task<string> Insert_BrandDoseTemplate(BrandDoseTemplateCreateVM vm, int userId)
         {
-            //## First get the Strength id- read the list from Cache- don't go to DB.
-            string cacheKey = $"StrengthTypes";
-            var strengthTypeList = _cacheService.GetCacheValue<List<StrengthType>>(cacheKey);
-
-            var strengthType = strengthTypeList.FirstOrDefault(s => s.Name.Equals(vm.StrengthTypeText));        //## Use the Text to find the id, ie: '10 mg' = Id:2
-            if (strengthType is null)
+            try
             {
-                //## Something peculiar strength may be, ie: "199 mg"--> insert it in the DB
-                strengthType = new StrengthType() { Name = vm.StrengthTypeText };
+                //## First get the Strength id- read the list from Cache- don't go to DB.
+                var strengthTypeList = _cacheService.GetCacheValue<List<StrengthType>>(CacheKey.StrengthTypes);
 
-                await _context.StrengthTypes.AddAsync(strengthType);
+                var strengthType = strengthTypeList.FirstOrDefault(s => s.Name.Equals(vm.StrengthTypeText));        //## Use the Text to find the id, ie: '10 mg' = Id:2
+                if (strengthType is null)
+                {
+                    //## Something peculiar strength may be, ie: "199 mg"--> insert it in the DB
+                    strengthType = new StrengthType() { Name = vm.StrengthTypeText };
+
+                    await _context.StrengthTypes.AddAsync(strengthType);
+                    await _context.SaveChangesAsync();
+                }
+
+                string teamplateName = CreateTemplateName(vm);
+
+                BrandDoseTemplate doseTemplate = new BrandDoseTemplate()
+                {
+                    DrugBrandId = vm.DrugBrandId,
+                    ModeOfDeliveryId = vm.ModeOfDeliveryId,
+                    StrengthTypeId = strengthType.Id,
+                    Dose = vm.Dose,
+                    Frequency = vm.Frequency,
+                    IntakePatternId = vm.IntakePatternId,
+                    Duration = vm.Duration,
+                    CreatedBy = userId,
+                    DateCreated = DateTime.Now,
+                    TemplateText = teamplateName
+                };
+
+                await _context.BrandDoseTemplates.AddAsync(doseTemplate);
                 await _context.SaveChangesAsync();
-            }
+                
+                //## Add this new BrandDoseTemplate to the Cache- so others can see it immediately
+                UpdateBrandDoseTemplateIn_Cache(doseTemplate);                
 
-            BrandDoseTemplate doseTemplate = new BrandDoseTemplate() { 
-                DrugBrandId = vm.DrugBrandId,
-                ModeOfDeliveryId  = vm.ModeOfDeliveryId,
-                StrengthTypeId = strengthType.Id,
-                Dose = vm.Dose,
-                Frequency = vm.Frequency,
-                Duration = vm.Duration,
-                CreatedBy = userId,
-                DateCreated = DateTime.Now
+                string result = $"{doseTemplate.Id};{teamplateName}";   //## Combine the Id of newly inserted Template and the TemplateTExt- to add to the Dropdown- on Success
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return "error";
+                //throw;
+            }
+            
+
+        }
+
+        /// <summary>This will create DrugDose Template, ie: '10 mg 1x3T-7D'</summary>
+        /// <param name="vm">BrandDoseTemplateCreateVM view model</param>
+        /// <returns></returns>
+        private string CreateTemplateName(BrandDoseTemplateCreateVM vm)
+        {
+            //## Get ModeOfDelivery List- and find the 'Delivery' Text
+            var listOfDeliveryMode = _cacheService.GetCacheValue<IList<ModeOfDelivery>>(CacheKey.ModeOfDeliveries);
+            var deliveryMode = listOfDeliveryMode.First(d => d.Id == vm.ModeOfDeliveryId).Name; //## we will know- Tablet/Capsule/Syrup!
+            string drugDose = vm.Dose == (short)DoseSolid.Half ? "half" : vm.Dose.ToString();
+
+            string durationText = vm.Duration == 0 ? "TBC" : vm.Duration.ToString() + "days";
+            string teamplateName = $"{vm.StrengthTypeText}-{deliveryMode}-{vm.Dose}*{vm.Frequency}Times-{durationText}"; //## ie: "10mg-Tablet-1*3Times-7Days"
+            return teamplateName;
+        }
+
+        private void UpdateBrandDoseTemplateIn_Cache(BrandDoseTemplate doseTemplate)
+        {
+            //## Add this new BrandDoseTemplate to the Cache- so others can see it immediately
+            var existingBrandDoseTemplate = _cacheService.GetCacheValue<IList<BrandDoseTemplateCreateVM>>(CacheKey.BrandDoseTemplate); //## Get from Cache
+            if (existingBrandDoseTemplate is null)
+                existingBrandDoseTemplate = new List<BrandDoseTemplateCreateVM>();
+
+            BrandDoseTemplateCreateVM newBrandDoseTeamplate = MapTo_BrandDoseTemplateVM(doseTemplate);
+            existingBrandDoseTemplate.Add(newBrandDoseTeamplate);                                        //## Add this new BrandTemplate
+            _cacheService.SetCacheValue(CacheKey.BrandDoseTemplate, existingBrandDoseTemplate);        //## Push that new list to Cache
+        }
+
+        /// <summary>This will Map the 'BrandDoseTemplate' to 'BrandDoseTemplateCreateVM' and make it easier to store in the Redis Cache</summary>
+        /// <param name="dose">BrandDoseTemplate object</param>
+        /// <returns>BrandDoseTemplateCreateVM View Model</returns>
+        private BrandDoseTemplateCreateVM MapTo_BrandDoseTemplateVM(BrandDoseTemplate dose)
+        {
+            BrandDoseTemplateCreateVM result = new BrandDoseTemplateCreateVM() { 
+                DrugBrandId = dose.DrugBrandId,
+                IntakePatternId = dose.IntakePatternId,
+                Duration = dose.Duration,
+                ModeOfDeliveryId = dose.ModeOfDeliveryId,
+                StrengthTypeId = dose.StrengthTypeId.Value,
+                Dose = dose.Dose.Value,
+                Frequency = dose.Frequency
             };
 
-            await _context.BrandDoseTemplates.AddAsync(doseTemplate);
-            await _context.SaveChangesAsync();
-
-            //## Get ModeOfDelivery List- and find the 'Delivery' Text
-            var listOfDeliveryMode = _cacheService.GetCacheValue<IList<ModeOfDelivery>>("LisAllModeOfDeliveries");
-            var deliveryMode = listOfDeliveryMode.First(d => d.Id == vm.ModeOfDeliveryId).Name; //## we will know- Tablet/Capsule/Syrup!
-
-            //## Add this new BrandDoseTemplate to the Cache- so others can see it immediately
-            var existingBrandDoseTemplate = _cacheService.GetCacheValue<IList<BrandDoseTemplate>>("BrandDoseTemplate"); //## Get from Cache
-            existingBrandDoseTemplate.Add(doseTemplate);                                        //## Add this new BrandTemplate
-            _cacheService.SetCacheValue("BrandDoseTemplate", existingBrandDoseTemplate);        //## Push that new list to Cache
-
-            string teamplateName = $"{vm.StrengthTypeText}-{deliveryMode.Substring(0,3)}-{vm.Dose}x{vm.Frequency}-{vm.Duration}D"; //## ie: "10mg-Tab-1x3-7D"
-
-            string result = $"{doseTemplate.Id};{teamplateName}";   //## Combine the Id of newly inserted Template and the TemplateTExt- to add to the Dropdown- on Success
-            return teamplateName;
+            return result;
         }
 
         public async Task<IList<ModeOfDelivery>> LisAllModeOfDeliveries()
         {
-            string cacheKey = $"LisAllModeOfDeliveries";
 
-            var modeOfDeliveryList = _cacheService.GetCacheValue<List<ModeOfDelivery>>(cacheKey);
+            var modeOfDeliveryList = _cacheService.GetCacheValue<List<ModeOfDelivery>>(CacheKey.ModeOfDeliveries);
 
             if (modeOfDeliveryList is null)
             {
@@ -325,7 +380,7 @@ namespace Pas.Service
                                                         .OrderBy(m=> m.RowOrder)
                                                         .ToListAsync();
 
-                _cacheService.SetCacheValue(cacheKey, modeOfDeliveryList);
+                _cacheService.SetCacheValue(CacheKey.ModeOfDeliveries, modeOfDeliveryList);
 
                 //## An extra peice of work- while reading Mode Of deliveries- also Load the StrengthList and save in the cache for future usage
                 SetAllStrengthTypesInCache();
@@ -338,17 +393,47 @@ namespace Pas.Service
 
         private void SetAllStrengthTypesInCache()
         {
-            string cacheKey = $"StrengthTypes";
-
-            var allStrengthTypes = _cacheService.GetCacheValue<List<StrengthType>>(cacheKey);
+            var allStrengthTypes = _cacheService.GetCacheValue<List<StrengthType>>(CacheKey.StrengthTypes);
 
             if (allStrengthTypes is null)
             {
                 allStrengthTypes = _context.StrengthTypes.ToList();
 
-                _cacheService.SetCacheValue(cacheKey, allStrengthTypes);
+                _cacheService.SetCacheValue(CacheKey.StrengthTypes, allStrengthTypes);
 
             }
+        }
+
+        public async Task<IList<BrandDoseTemplateViewVM>> ListAllBrandsDoseTemplates(int drugBrandId)
+        {
+            string doseCacheKey = $"{CacheKey.BrandDoseTemplate}_{drugBrandId}"; 
+            var templateList = _cacheService.GetCacheValue<List<BrandDoseTemplateViewVM>>(doseCacheKey);
+
+            if (templateList is null)
+            {
+                try
+                {
+                    var result = await _context.BrandDoseTemplates.ToListAsync();
+
+                    templateList = result.Select(r => new BrandDoseTemplateViewVM()
+                    {
+                        TemplateId = r.Id,
+                        DrugBrandId = r.DrugBrandId,
+                        TemplateName = r.TemplateText
+                    }).ToList();
+
+                    _cacheService.SetCacheValue(doseCacheKey, templateList);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    throw;
+                }
+
+
+            }
+
+            return templateList;
         }
     }
 }

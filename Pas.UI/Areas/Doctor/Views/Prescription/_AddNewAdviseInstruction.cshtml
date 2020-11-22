@@ -3,29 +3,41 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">New Instruction/Advise</h5>
+                    <h5 class="modal-title">New <span id="InstructionModalTitle">[Instruct/Advise]</span></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
 
                 <div class="modal-body">
+                    <!-- Instruction/Advise Type selection   -->
+                    <div class="frame-wrap d-none invisible">
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="AdviseRadioOption" name="AdviseInstructionTypeRadio" checked="">
+                                    <label class="custom-control-label" for="AdviseRadioOption">Advise</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="InstructionRadioOption" name="AdviseInstructionTypeRadio">
+                                    <label class="custom-control-label" for="InstructionRadioOption">Instruction</label>
+                                </div>
+                            </div>
+
                     <!-- Instruction   -->
                     <div id="DrugNewInstructionInputDiv" class="col-12 mb-3">
-                        <label for="DrugNewInstructionInput" class="col-12 form-label">Instructions: English</label>
+                        <label for="DrugNewInstructionInput" class="col-12 form-label">English text</label>
                         <div class="col-12">
                             <input type="text" class="form-control form-control" id="DrugNewInstructionInput"
-                                   placeholder="Instruction in English">
+                                   placeholder="Description in English">
 
                         </div>
                     </div>
 
                     <!-- Instruction: In Bangla   -->
                     <div id="DrugNewInstructionInputDivBangla" class="col-12 mb-3">
-                        <label for="DrugNewInstructionBanglaInput" class="col-12 form-label">Instructions: Bangla</label>
+                        <label for="DrugNewInstructionBanglaInput" class="col-12 form-label">বাংলায় লিখুনঃ</label>
                         <div class="col-12">
                             <input type="text" class="form-control form-control" id="DrugNewInstructionBanglaInput"
-                                   placeholder="Instruction in Bangla">
+                                   placeholder="Description in Bangla">
 
                         </div>
                     </div>

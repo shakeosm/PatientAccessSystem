@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Pas.Common.Enums;
+using Pas.Data;
 using Pas.Data.Models;
 using Pas.Service.Interface;
 using Pas.Web.ViewModels;
@@ -14,7 +15,8 @@ namespace Pas.Service
 {
     public class AppAuthorisationService : IAppAuthorisationService
     {
-        private readonly IHttpContextAccessor Context;
+        private readonly IHttpContextAccessor _httpContext;
+        private readonly PasContext _context;
         private readonly IAppUserService _appUserService;
         //private readonly IActiveUserService ActiveUserService;
         private readonly IUserOrgRoleService _userOrgRoleService;
@@ -24,7 +26,8 @@ namespace Pas.Service
 
         public UserManager<IdentityUser> _userManager { get; }
 
-        public AppAuthorisationService(IHttpContextAccessor context,
+        public AppAuthorisationService(IHttpContextAccessor HttpContext,
+                                        PasContext Context,
                                         IAppUserService AppUserService,
                                         //IActiveUserService activeUserService, 
                                         //IOrganisationService organisationService, 
@@ -34,7 +37,8 @@ namespace Pas.Service
                                         //IHttpContextAccessor HttpContextAccessor
                                         )
         {
-            Context = context;
+            _httpContext = HttpContext;
+            _context = Context;
             _appUserService = AppUserService;
             //ActiveUserService = activeUserService;
             _userOrgRoleService = UserOrgRoleService;
@@ -47,15 +51,49 @@ namespace Pas.Service
 
         public bool SetActiveUserInCache(AppUserDetailsVM user)
         {         
-            if (user != null) { 
-                _cacheService.SetCacheValue(user.Email, user);
-                return true;            
+            if (user != null) {
+                bool isUpdated = UpdateActiveUserRoleIn_DB(user);
+
+                if(isUpdated)
+                    _cacheService.SetCacheValue(user.Email, user);
+
+                return isUpdated;            
             }
 
             return false;
          
         }
-        
+
+        private bool UpdateActiveUserRoleIn_DB(AppUserDetailsVM user)
+        {
+            ActiveRole activeRole = _context.ActiveRoles.FirstOrDefault(ar=> ar.UserId == user.Id);
+
+            if (activeRole is null)
+            {
+                //## User First time Switched Role (as a Doctor)
+                activeRole = new ActiveRole()
+                {
+                    OrganisationId = (user.ApplicationRole == ApplicationRole.Patient ? 0 : user.CurrentRole.OrganisationId),
+                    UserId = user.Id,
+                    RoleId = (int) user.ApplicationRole
+                };
+
+                _context.ActiveRoles.Add(activeRole);
+
+            }
+            else {
+                activeRole.OrganisationId = user.CurrentRole.OrganisationId;
+                activeRole.RoleId = user.CurrentRole.RoleId;
+
+                _context.ActiveRoles.Update(activeRole);
+            }
+
+            _context.SaveChangesAsync();
+
+            return true;
+
+        }
+
         /// <summary>This will return a AppUserDetailsVM Object- which doesn't have any child entity</summary>
         /// <returns>AppUser Object</returns>
         public async Task<AppUserDetailsVM> GetActiveUserFromCache(string userEmail)
@@ -65,30 +103,55 @@ namespace Pas.Service
             //var userEmail = Context.HttpContext.User.FindFirst(ClaimTypes.Email).Value;
             //if (userEmail is null) return null;     //## Unauthenticated User
 
-            var cachedUser = _cacheService.GetCacheValue<AppUserDetailsVM>(userEmail);
+            AppUserDetailsVM currentUser = _cacheService.GetCacheValue<AppUserDetailsVM>(userEmail);
+            IEnumerable<UserRoleVM> userRoles = null;
 
-            if (cachedUser is null) {
-                cachedUser = _appUserService.FindByEmail(userEmail);
-                
-                //## this User Details were never read from DB.. So- now read the UserOrganisationRoles as well- and put them in the Cache
-                var userRoles = await _userOrgRoleService.FindMappedRolesByUserId(cachedUser.Id);
+            if (currentUser is null) {
+                currentUser = _appUserService.FindByEmail(userEmail);   //## No CurrentUser info in RedisCache- Read from Table
 
-                //## Is this a PatientOnly Account? Who has no other Roles anywhere?
-                //cachedUser.HasAdditionalRoles = userRoles.Count() >= 1;
+                //## If this is a Doctor/Director- with additional Roles- then find out what was their Last selected Role from the DB
+                if (currentUser.HasMultipleRoles)
+                {
 
-                if (userRoles.Count() < 1) {
-                    cachedUser.ApplicationRole = ApplicationRole.Patient;
+                    //## Cache is Empty- Does the user have any 'ActiveRole' Table?
+                    var activeRole = _context.ActiveRoles.FirstOrDefault(ar => ar.UserId == currentUser.Id);
+
+                    //## Check- for any previous 'Active Role' in the DB Table?
+                    if (activeRole is null)
+                    {
+                        //## ActiveRole Table is empty. Means- this Doctor never SwitchedRole before- so we can assume this User as a Patient- for the first time. 
+                        //## Let the User- to go to SwitchRole page and from their Insert a Record in the ActiveRole table- then we can use that info
+
+                        currentUser.ApplicationRole = ApplicationRole.Patient;
+
+                    }
+                    else
+                    { //## ActiveRole present in the DB- but not in the Cache.. so- Update the values from DB int to RedisCache
+                        currentUser.CurrentRole = new UserRoleVM() {                             
+                            RoleId = activeRole.RoleId,
+                            OrganisationId = activeRole.OrganisationId
+                        };
+
+                        currentUser.ApplicationRole = (ApplicationRole)activeRole.RoleId;
+                        currentUser.OrganisationId = activeRole.OrganisationId;
+
+                    }
+
+                    //## And now set them in the Cache- so we will have everything we need
+                    SetUserRolesInCache(userRoles, currentUser.Id);
+
+                }
+                else {
+                    //## This is a Patient Only
+                    currentUser.ApplicationRole = ApplicationRole.Patient;
                 }
 
-                SetActiveUserInCache(cachedUser);
-
-                //## And now set them in the Cache- so we will have everything we need
-                SetUserRolesInCache(userRoles, cachedUser.Id);
+                SetActiveUserInCache(currentUser);
             }
 
             //if (cachedUser is null) return null;     //## First Time Logged in- no cache value
 
-            return cachedUser;
+            return currentUser;
         }
 
                 
@@ -134,7 +197,7 @@ namespace Pas.Service
 
         public bool SetUserRolesInCache(IEnumerable<UserRoleVM> roles, int appUserId)
         {
-            _cacheService.SetCacheValue<IEnumerable<UserRoleVM>>(appUserId.ToString(), roles);
+            _cacheService.SetCacheValue(appUserId.ToString(), roles);
             return true;
         }
 

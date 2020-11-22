@@ -22,4 +22,13 @@
 
         public int IntakePatternId { get; set; }
     }
+
+    public class BrandDoseTemplateViewVM
+    {
+        public int DrugBrandId { get; set; }
+        
+        public int TemplateId { get; set; }
+
+        public string TemplateName { get; set; }
+    }
 }

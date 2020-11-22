@@ -70,28 +70,6 @@ namespace Pas.UI.Controllers
             
             return View(currentUser);
             
-
-            //## The User is found in the DB.. How many roles the User have. Is the User simply a Patient or a Doctor or Hospital-Director
-            var roles = await _userOrgRoleService.FindRolesByUserId(currentUser.Id);
-            if (roles is null)
-            {
-                //## This is a PatientOnly user.. redirect to Patient Landing/Dashboard page
-            }
-            else if (roles.Count() == 1)
-            {
-                //## Only One role- either a Doctor or a Technician or Simply a Director(Non-Doctor)- redirect to ther respective page
-                string areaName = GetAreaName(roles.FirstOrDefault().RoleId);
-
-                return RedirectToAction("Index", "Home", new { Area = areaName });
-            }
-            else {
-                //## More than One roles-> Doctor+Director.
-                return RedirectToAction("SwitchRole", "AppUser");
-            }
-
-            var currentClaims = ClaimsPrincipal.Current?.Identities.First().Claims.ToList();
-
-            return View();
         }
 
         private string GetAreaName(int roleId)

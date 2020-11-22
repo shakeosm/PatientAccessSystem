@@ -57,6 +57,7 @@ namespace Pas.Data
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserOrganisationRole> UserOrganisationRole { get; set; }
         public virtual DbSet<UserRelated> UserRelated { get; set; }
+        public virtual DbSet<ActiveRole> ActiveRoles { get; set; }
         public virtual DbSet<VitalsHistory>  VitalsHistories{ get; set; }        
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -322,17 +323,6 @@ namespace Pas.Data
             {
                 entity.ToTable("DrugModeOfDelivery", "Drug");
 
-                entity.HasOne(d => d.Drug)
-                    .WithMany(p => p.DrugModeOfDelivery)
-                    .HasForeignKey(d => d.DrugId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_DrugModeOfDelivery_Drugs");
-
-                entity.HasOne(d => d.ModeOfDelivery)
-                    .WithMany(p => p.DrugModeOfDelivery)
-                    .HasForeignKey(d => d.ModeOfDeliveryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_DrugModeOfDelivery_ModeOfDelivery");
             });
 
             modelBuilder.Entity<Drugs>(entity =>
@@ -497,12 +487,6 @@ namespace Pas.Data
             {
                 entity.ToTable("PrescriptionDrugs", "Patient");
 
-                entity.HasOne(d => d.StrengthType)
-                    .WithMany(p => p.PrescriptionDrugs)
-                    .HasForeignKey(d => d.StrengthTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PrescriptionDrugs_DosageTypes");
-
                 entity.HasOne(d => d.Drug)
                     .WithMany(p => p.PrescriptionDrugs)
                     .HasForeignKey(d => d.DrugId)
@@ -514,12 +498,6 @@ namespace Pas.Data
                     .HasForeignKey(d => d.DrugBrandId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PrescriptionDrugs_DrugBrands");
-
-                entity.HasOne(d => d.ModeOfDelivery)
-                    .WithMany(p => p.PrescriptionDrugs)
-                    .HasForeignKey(d => d.ModeOfDeliveryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PrescriptionDrugs_ModeOfDelivery");
 
                 entity.HasOne(d => d.Prescription)
                     .WithMany(p => p.PrescriptionDrugs)
@@ -611,6 +589,12 @@ namespace Pas.Data
                     .HasConstraintName("FK_UserOrganisationRole_User");
             });
 
+
+            modelBuilder.Entity<ActiveRole>(entity =>
+            {
+                entity.ToTable("ActiveRole", "User");
+            });
+
             modelBuilder.Entity<UserRelated>(entity =>
             {
                 entity.ToTable("UserRelated", "User");
@@ -628,9 +612,7 @@ namespace Pas.Data
             {
                 entity.ToTable("VitalsHistory", "Patient");                
             });
-
-
-
+               
             OnModelCreatingPartial(modelBuilder);
         }
 

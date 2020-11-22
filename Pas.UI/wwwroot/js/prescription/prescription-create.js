@@ -124,6 +124,33 @@ $(document).ready(function () {
         }
     }
 
+    //## Drug Brand Selection Change-> Load all DrugDoseTemplates
+    $("#BrandListSelect").click(function() {
+        debugger;
+
+        var drugBrandId = $(this).val();
+        if (drugBrandId === undefined || drugBrandId < 1)
+            return;
+
+        var URL = `/Doctor/Prescription/ListAllBrandsDoseTemplates/${drugBrandId}`;
+
+        var brandDoseTemplateList = $("#DrugDoseTemplateListSelect");
+        brandDoseTemplateList.empty();
+
+        axios.get(URL)
+            .then(function (response) {
+                debugger;
+                if (response.data !== "error") {
+                    for (i = 0; i < response.data.length; i++) {
+                        $('#DrugDoseTemplateListSelect').append("<option value=" + response.data[i].templateId + ">" + response.data[i].templateName + "</option>");
+                    }
+                }
+            });
+
+        //## Update the Preview/sample area- showing the selected drug name
+
+    });
+
     //## In DrugDose Template Modal Popup- selecting Tablet/Capsule/Syrup and show/hide Drug strength input box
     $(".drug-intake-radio-option").click(function () {
         if ($(this).hasClass("drug-intake-solid")) {
@@ -180,7 +207,7 @@ $(document).ready(function () {
     $("#AssignDrugBrandToDiagnosisButton").click(function () {
         debugger;
 
-        var drugBrandId = $("#DrugListSelect").val();   //## TODO: Brand ID
+        var drugBrandId = $("#DrugBrandListSelect").val();   //## TODO: Brand ID
         var indicationTypeId = $('input[type=radio][name=DiagnosisOptions]:checked').val()
 
         //## Post this existing Brand - and Assign to the Diognosis/indicationTypeId
@@ -193,6 +220,7 @@ $(document).ready(function () {
 
         var postUrl = "/Doctor/Prescription/Insert_DrugBrandForDiagnosis";
         console.log("token: " + token);
+        var selectOptionText = newBrandName === "" ? $("#DrugBrandListSelect option:selected").text() : newBrandName;
 
         $.ajax({
             url: postUrl,
@@ -210,7 +238,8 @@ $(document).ready(function () {
                 debugger;
                 if (result >= 1) {
                     //$("#DiagnosisListSelect").append();                    
-                    $("#BrandListSelect").append(new Option(newBrandName, result))
+                    $("#BrandListSelect").append(new Option(selectOptionText, result))
+                    $("#BrandListSelect").val(result);  //## Make it Selected
                 } else {
                     swal({
                         title: "Update Failed!",
@@ -240,6 +269,7 @@ $(document).ready(function () {
     $("#CreateBrandDoseTemplateButton").click(function () {
 
         var postUrl = "/Doctor/Prescription/Insert_BrandDoseTemplate";        
+        debugger;
 
         var modeOfDelivery = $("#ModeOfDeliverySelectList").val();
         var drugBrandId = $("#BrandListSelect").val();
@@ -250,18 +280,59 @@ $(document).ready(function () {
         var durationDays = $("#DurationDays").val();
         var intakePatternId = $("#IntakePatternSourceSelect").val();
 
+        var brandDoseTemplateCreateVM = {
+            __RequestVerificationToken: token,  //# AntiForgeryToken__Validate : token,
+            "DrugBrandId": drugBrandId,
+            "ModeOfDeliveryId": modeOfDelivery,
+            "StrengthTypeText": strengthTypeText,
+            "Dose": drugDoseQty,
+            "Frequency": doseFrequency,
+            "Duration": durationDays,
+            "IntakePatternId": intakePatternId,
+        };
+
+        $.ajax({
+            type: "POST",
+            url: postUrl,
+            data: brandDoseTemplateCreateVM,
+            dataType: "json",
+            success: function (response) {
+                debugger;
+                if (response !== "error") {
+                    var resultList = response.split(";");
+                    var newPatternId = resultList[0];
+                    var pattern = resultList[1];
+
+                    console.log(response);
+                    $("#NewDrugDoseTemplatePopupModal").modal("hide")
+                    alert("response -" + newPatternId + "-" + newPatternId);
+                    $("#DrugDoseTemplateListSelect").append($('<option></option>').attr('value', newPatternId).text(pattern));
+                    $("#DrugDoseTemplateListSelect").val(newPatternId);
+                } else {
+                    OnFail_DrugDoseTemplate_Create();
+                }
+            },
+            error: function (xhr, status, error) {
+                // handle failure
+                console.log('ERROR');
+                OnFail_DrugDoseTemplate_Create();
+            }
+        });
+
+        return;
+
         axios({
             method: 'post',
             headers: { "RequestVerificationToken": token },
             url: postUrl,
             data: {
-                "DrugBrandId": "1",
-                "ModeOfDeliveryId": "2",
-                "StrengthTypeText": "2",
-                "Dose": "3",
-                "Frequency": "4",
-                "Duration": "5",
-                "IntakePatternId": "6"
+                drugBrandId: "1",
+                modeOfDeliveryId: "2",
+                strengthTypeText: "2",
+                dose: "3",
+                frequency: "4",
+                duration: "5",
+                intakePatternId: "6",
             }
         }).then(function (response) {
             debugger;
@@ -318,6 +389,7 @@ $(document).ready(function () {
 
     //## Add new Instruction- 'Before Meals', 'After Meals'
     $("#AddNewDrugInstructionButton").click(function () {
+        $("#InstructionModalTitle").text("Instructions");
         $("#NewDrugAdviseInstructionPopupDiv").modal("show");
     });
 
