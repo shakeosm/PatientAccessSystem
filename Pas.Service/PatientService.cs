@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Pas.Common.Constants;
 using Pas.Common.Enums;
 using Pas.Common.Extensions;
 using Pas.Data;
@@ -176,13 +177,12 @@ namespace Pas.Service
                     Height = ch.Height,
                     Weight = ch.Weight?.ToString(),
 
-                    AllergyInfo = ch.AllergyInfo,                    
-
+                    AllergyInfo = ch.AllergyInfo,                                        
                     ClinicalInfoLastUpdated = ch.ClinicalInfoLastUpdated,
                     PersonalHistoryLastUpdated = ch.PersonalHistoryLastUpdated
                 };
-
-                clinicalHistoryVM.AilmentList = await GetPatientAilments(ch.UserId);    // "Ailment section is not filled up yet",
+                
+                clinicalHistoryVM.ChiefComplaints = await GetPatientChiefComplaints(ch.UserId);
 
                 return clinicalHistoryVM;
             }
@@ -194,22 +194,28 @@ namespace Pas.Service
 
         }
 
-        public async Task<IEnumerable<PatientAilmentType>> GetPatientAilments(int id)
+        public async Task<IEnumerable<ChiefComplaintsVM>> GetPatientChiefComplaints(int id)
         {
-            string cacheKey = $"GetPatientAilments_{id}";
+            string redisKey = $"{CacheKey.PatientChiefComplaints}_{id}";
 
-            var ailments = _cacheService.GetCacheValue<IEnumerable<PatientAilmentType>>(cacheKey);
-            
-            if (ailments is null) {
-                ailments = await _pasContext.PatientAilmentTypes
-                                            .AsNoTracking()
-                                            .Where(pa => pa.PatientId == id)
-                                            .ToListAsync();
-                
-                _cacheService.SetCacheValue(cacheKey, ailments);                
+            var complaints = _cacheService.GetCacheValue<IEnumerable<ChiefComplaintsVM>>(redisKey);
+
+            if (complaints is null)
+            {
+                var prescriptionChiefComplaints = await _pasContext.PrescriptionChiefComplaints
+                                                                    .Include(pc=> pc.Symptom)
+                                                                    .AsNoTracking()
+                                                                    .Where(pa => pa.PatientId == id)
+                                                                    .ToListAsync();
+                complaints = prescriptionChiefComplaints.Select(pc => new ChiefComplaintsVM() { 
+                    Id = pc.Id,
+                    Name = pc.Symptom.Description
+                });
+
+                _cacheService.SetCacheValue(redisKey, complaints);
             }
 
-            return ailments;
+            return null;
         }
 
         public async Task<IEnumerable<DrugDetailsVM>> GetRecentMedication(int id)
@@ -222,6 +228,7 @@ namespace Pas.Service
                 var patientMedications = await _pasContext.PrescriptionDrugs
                                                     .Include(pd=> pd.BrandDoseTemplate)
                                                     .ThenInclude(p=> p.StrengthType)
+                                                    .Include(pd=> pd.DrugBrands)
                                                     .AsNoTracking()
                                                     .Where(pd=> pd.Prescription.PatientId == id)
                                                     .ToListAsync();

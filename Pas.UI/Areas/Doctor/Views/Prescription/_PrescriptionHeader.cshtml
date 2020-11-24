@@ -1,13 +1,13 @@
 ﻿@model Pas.Web.ViewModels.AppUserDetailsVM
 
-<div id="PatientHistory" class="form-row w-100 mb-2 bg-white border rounded ml-2 pt-2">
+<div id="PatientHistory" class="form-row w-100 mb-2 bg-white border rounded ml-2 pt-2 no-print">
 
     <!-- Name/Age/Sex amd Address -->
     <div id="LeftColumn" class="col-sm-12 col-md-6 pl-3">
         <div id="PersonalDetails" class="">
             <div class="">
-                <div class="h2">@Model.Title @Model.Name / @Model.Age / @Model.Gender</div>
-                @*<div class="h3 text-primary">@Model.AddressBook.FullAddress()</div>*@
+                <div class="h2 patient-name">@Model.Title @Model.Name / @Model.Age / @Model.Gender (@Model.ShortId)</div>
+                <div class="h3 text-primary patient-address d-none">@Model.AddressBook.FullAddress()</div>
             </div>
 
             @await Html.PartialAsync("_PatientVitals", @Model.Id)

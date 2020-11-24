@@ -7,6 +7,7 @@ using Pas.Service.Interface;
 using Pas.Web.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -164,7 +165,11 @@ namespace Pas.Service
             {
                 try
                 {
-                    Expression<Func<BrandForIndications, bool>> searchPredicate = p => (applyFilter && p.IndicationTypeId == diagnosisId) || true;
+                    //Expression<Func<BrandForIndications, bool>> searchPredicate = p => (applyFilter && p.IndicationTypeId == diagnosisId);
+                    Expression<Func<BrandForIndications, bool>> searchPredicate = o => (true);
+                    if (diagnosisId > 0) {
+                        searchPredicate = p => (p.IndicationTypeId == diagnosisId);
+                    }
 
                     var result = await _context.BrandForIndications
                                                 .Where(searchPredicate)
@@ -204,15 +209,15 @@ namespace Pas.Service
 
         public async Task<IList<IntakePattern>> ListAllIntakePatterns()
         {
-            string cacheKey = $"ListAllIntakePatterns";
+            string redisKey = CacheKey.IntakePatterns;
 
-            var intakePatterns = _cacheService.GetCacheValue<List<IntakePattern>>(cacheKey);
+            var intakePatterns = _cacheService.GetCacheValue<List<IntakePattern>>(redisKey);
 
             if (intakePatterns is null)
             {
                 intakePatterns = await _context.IntakePatterns.ToListAsync();
 
-                _cacheService.SetCacheValue(cacheKey, intakePatterns);
+                _cacheService.SetCacheValue(redisKey, intakePatterns);
 
             }
 
@@ -334,8 +339,8 @@ namespace Pas.Service
             var deliveryMode = listOfDeliveryMode.First(d => d.Id == vm.ModeOfDeliveryId).Name; //## we will know- Tablet/Capsule/Syrup!
             string drugDose = vm.Dose == (short)DoseSolid.Half ? "half" : vm.Dose.ToString();
 
-            string durationText = vm.Duration == 0 ? "TBC" : vm.Duration.ToString() + "days";
-            string teamplateName = $"{vm.StrengthTypeText}-{deliveryMode}-{vm.Dose}*{vm.Frequency}Times-{durationText}"; //## ie: "10mg-Tablet-1*3Times-7Days"
+            string durationText = vm.Duration == 0 ? "TBC" : vm.Duration.ToString() + " Days";
+            string teamplateName = $"{vm.StrengthTypeText}-{deliveryMode}-{vm.Dose}*{vm.Frequency}Times-{durationText}"; //## ie: "10mg-Tablet-1*3Times-7 Days"
             return teamplateName;
         }
 
@@ -404,16 +409,22 @@ namespace Pas.Service
             }
         }
 
+        /// <summary>This will load all the Dose Templates for a Brand Drug, ie: Nurofen with 3 possible Dose Templates</summary>
+        /// <param name="drugBrandId">Brand Id, ie: Nurofen / Calpol </param>
+        /// <returns>List of Dose Templates</returns>
         public async Task<IList<BrandDoseTemplateViewVM>> ListAllBrandsDoseTemplates(int drugBrandId)
         {
             string doseCacheKey = $"{CacheKey.BrandDoseTemplate}_{drugBrandId}"; 
             var templateList = _cacheService.GetCacheValue<List<BrandDoseTemplateViewVM>>(doseCacheKey);
 
-            if (templateList is null)
+            if (templateList is null || templateList.Count < 1)
             {
                 try
                 {
-                    var result = await _context.BrandDoseTemplates.ToListAsync();
+                    var result = await _context.BrandDoseTemplates
+                                                        .AsNoTracking()
+                                                        .Where(bd=> bd.DrugBrandId == drugBrandId)
+                                                        .ToListAsync();
 
                     templateList = result.Select(r => new BrandDoseTemplateViewVM()
                     {

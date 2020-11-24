@@ -18,7 +18,7 @@
     var symptomListSource = new SelectList(symptomList, "Id", "Description");
 }
 
-    <div id="PrescriptionFormDiv" class="form-row col-12 ml-2 bg-white border rounded p-3">
+    <div id="PrescriptionFormDiv" class="form-row col-12 ml-2 bg-white border rounded p-3 no-print">
         <div id="DrugAndBrandsRowDiv" class="form-row col-md-6 col-sm-12">
             <div id="PrescriptionItemEntryTopDiv" class="form-row">
 
@@ -28,11 +28,17 @@
                     <label for="ChiefComplaintTextArea" class="col-sm-2 form-label">Chief complaints</label>
                     <div class="col-sm-10">
                         @Html.DropDownList("ChiefComplaintList", symptomListSource, "Select a CC",
-                                new { id = "ChiefComplaintList", @class = "form-control", 
-                                    multiple = "multiple", placeholder="Select a CC", style="width:100%;" })
+                                new
+                                     {
+                                         id = "ChiefComplaintList",
+                                         @class = "form-control",
+                                    multiple = "multiple",
+                                         placeholder = "Select a CC",
+                                         style = "width:100%;"
+                                     })
                         @*<select id="ChiefComplaintList" asp-items="symptomListSource" class="form-control">
-            <option value="">Select a CC</option>
-        </select>*@
+                    <option value="">Select a CC</option>
+                </select>*@
                         <span class="help-block">Select at least on CC</span>
                     </div>
 
@@ -42,32 +48,16 @@
                 <div class="form-row col-12 mb-3 height-10">
                     <label for="DiagnosisListSelect" class="col-sm-2 form-label">Diagnosis</label>
                     <div class="col-sm-10">
-                        @Html.DropDownList("DiagnosisListSelect", diagnosisListSource, null,
-                               new
-                               {
+                        @Html.DropDownList("DiagnosisListSelect", diagnosisListSource, "Select a Diagnosis",
+                               new{
                                    id = "DiagnosisListSelect",
                                    @class = "form-control",
-                                   placeholder= "Select a Diagnosis",
+                                   placeholder = "Select a Diagnosis",
                                    style = "width:100%;"
                                })
-                        @*<select id="DiagnosisListSelect" class="form-control" style="width:100%;">
-            <option value="" selected>Select a Diagnosis</option>
-            <option value="1">Headache</option>
-            <option value="2">Migrain</option>
-            <option value="3">Scietic</option>
-            <option value="4">Ulcer</option>
-        </select>*@
                         <div class="form-row col-12 mt-2">
                             <div id="SelectedDiagnosisOptions" class="btn-group btn-group-toggle" data-toggle="buttons">
-                                @*<label class="btn btn-outline-danger waves-effect waves-themed">
-                                    <input type="radio" name="options" id="DiagnoisisOption_1111" checked="checked"> -
-                                </label>*@
-                                @*<label class="btn btn-outline-danger waves-effect waves-themed active">
-                    <input type="radio" name="options" id="DiagnoisisOption2"> Migrain
-                </label>
-                <label class="btn btn-outline-danger waves-effect waves-themed active">
-                    <input type="radio" name="options" id="DiagnoisisOption3"> Ulcer
-                </label>*@
+                                <!-- Here we will dump the selected Diagnosis as 'Radio Buttons'- for 'select and add medicine' -->
                             </div>
 
                             <a id="RemoveDiagnosisLinkButton" href="#" class="btn btn-primary position-absolute pos-right"
@@ -87,16 +77,18 @@
                     <div class="col-sm-10 pl-0">
                         @*<input type="email" class="form-control" id="inputEmail3" placeholder="Email">*@
                         <select id="BrandListSelect" class="form-control" size="4">
-                            <option value="111">GSK Brand- Ibuprofen</option>
-                            <option value="121">Nurofen Migraine Pain relief</option>
-                            <option value="131">pFizer - Codeine</option>
-                            <option value="123">Solpadeine Max</option>
-                            <option value="112">Migraleve Migraine Pink & Yellow Complete</option>
+                            <option value="">Select a Diagnosis</option>
+                            @*<option value="111">GSK Brand- Ibuprofen</option>
+        <option value="116">Nurofen Migraine Pain relief</option>
+        <option value="131">pFizer - Codeine</option>
+        <option value="123">Solpadeine Max</option>
+        <option value="168">Migraleve Migraine Pink & Yellow Complete</option>*@
                         </select>
 
-                        <button type="button" id="AddNewDrugBrandButton" class="btn btn-primary waves-effect waves-themed mt-2"
-                                data-toggle="tooltip" data-placement="right" title="Add a new Drug Brand">
-                            <i class="fal fa-notes-medical fa-lg mr-2"></i>Add new Brand
+                        <button type="button" id="AddNewDrugBrandButton" 
+                                class="btn btn-primary waves-effect waves-themed float-right mt-2"
+                                data-toggle="tooltip" data-placement="left" title="Add a new Drug Brand">
+                            <i class="fal fa-notes-medical fa-lg mr-2"></i>Add
                         </button>
                     </div>
                 </div>
@@ -141,11 +133,26 @@
                     </div>
                 </div>
 
+                <!-- Add This Drug Item Button -->
+                <div class="col-12 mb-2 pr-4">
+                    <button type="button" id="NextStepSummaryButton"
+                            class="btn btn-primary waves-effect waves-themed mt-2 float-left"
+                            data-toggle="tooltip" data-placement="right" title="Proceed to Summary notes">
+                        <i class="fal fa-arrow-circle-right fa-lg mr-2"></i>
+                        Next
+                    </button>
+
+                    <button type="button" id="AddNewPescriptionItemButton"
+                            class="btn btn-primary waves-effect waves-themed float-right mt-2"
+                            data-toggle="tooltip" data-placement="left" title="Add this item to Prescription">
+                        <i class="fal fa-pills fa-lg mr-2"></i>Add
+                    </button>
+                </div>
+
                 <!-- Example of Dosage instruction  -->
-                <div class="form-row col-12 mb-3">
-                    <label for="QuantityInput" class="col-sm-2 form-label"></label>
+                <div class="form-row col-12 mb-3 d-none invisible">
                     <div class="col-sm-12">
-                        <div class="alert alert-info">Nurofen Migraine Pain Relief- Tablet 10mg (1 + 0 + 0 + 1) for 14 Days</div>
+                        <div class="alert alert-info">Nurofen Migraine Pain Relief- Tablet 10mg (1 + 0 + 1) for 14 Days</div>
                     </div>
 
                 </div>
@@ -202,8 +209,7 @@
                                 <input type="tel" class="form-control" id="DrugNotes" rows="3"
                                        placeholder="Extra tips/notes for this Drug item" />
 
-                                <button type="button" id="AddDrugItemButton" class="btn btn-primary waves-effect waves-themed mt-2 float-left">Add this Drug</button>
-                                <button type="button" id="NextStepSummaryButton" class="btn btn-primary waves-effect waves-themed mt-2 float-right">Next: Summary and Plan</button>
+                                <button type="button" id="AddDrugItemButton" class="btn btn-primary waves-effect waves-themed mt-2 float-left">Add this Drug</button>                                
                             </div>
                         </div>
                     </div>

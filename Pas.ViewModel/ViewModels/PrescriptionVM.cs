@@ -19,7 +19,7 @@ namespace Pas.Web.ViewModels
 
         public IList<string> PreviousNotes { get; set; }
         
-        public IEnumerable<PatientAilmentType> Ailments { get; set; }
+        public IEnumerable<ChiefComplaintsVM> ChiefComplaints { get; set; }
         
         /// <summary>List of known Allergies- from [Patient].[ClinicalHistory]</summary>
         public string AllergyList { get; set; }
@@ -34,11 +34,15 @@ namespace Pas.Web.ViewModels
     public class PrescriptionConfirmSaveVM
     {
         public int Id { get; set; }
-        public int IndicatioId { get; set; }
+        
 
         public bool IsFollowUpVisit { get; set; }
 
         public string Notes { get; set; }
+        public string Summary { get; set; }
+        public string ReferredDoctorName { get; set; }
+        public string Advise { get; set; }
+        public string LabTestRequested { get; set; }
     }
 
     /// <summary>

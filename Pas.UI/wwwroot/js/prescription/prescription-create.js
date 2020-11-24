@@ -18,7 +18,10 @@ var Tooltip = (function () {
 //## This variable will be used Gloablly for all Calendar Control. One place - one head, one ache!
 window.calendarFormat = "DD MMM YYYY";
 
+var prescriptionId = -1;
+
 $(document).ready(function () {
+    prescriptionId = $("[name='PrescriptionIdInput']").val();
 
     //## Following 2 lines are required for Ajax call to include AntiForgeryToken; to be used in all ProviderClaim Forms (Create/Edit)
     var form = $('#PrescriptionCreateForm');
@@ -53,7 +56,7 @@ $(document).ready(function () {
     $('#ChiefComplaintList').on('select2:select', function (e) {
 
         //debugger;
-        var selectedVal = $(this).find(':selected').val();
+        //var selectedVal = $(this).find(':selected').val();
         //alert("selectedVal : " + selectedVal);
 
         //var data = e.params.data;
@@ -90,9 +93,7 @@ $(document).ready(function () {
 
 
     //### Show Drug Brands per Diagnosis. When selecting a Diagnosis- show the possible list of Drug Brands.. make the life easier
-    $(document).on("click", ".diagnosis-radio-option", function (e) {
-        
-        debugger;
+    $(document).on("click", ".diagnosis-radio-option", function (e) {        
 
         var diagnosisId = $(this).val();
         var URL = `/Doctor/Prescription/ListAllBrandsForDiagnosis/${diagnosisId}`;
@@ -126,7 +127,6 @@ $(document).ready(function () {
 
     //## Drug Brand Selection Change-> Load all DrugDoseTemplates
     $("#BrandListSelect").click(function() {
-        debugger;
 
         var drugBrandId = $(this).val();
         if (drugBrandId === undefined || drugBrandId < 1)
@@ -171,8 +171,6 @@ $(document).ready(function () {
 
     //## Add- New Drug Brand - opens Popup Modal Windows
     $("#AddNewDrugBrandButton").click(function () {
-        debugger;
-        //if ($("#BrandListSelect").val() != null) {
         //## If any Diagnosis is selected and a DiagnosisRadioOption is selected- then show Modal to create a new DrugBrand for that Diagnosis
         if ($('#SelectedDiagnosisOptions').find(".active").length > 0) {
             $("#CreateNewBrandEntryDiv").slideUp();    //## Hide the 'CreateNew' Area
@@ -190,7 +188,6 @@ $(document).ready(function () {
 
     //## POST Ajax- Insert a new DrugBrand for the Selected Diagnosis
     $("#AddNewDiagnosisDrugBrandSubmitButton").click(function () {
-        debugger;
 
         var drugId = $("#DrugListSelect").val();
         //var drugBrandId = $("#DiagnosisListSelect").val();
@@ -205,7 +202,6 @@ $(document).ready(function () {
 
     //## POST Ajax- Assign a DrugBrand to the Selected Diagnosis
     $("#AssignDrugBrandToDiagnosisButton").click(function () {
-        debugger;
 
         var drugBrandId = $("#DrugBrandListSelect").val();   //## TODO: Brand ID
         var indicationTypeId = $('input[type=radio][name=DiagnosisOptions]:checked').val()
@@ -240,6 +236,8 @@ $(document).ready(function () {
                     //$("#DiagnosisListSelect").append();                    
                     $("#BrandListSelect").append(new Option(selectOptionText, result))
                     $("#BrandListSelect").val(result);  //## Make it Selected
+
+                    $("#DrugDoseTemplateListSelect").empty();
                 } else {
                     swal({
                         title: "Update Failed!",
@@ -269,8 +267,7 @@ $(document).ready(function () {
     $("#CreateBrandDoseTemplateButton").click(function () {
 
         var postUrl = "/Doctor/Prescription/Insert_BrandDoseTemplate";        
-        debugger;
-
+        
         var modeOfDelivery = $("#ModeOfDeliverySelectList").val();
         var drugBrandId = $("#BrandListSelect").val();
         var doseStrength = $("input[name='DrugStrengthInputRadio']:checked").val();
@@ -365,27 +362,172 @@ $(document).ready(function () {
         });
     }
 
-    //## TODO : WHen removing an item from the Current Prescription
-    $(".remove-prescription-item").click(function () {
+
+    //## Add New Drug item to Prescription
+    $("#AddNewPescriptionItemButton").click(function (e) {
+        debugger;
+
+        if (PrescriptionHeaderInfo_Invalid()) {
+            e.preventDefault();
+            return false;
+        }
+       
+        
+        var drugBrandId = $("#BrandListSelect").val();
+        var doseTemplateId = $("#DrugDoseTemplateListSelect").val();
+        var instructionId = $("#DrugInstructionSelectList").val();
+
+        var postUrl = "/Doctor/Prescription/Insert_PescriptionItem";        
+
+        $.ajax({
+            type: "POST",
+            url: postUrl,
+            data: {
+                __RequestVerificationToken: token,  //# AntiForgeryToken__Validate : token,
+                "PrescriptionId": prescriptionId,
+                "DrugBrandId": drugBrandId,
+                "BrandDoseTemplateId": doseTemplateId,
+                "AdviseInstructionId": instructionId
+            },
+            dataType: "json",
+            success: function (response) {
+                debugger;
+                if (response !== "error") {
+                    OnSuccess_PrescriptionDrugItemAdd(response);
+                } else {
+                    console.log("failed - AddNewPescriptionItemButton() ");
+                }
+            },
+            error: function (xhr, status, error) {
+                // handle failure
+                console.log('ERROR');
+                console.log("failed - AddNewPescriptionItemButton() ");
+            }
+        });
+               
+    });
+
+    function PrescriptionHeaderInfo_Invalid() {
+        //## Validate Prescription Header info- ie: CC/Diagnosis/DrugBrand/Template
+        var ccSelected = $("#ChiefComplaintList option:selected").length > 0;
+        var templateSelected = $("#DrugDoseTemplateListSelect option:selected").length > 0;
+
+        if (ccSelected == false || templateSelected == false) {
+            swal({
+                title: "Data missing",
+                text: "You must select: Complaint, Diagnosis, Drug Brand and a Drug Template- to add an item to the prescription.",
+                icon: "warning",
+            });
+
+            return true;    //## Prescription header is incomplete
+        }
+
+        return false;;
+    }
+
+    function OnSuccess_PrescriptionDrugItemAdd(data) {
+        //debugger;
+
+        var result = data.split(";");
+        var newItemId = result[0];
+        var intakePattern = result[1];
+
+        var brandName = $("#BrandListSelect option:selected").text();
+        var doseTemplate = $("#DrugDoseTemplateListSelect option:selected").text();
+        var doseInstruction = $("#DrugInstructionSelectList option:selected").text();
+        var doseArray = doseTemplate.split("-");
+
+
+        var newItem = $("#PrescriptionItemRowTemplate").clone();
+        $(newItem).attr("id", "prescriptionItem_" + newItemId);
+        $(newItem).addClass("prescription-item-row");
+
+        $("#PrescriptionItemsPreviewContainer").append(newItem);
+        $(newItem).removeClass("d-none");
+
+        //## Feed the PrescriptionItemValues in the Row        
+        $(newItem).find(".mode-of-delivery-type").text(doseArray[1]);    //## Tablet/capsule
+        $(newItem).find(".prescription-item-name").text(brandName);    //## Nurofen, Solpadine Max
+        $(newItem).find(".prescription-item-strength").text(doseArray[0]);    //## ie: '200 mg'
+        $(newItem).find(".prescription-item-pattern").text(intakePattern);    //## (1+0+1)
+
+        if ($("#DrugInstructionSelectList").val() > 0) {
+            $(newItem).find(".prescription-item-instruction").text(doseInstruction);    //## 'One before meals'
+        }
+
+        $(newItem).find(".prescription-item-duration").text(doseArray[3]);    //## ie: '7 Days'
+
+        $(newItem).find(".prescription-item-remove").data("itemId", newItemId);    //### Delete Button will have the Newly Created Item's ID
+
+
+        //## Add this atribute- so we cna count how many DrugItems are in the Prescription currently and show the serial number
+        var itemsCount = $("#PrescriptionItemsPreviewContainer .prescription-item-row").length;
+        $(newItem).find(".prescription-item-number").text(itemsCount);
+
+        //## Now reset the Dropdown boxes values
+        $("#DrugInstructionSelectList").val(0);
+        $("#DrugDoseTemplateListSelect").empty()
+        $("#DrugDoseTemplateListSelect").append(new Option("Select a Diagnosis", null));
+
+
+    }
+
+
+    //## WHen removing an item from the Current Prescription
+    $(document).on("click", ".prescription-item-remove", function (e)
+    {
+        var drugItem = $(this).parent().find(".prescription-item-name").text();
+        var drugItemId = $(this).data("itemId");
+
+        debugger;
 
         swal({
-            title: "Are you sure?",
-            text: "Once deleted, you will not be able to recover this imaginary file!",
+            title: "Confirm remove?",
+            text: "Are you sre to remove '" + drugItem + "' from this Prescription?",
             icon: "warning",
             buttons: true,
             dangerMode: true,
         })
             .then((willDelete) => {
                 if (willDelete) {
-                    swal("Poof! Your imaginary file has been deleted!", {
-                        icon: "success",
-                    });
-                } else {
-                    swal("Your imaginary file is safe!");
+                    var itemDivToRemove = $(this).parent().parent().attr("id");
+                    RemoveDrugItemFromPrescription(drugItemId, itemDivToRemove);
+                    //swal("Poof! Your imaginary file has been deleted!", {
+                    //    icon: "success",
+                    //});
                 }
             });
 
+        e.preventDefault();
     });
+
+    function RemoveDrugItemFromPrescription(drugItemId, itemDivToRemove) {
+        var postUrl = "/Doctor/Prescription/Delete_PescriptionItem";        
+        debugger;
+
+        $.ajax({
+            type: "POST",
+            url: postUrl,
+            data: {
+                __RequestVerificationToken: token,  //# AntiForgeryToken__Validate : token,
+                "PrescriptionItemId": drugItemId,
+            },
+            dataType: "json",
+            success: function (response) {
+                debugger;
+                if (response === "success") {
+                    $("#" + itemDivToRemove).remove();
+                } else {
+                    console.log("failed - RemoveDrugItemFromPrescription() ");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log("failed - RemoveDrugItemFromPrescription() ");
+            }
+        });
+
+        
+    }
 
     //## Add new Instruction- 'Before Meals', 'After Meals'
     $("#AddNewDrugInstructionButton").click(function () {
@@ -431,8 +573,10 @@ $(document).ready(function () {
     });
 
     $("#NextStepSummaryButton").click(function () {
+        
         $("#PrescriptionSummaryNotesDiv").removeClass("d-none");
         $("#PrescriptionItemEntryTopDiv").slideUp();
+
     });
 
     $("#PreviousStepButton").click(function () {
@@ -440,8 +584,114 @@ $(document).ready(function () {
         $("#PrescriptionSummaryNotesDiv").addClass("d-none");
     });
 
+    $("#ReferredPatientCheckBox").click(function () {
+        $("#ReferredDoctorNameInput").prop("disabled", $(this).is(":checked") ? "" : "disabled");
+        $("#ReferredDoctorNameInput").val("");  //## clear the existing value
+
+    });
 
 
+    //## Last Action in the Presction-> "Finish And Print"
+    $("#FinishAndPrintButton").click(function(e) {
+
+        //## Do Validation. All fields are filled?
+
+        //## Now POST
+        var postUrl = "/Doctor/Prescription/FinishAndPreview";
+        debugger;
+
+        $.ajax({
+            type: "POST",
+            url: postUrl,
+            data: {
+                __RequestVerificationToken: token,  //# AntiForgeryToken__Validate : token,
+                "Id": prescriptionId,
+            },
+            dataType: "json",
+            success: function (response) {
+                $("#PrescriptionMainContainer").html(response);
+                debugger;
+
+                console.log("success")
+            },
+            error: function (xhr, status, error) {
+                console.log("failed - FinishAndPrintButton.CLick() ");
+            }
+        });
+
+    });
+
+    $("#PrintPreviewButton").click(function (e) {
+        debugger;
+
+        //## Patient Details
+        var personalDetails = $("#PersonalDetails .patient-name").text();
+        $("#PrescriptionPreviewPatientDetails .patient-name").text(personalDetails);
+        var address = $("#PersonalDetails .patient-address").text();
+        $("#PrescriptionPreviewPatientDetails .patient-address").text(address);
+        //## CC
+
+        //## Examination
+        var temp = $("#PatientVitalsInfoDiv .vital-temperature").text();
+        var pulse = $("#PatientVitalsInfoDiv .vital-pulse").text();
+        var pressure = $("#PatientVitalsInfoDiv .vital-pressure").text();
+        var weight = $("#PatientVitalsInfoDiv .vital-weight").text();
+        //var height = $("#PatientVitalsInfoDiv .vital-height").text();
+                
+        $("#PrescriptionVitalsDiv .vital-temperature").text(temp);
+        $("#PrescriptionVitalsDiv .vital-pulse").text(pulse);
+        $("#PrescriptionVitalsDiv .vital-pressure").text(pressure);
+        $("#PrescriptionVitalsDiv .vital-weight").text(weight);
+        //$("#PrescriptionVitalsDiv .vital-height").text(height);
+
+        //## Notes
+        $("#PrescriptionPreviewNotesDiv").text($("#PrescriptionNotesInput").val());
+
+        //## Planning
+        $("#PrescriptionPreviewPlanDiv").text($("#PlanInputBox").val());
+        
+        //## Advise
+        $("#PrescritionPreviewAdvise").text($("#AdviseInput").val());
+
+        //## Lab Test Request
+
+        //## Finally all the DrugItem names will be copied to the Preview Panel
+        $("#PrintPreviewContainer").html($("#PrescriptionItemsPreviewContainer").html());
+        $("#PrintPreviewContainer .prescription-action-column").remove();
+        $("#PrintPreviewContainerModalPopup").modal("show");
+
+    });
+
+
+    $("#ConfirmAndPrintPrescriptionButton").click(function () {
+
+        //## Now POST
+        var postUrl = "/Doctor/Prescription/Create_Prescription_HTML";
+        var htmlContents = $("#PreviewContentsDiv").html();
+        
+        $.ajax({
+            type: "POST",
+            url: postUrl,
+            data: {
+                __RequestVerificationToken: token,  //# AntiForgeryToken__Validate : token,
+                "id": prescriptionId,
+                "contents": htmlContents,
+            },
+            dataType: "json",
+            success: function (response) {
+                if (response === "success") {
+                    window.print();
+                    console.log("success")
+                } else {
+                    console.log("failed to create output HTML file")
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log("failed - ConfirmAndPrintPrescriptionButton.Click() ");
+            }
+        });
+        
+    });
 
     /* HTTP Requests */
     var httpMethods = {

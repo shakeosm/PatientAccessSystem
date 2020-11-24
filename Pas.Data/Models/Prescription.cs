@@ -33,6 +33,8 @@ namespace Pas.Data.Models
         public bool? IsRepeatingVisit { get; set; }
         public int? PreviousPrescriptionId { get; set; }
 
+        public int Status { get; set; }
+
         public virtual ICollection<PrescriptionDiagnosticTest> PrescriptionDiagnosticTest { get; set; }
         public virtual ICollection<PrescriptionDrugs> PrescriptionDrugs { get; set; }
         public virtual ICollection<PatientIndications> PatientIndications { get; set; }

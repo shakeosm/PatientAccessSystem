@@ -1,6 +1,9 @@
 ﻿
 $("#SearchPatientButton").click(function () {
 
+    $("#PrescriptionView").removeClass("invisible");
+    return;
+
     var getUrl = "/Prescription/Get";
 
     $.ajax({
@@ -12,10 +15,33 @@ $("#SearchPatientButton").click(function () {
             "id" : "123"
         },
         success: function (result) {
-            ServiceFileUploadOnSuccess(result, uploadedFileListTable)
+            //ServiceFileUploadOnSuccess(result, uploadedFileListTable)
         },
         error: function (xhr, status, error) {
-            ServiceFileUploadOnError(xhr, status, error);
+            //ServiceFileUploadOnError(xhr, status, error);
         }
     });
+});
+
+//### LoaderBody- Spinning image
+$("#PasLoaderbody").addClass('invisible');
+$(document).bind('ajaxStart', function () {
+    $("#PasLoaderbody").removeClass('invisible');
+}).bind('ajaxStop', function () {
+    $("#PasLoaderbody").addClass('invisible');
+});
+
+
+$("#LoadHtmlButton").click(function () {
+    debugger;
+    var prescriptionId = 1003;
+
+    var URL = `/Doctor/Prescription/GetPrescription_HTML/${prescriptionId}`;
+
+    axios.get(URL)
+        .then(function (response) {
+            $("#LoadPrescriptionPreviewDiv").html(response.data);
+        });
+
+
 });

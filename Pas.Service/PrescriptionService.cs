@@ -6,6 +6,7 @@ using Pas.Service.Interface;
 using Pas.Web.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -100,6 +101,85 @@ namespace Pas.Service
             
 
             return prescriptionList;
+        }
+
+
+        /// <summary>This will Insert a New drug Item in the Prescription</summary>
+        /// <param name="vm">PrescriptionDrugCreateVM View Model</param>
+        /// <returns>A String- semi-colon separated value</returns>
+        public async Task<string> Insert_PescriptionItem(PrescriptionDrugCreateVM vm)
+        {
+            //## First insert this new Prescription Item in the table
+            var newPrescriptionItem = new PrescriptionDrugs()
+            {
+                PrescriptionId = vm.PrescriptionId,
+                DrugBrandId = vm.DrugBrandId,
+                BrandDoseTemplateId = vm.BrandDoseTemplateId,
+                //Notes = vm.Notes
+            };
+
+            if (vm.AdviseInstructionId > 0)
+                newPrescriptionItem.AdviseInstructionId = vm.AdviseInstructionId;
+
+            await _pasContext.PrescriptionDrugs.AddAsync(newPrescriptionItem);
+            await _pasContext.SaveChangesAsync();
+
+
+
+            //## Now get the Intake Pattern from Pattern table- to return to UI- to show in the Prescription Preview
+            var newItemId = newPrescriptionItem.Id;
+
+            var details = await _pasContext.BrandDoseTemplates
+                                                    .Include(bd => bd.IntakePattern)
+                                                    .AsNoTracking()
+                                                    .Where(bd => bd.Id == vm.BrandDoseTemplateId)
+                                                    .Select(bd => new PrescriptionDrugViewVM()
+                                                    {
+                                                        PrescriptionItemId = newItemId,             //## Will need this to Delete this Item- if required
+                                                        IntakeTemplate = bd.IntakePattern.Pattern,  //## this could be in Bangla or English                                                      
+                                                    })
+                                                    .FirstOrDefaultAsync();
+
+            string result = $"{newItemId};{details.IntakeTemplate}";
+
+            return result;
+        }
+
+
+        public async Task<bool> Delete_PescriptionItem(int prescriptionItemId)
+        {
+            try
+            {
+                PrescriptionDrugs drugItem = new PrescriptionDrugs() { Id = prescriptionItemId };
+                _pasContext.Remove(drugItem);
+                await _pasContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+        }
+
+        public async Task<bool> Create_Prescription_HTML(int prescriptionId, string prescriptionContents)
+        {
+            string filePath = $"C:\\Shawkat\\dummy\\prescription\\p-{prescriptionId}.html";
+            using (StreamWriter writer = System.IO.File.CreateText(filePath))
+            {
+                writer.WriteLine(prescriptionContents);
+            }
+
+            return await Task.FromResult(true);
+        }
+
+        public async Task<string> GetPrescription_HTML(int id)
+        {
+            string path = $"C:\\Shawkat\\dummy\\prescription\\p-{id}.html";
+            string content = System.IO.File.ReadAllText(path);
+
+            return await Task.FromResult(content);
         }
 
         //private async Task<PrescriptionAddVM> MapToCreateViewModel(Prescription prescription)

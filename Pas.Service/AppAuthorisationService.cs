@@ -83,7 +83,7 @@ namespace Pas.Service
             }
             else {
                 activeRole.OrganisationId = user.CurrentRole.OrganisationId;
-                activeRole.RoleId = user.CurrentRole.RoleId;
+                activeRole.RoleId = (int) user.ApplicationRole;
 
                 _context.ActiveRoles.Update(activeRole);
             }

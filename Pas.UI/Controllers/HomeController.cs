@@ -87,6 +87,15 @@ namespace Pas.UI.Controllers
             return View();
         }
 
+
+        /// <summary>This is open for Everyone- to view their Prescription</summary>
+        /// <returns></returns>
+        public IActionResult ViewPrescription()
+        {
+            return View();
+        }
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

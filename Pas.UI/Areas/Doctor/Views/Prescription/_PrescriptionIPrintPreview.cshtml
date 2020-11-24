@@ -1,0 +1,130 @@
+﻿@using Pas.Common.Extensions
+<!-- _PrescriptionIPrintPreview -->
+<!-- Modal -->
+
+<div id="PrintPreviewContainerModalPopup" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div id="PreviewContentsDiv" class="modal-content" style="">
+            <div id="HeaderDiv" class="form-row col-12">
+                <div class="col-6 border rounded p-3">
+                    <h4>BelleVue Hospital</h4>
+                    <p>
+                        Panchlaish, Chattogram-4100<br/>
+                        Phone: 031-123456<br />
+                        Email: info@bellevue.com
+                    </p>
+                </div>
+                <div class="col-6 border rounded p-3 text-right">
+                    <h5 class="text-primary">Dr Rawnak Jahan</h5>
+                    <p>
+                        MBBS, MRCOG, FCPS<br />
+                        Phone: 018-123456<br />
+                        Email: info@bellevue.com
+                    </p>
+                </div>                
+            </div>
+            <div id="PrescriptionPreviewPatientDetails" class="form-row col-12">
+                <div class="h6 text-info col-6 patient-name">Shawkat Osman / 70 / Male                
+                </div>
+                <div class="h6 col-6 text-right">Date: @DateTime.Today.ToDisplay()</div>
+                <div class="col-12 patient-address">1069/A Jangi Shah Majar Lane, Badurtola, Chattogram</div>
+            </div>
+            <div id="BodyDiv" class="form-row col-12">
+                <!--- Left column- Plan/Notes-->
+                <div id="LeftColumn" class="col-5 p-3 border rounded">
+                    <h4>
+                        <i class="fas fa-diagnoses mr-2"></i>
+                        C/C:
+                    </h4>
+                    <div id="PrescriptionCCDiv" class="mb-5 border rounded">
+                        <ul>
+                            <li>Migraine</li>
+                            <li>Headache</li>
+                            <li>Loss of appetite</li>
+                            <li>Blurred Vision</li>
+                        </ul>
+                    </div>
+
+                    <h4>
+                        <i class="fas fa-stethoscope mr-2"></i>
+                        Examination:
+                    </h4>
+                    <div id="PrescriptionVitalsDiv" class="mb-5 text-center">
+                        <div class="form-row col-12 border-bottom thead-themed">
+                            <div class="col-4">Temperature</div>
+                            <div class="col-2">Pulse</div>
+                            <div class="col-4">Pressure</div>
+                            <div class="col-2">Weight</div>
+                        </div>
+                        <div class="form-row col-12">
+                            <div class="col-4 vital-temperature">37</div>
+                            <div class="col-2 vital-pulse">70</div>
+                            <div class="col-4 vital-pressure">120/80</div>
+                            <div class="col-2 vital-weight">72 kgs</div>
+                        </div>
+                    </div>
+
+                    <h4><i class="fas fa-comment-medical mr-2"></i>Notes</h4>
+                    <div id="PrescriptionPreviewNotesDiv" class="mb-5 p-2 border rounded">
+                        Notes about the patient. What the doctor has observed or something extra info
+                    </div>
+
+                    <h4><i class="fas fa-laptop-medical mr-2"></i>Plan</h4>
+                    <div id="PrescriptionPreviewPlanDiv" class="mb-5 p-2 border rounded">
+                        Doctor will write future plan here. <br />
+                        Next appointment date: 2 weeks later<br />
+                        Test: Blood Himoglobin, HRV
+
+                    </div>
+                </div>
+
+                <!--- Right column- Actual medicine items -->
+                <div id="PreviewModaBodyDiv" class="col-7">
+
+                    <div id="PrintPreviewContainer" class="modal-body p-3 mb-3 border rounded">
+                        <h4>Actual medicine items</h4>
+                        <!-- Here we will dump the Prescription to view as a Modal Popup -->
+                    </div>
+
+                    <!-- Advise for the Patient -->
+                    <div class="col-12 border-top p-3">
+                        <h4><i class="fas fa-lightbulb mr-2"></i>Advise</h4>
+                        <div id="PrescritionPreviewAdvise">
+                            <!-- we will dump here Advise List-->
+                        </div>
+                        <ul>
+                            <li>Drink plenty of water</li>
+                            <li>Walk 30 mins daily</li>
+                            <li>At least 7 hours sleep</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-12 border-top p-3">
+                        <h4>
+                            <i class="fas fa-vials mr-2"></i>Lab test requested
+                        </h4>
+                        <ul>
+                            <li>Blood Himoglobin</li>
+                            <li>Urine test</li>
+                            <li>Chest X-ray</li>
+                        </ul>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
+
+            <div class="modal-footer">
+                <button id="ConfirmAndPrintPrescriptionButton" type="button" class="btn btn-default" >Confirm &amp; Print</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

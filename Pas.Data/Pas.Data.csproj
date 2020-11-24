@@ -7,6 +7,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\Pas\20201101184839_prescription-drug-changes.cs" />
     <Compile Remove="Migrations\Pas\20201101184839_prescription-drug-changes.Designer.cs" />
+    <Compile Remove="Models\AilmentTypes.cs" />
+    <Compile Remove="Models\PatientAilmentType.cs" />
   </ItemGroup>
 
   <ItemGroup>

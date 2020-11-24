@@ -39,7 +39,7 @@ namespace Pas.Web.ViewModels
         public DateTime ClinicalInfoLastUpdated { get; set; }
 
         public string AllergyInfo { get; set; }
-        public IEnumerable<PatientAilmentType> AilmentList { get; set; }
+        public IEnumerable<ChiefComplaintsVM> ChiefComplaints{ get; set; }
 
         public IEnumerable<DrugDetailsVM> DrugList { get; set; }
     }

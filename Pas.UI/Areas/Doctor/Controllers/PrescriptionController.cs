@@ -66,7 +66,8 @@ namespace Pas.UI.Areas.Doctor.Controllers
             IList<DiagnosticTestDetailsVM> diagnosticTestList = null;   //TODO
             var clinicialInfo = await _patientService.GetClinicalDetails(patientDetails.Id);
             var recentMedication = await _patientService.GetRecentMedication(patientDetails.Id);
-            var ailmentList = await _patientService.GetPatientAilments(patientDetails.Id);
+            
+            var chiefComplaints = await _patientService.GetPatientChiefComplaints(patientDetails.Id);
 
             //## PrescriptionCreateVM- will have all necessary info to make a Prescription- 
             //## When the Doc needs to see preview of Prescription before Print/Save
@@ -80,7 +81,7 @@ namespace Pas.UI.Areas.Doctor.Controllers
                 indicationList = indicationList,
                 DiagnosticTestList = diagnosticTestList,
                 AllergyList = clinicialInfo.AllergyInfo,
-                Ailments = ailmentList,
+                ChiefComplaints = chiefComplaints,
                 RecentMedication = recentMedication
             };
 
@@ -90,8 +91,8 @@ namespace Pas.UI.Areas.Doctor.Controllers
             return View(vm);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(PrescriptionConfirmSaveVM vm)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> FinishAndPreview(PrescriptionConfirmSaveVM vm)
         {
             AppUserDetailsVM currentUser = await GetCurrentUser();
 
@@ -100,8 +101,58 @@ namespace Pas.UI.Areas.Doctor.Controllers
                 return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
             }
 
-            return View();
+            return PartialView("Areas/Doctor/Views/Prescription/_FinishAndPreview.cshtml");
+
         }
+
+       
+        public async Task<IActionResult> TestPreview(PrescriptionConfirmSaveVM vm)
+        {
+            AppUserDetailsVM currentUser = await GetCurrentUser();
+
+            if (currentUser.Not_A_Doctor())
+            {
+                return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
+            }
+
+            return View("Areas/Doctor/Views/Prescription/_FinishAndPreview.cshtml");
+            //return PartialView("/Doctor/Prescription/Views/FinishAndPreview");
+
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create_Prescription_HTML(int id, string contents)
+        {
+            AppUserDetailsVM currentUser = await GetCurrentUser();
+
+            if (currentUser.Not_A_Doctor())
+            {
+                return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
+            }
+
+            var result = await _prescriptionService.Create_Prescription_HTML(id, contents);
+
+            return Json(result ? "success" : "fail");
+
+        }
+
+        public async Task<IActionResult> GetPrescription_HTML(int id)
+        {
+            AppUserDetailsVM currentUser = await GetCurrentUser();
+
+            if (currentUser.Not_A_Doctor())
+            {
+                return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
+            }
+
+            var result = await _prescriptionService.GetPrescription_HTML(id);
+
+            return Json(result);
+
+        }
+
+
+        
 
         private void SetDoctorsProfileValues(AppUserDetailsVM currentUser)
         {
@@ -161,6 +212,30 @@ namespace Pas.UI.Areas.Doctor.Controllers
             return Json(result);
         }
 
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Insert_PescriptionItem(PrescriptionDrugCreateVM vm)
+        {            
+            //## This will create a Template for a Specific Drug Brand. ie: 'Ibuprofen 200mg Tablet 4 Times a Day for 7 days'
+            if (vm is null || vm.DrugBrandId < 1 || vm.BrandDoseTemplateId < 1)
+                return Json("error");
+
+            var result = await _prescriptionService.Insert_PescriptionItem(vm);
+                                    
+            return Json(result);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Delete_PescriptionItem(int prescriptionItemId)
+        {            
+            //## This will create a Template for a Specific Drug Brand. ie: 'Ibuprofen 200mg Tablet 4 Times a Day for 7 days'
+            if (prescriptionItemId < 1)
+                return Json("error");
+            
+            var result = await _prescriptionService.Delete_PescriptionItem(prescriptionItemId);
+                                  
+            return Json(result ? "success" : "fail");
+        }
+
 
         [HttpGet]
         public async Task<ActionResult> ListAllInvestigationsForDiagnosis(int id)
@@ -192,5 +267,6 @@ namespace Pas.UI.Areas.Doctor.Controllers
             var result = await _drugService.ListAllDrugPatternTemplates(id);
             return Json(result);
         }
+
     }
 }

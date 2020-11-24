@@ -18,9 +18,7 @@ namespace Pas.Data.Models
         [Required]
         public int BrandDoseTemplateId { get; set; }
 
-
-        [Required]
-        public int AdviseInstructionId { get; set; }
+        public int? AdviseInstructionId { get; set; }
 
         
         [Column(TypeName = "nvarchar(100)")]

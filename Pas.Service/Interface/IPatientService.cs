@@ -1,5 +1,4 @@
-﻿using Pas.Data.Models;
-using Pas.Web.ViewModels;
+﻿using Pas.Web.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,7 +18,7 @@ namespace Pas.Service.Interface
         Task<IEnumerable<AppUserDetailsVM>> GetRegularPatientList(int doctorId);
         Task<ClinicalHistoryVM> GetClinicalDetails(int id);
 
-        Task<IEnumerable<PatientAilmentType>> GetPatientAilments(int id);
+        Task<IEnumerable<ChiefComplaintsVM>> GetPatientChiefComplaints(int id);
 
         Task<IEnumerable<DrugDetailsVM>> GetRecentMedication(int id);
     }

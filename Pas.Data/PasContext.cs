@@ -21,8 +21,7 @@ namespace Pas.Data
         }
 
         public virtual DbSet<AddressBook> AddressBooks { get; set; }
-        public virtual DbSet<AdviseInstructions> AdviseInstructions { get; set; }
-        public virtual DbSet<AilmentTypes> AilmentTypes { get; set; }
+        public virtual DbSet<AdviseInstructions> AdviseInstructions { get; set; }        
         public virtual DbSet<AllergyTypes> AllergyTypes { get; set; }
         
         public virtual DbSet<CategoryTypes> CategoryTypes { get; set; }
@@ -44,11 +43,11 @@ namespace Pas.Data
         public virtual DbSet<IntakePattern> IntakePatterns { get; set; }
         public virtual DbSet<Manufacturer> Manufacturers { get; set; }
         public virtual DbSet<ModeOfDelivery> ModeOfDelivery { get; set; }
-        public virtual DbSet<Organisation> Organisation { get; set; }
-        public virtual DbSet<PatientAilmentType> PatientAilmentTypes { get; set; }
+        public virtual DbSet<Organisation> Organisation { get; set; }        
         public virtual DbSet<PatientAllergy> PatientAllergies { get; set; }
         public virtual DbSet<PatientIndications> PatientIndications { get; set; }
         public virtual DbSet<Prescription> Prescription { get; set; }
+        public virtual DbSet<PrescriptionChiefComplaints> PrescriptionChiefComplaints { get; set; }
         public virtual DbSet<PrescriptionDiagnosticTest> PrescriptionDiagnosticTest { get; set; }
         public virtual DbSet<PrescriptionDrugs> PrescriptionDrugs { get; set; }
         public virtual DbSet<Role> Role { get; set; }
@@ -185,12 +184,6 @@ namespace Pas.Data
             {
                 entity.ToTable("AdviseInstructions", "dbo");                
             });
-
-            modelBuilder.Entity<AilmentTypes>(entity =>
-            {
-                entity.ToTable("AilmentTypes", "dbo");                
-            });
-
             
             modelBuilder.Entity<CategoryTypes>(entity =>
             {
@@ -448,6 +441,12 @@ namespace Pas.Data
                 entity.Property(e => e.Notes).HasMaxLength(1000);
             });
 
+            modelBuilder.Entity<PrescriptionChiefComplaints>(entity =>
+            {
+                entity.ToTable("PrescriptionChiefComplaints", "Patient");
+            });
+
+            
             modelBuilder.Entity<PrescriptionDiagnosticTest>(entity =>
             {
                 entity.ToTable("PrescriptionDiagnosticTest", "Patient");
@@ -466,13 +465,7 @@ namespace Pas.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PrescriptionDiagnosticTest_Prescription");
             });
-
-            modelBuilder.Entity<PatientAilmentType>(entity =>
-            {
-                entity.ToTable("PatientAilmentType", "Patient");                                   
-            });
-
-
+                       
             modelBuilder.Entity<PatientAllergy>(entity =>
             {
                 entity.ToTable("PatientAllergy", "Patient");

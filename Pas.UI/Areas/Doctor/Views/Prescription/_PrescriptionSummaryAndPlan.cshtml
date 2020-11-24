@@ -8,7 +8,7 @@
             <div class="col-sm-10">
                 <div class="custom-control custom-checkbox my-1 mr-sm-2">
                     <input type="checkbox" class="custom-control-input" id="FollowUpVisitCheckbox">
-                    <label class="custom-control-label" for="FollowUpVisitCheckbox">No</label>
+                    <label class="custom-control-label" for="FollowUpVisitCheckbox">Yes</label>
                 </div>
                     <span class="help-block">Is this a Follow up visit?</span>
             </div>
@@ -26,7 +26,7 @@
 
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" class="custom-control-input" id="ReferredPatientCheckBox">
-                                    <label class="custom-control-label" for="ReferredPatientCheckBox">No</label>
+                                    <label class="custom-control-label" for="ReferredPatientCheckBox">Yes</label>
                                 </div>
                             </div>
                             <div class="input-group-text text-success">
@@ -68,9 +68,22 @@
 
 
 
-        <div id="NavigationButtonsDiv" class="col-12 mb-3">
-            <button type="button" id="FinishAndPrintButton" class="btn btn-primary waves-effect waves-themed float-left">Finish &amp; Print</button>
-            <button type="button" id="PreviousStepButton" class="btn btn-primary waves-effect waves-themed mt-2 float-right">Back: Drug item entry</button>
+        <div id="NavigationButtonsDiv" class="col-12 mb-2 pr-4">
+            <button type="button" id="PreviousStepButton"
+                    data-toggle="tooltip" data-placement="right" title="Back: Drug item entry"
+                    class="btn btn-primary waves-effect waves-themed mt-2 float-left">
+                <i class="fal fa-arrow-circle-left fa-lg mr-2"></i>
+                Back
+            </button>
+
+            <button type="button" id="PrintPreviewButton">Print Preview</button>
+
+            <button type="button" id="FinishAndPrintButton"
+                    data-toggle="tooltip" data-placement="left" title="Finish and Print Preview"
+                    class="btn btn-primary waves-effect waves-themed float-right">
+                <i class="fal fa-check-circle fa-lg mr-2"></i>
+                Finish
+            </button>
         </div>
 
         <div class="col-12">

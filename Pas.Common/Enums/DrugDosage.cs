@@ -6,6 +6,13 @@ using System.Text;
 
 namespace Pas.Common.Enums
 {
+    
+    public enum PrescriptionStatus
+    {
+        Draft = 1,
+        Complete = 2,
+        Abandoned = 9
+    } 
     public enum DoseSolid
     {
         Half = 50,
@@ -31,5 +38,26 @@ namespace Pas.Common.Enums
         After = 2
 
     }
-    
+
+    public enum Tips
+    {
+        Advise = 1,
+        Instructions = 2
+    }
+
+    public enum DrugUnitVolume
+    {
+        cc,
+        gram,
+        IU,
+        kg,
+        litre,
+        mcg = 1,
+        mg,
+        mm,
+        ml,
+        pound,
+
+    }
+
 }

@@ -10,5 +10,7 @@ namespace Pas.Common.Constants
         public static string ModeOfDeliveries = "ModeOfDeliveries";
         public static string StrengthTypes = "StrengthTypes";        
         public static string BrandsForDiagnosis = "BrandsForDiagnosis";        
+        public static string PatientChiefComplaints = "PatientChiefComplaints";        
+        public static string IntakePatterns = "IntakePatterns";        
     }
 }
