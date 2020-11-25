@@ -1,6 +1,4 @@
-﻿//
-// Tooltip
-//
+﻿// Tooltip //
 var Tooltip = (function () {
     var $tooltip = $('[data-toggle="tooltip"]');
 
@@ -629,7 +627,11 @@ $(document).ready(function () {
         $("#PrescriptionPreviewPatientDetails .patient-name").text(personalDetails);
         var address = $("#PersonalDetails .patient-address").text();
         $("#PrescriptionPreviewPatientDetails .patient-address").text(address);
+
         //## CC
+        $("#ChiefComplaintList option:selected").each(function (index) {
+            $("#PrescriptionCCListUL").append("<li class='list-group-item'>" + $(this).text() +"</li>");            
+        });
 
         //## Examination
         var temp = $("#PatientVitalsInfoDiv .vital-temperature").text();
@@ -643,7 +645,7 @@ $(document).ready(function () {
         $("#PrescriptionVitalsDiv .vital-pressure").text(pressure);
         $("#PrescriptionVitalsDiv .vital-weight").text(weight);
         //$("#PrescriptionVitalsDiv .vital-height").text(height);
-
+               
         //## Notes
         $("#PrescriptionPreviewNotesDiv").text($("#PrescriptionNotesInput").val());
 
@@ -719,6 +721,9 @@ $(document).ready(function () {
             }
         });
     }
+
+
+    //## Prepare PrescriptionPreviwe Modal- with Doctor and Hospital Details
 
 });
 

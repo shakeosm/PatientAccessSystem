@@ -1,5 +1,4 @@
-﻿@*@model Pas.Web.ViewModels.PrescriptionConfirmSaveVM*@
-@model Pas.Web.ViewModels.PrescriptionCreateVM
+﻿@model Pas.Web.ViewModels.PrescriptionCreateVM
 
 @{
     ViewData["Title"] = "Prescription Create";
@@ -26,7 +25,7 @@
         @await Html.PartialAsync("_PatientVitalsModal")
 
         <!-- Here we will dump the Prescription to view as a Modal Popup -->
-        @await Html.PartialAsync("_PrescriptionIPrintPreview.cshtml")
+        @await Html.PartialAsync("_PrescriptionPrintPreview.cshtml", Model)
 
         <form id="PrescriptionCreateForm" action="Create" method="post">
             @Html.AntiForgeryToken()

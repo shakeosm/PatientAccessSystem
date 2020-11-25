@@ -6,29 +6,25 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pas.Common.Enums;
+using Pas.Service;
 using Pas.Service.Interface;
+using Pas.UI.Controllers;
 using Pas.Web.ViewModels;
 
 namespace Pas.UI.Areas.Doctor.Controllers
 {
     [Area("Doctor")]
     [Authorize]
-    public class ProfileController : Controller
-    {
-
-        private readonly IAppUserService _appUserService;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IAppAuthorisationService _appAuthorisationService;
-        
-        public ProfileController(IPrescriptionService PrescriptionService,
-                                IPatientService PatientService,
+    public class ProfileController : BaseController
+    {                
+        public ProfileController(
                                 IAppUserService AppUserService,
                                 UserManager<IdentityUser> UserManager,
-                                IAppAuthorisationService AppAuthorisationService)
+                                IAppAuthorisationService AppAuthorisationService,
+                                IUserOrgRoleService UserOrgRoleService
+            ) : base(UserManager, AppUserService, AppAuthorisationService, UserOrgRoleService)
         {            
-            _appUserService = AppUserService;
-            _userManager = UserManager;
-            _appAuthorisationService = AppAuthorisationService;
+
         }
 
 
@@ -51,13 +47,6 @@ namespace Pas.UI.Areas.Doctor.Controllers
             return View(currentUser);
         }
 
-        private void SetDoctorsProfileValues(AppUserDetailsVM currentUser)
-        {
-            currentUser.Name = "Dr. " + currentUser.Name;
-            currentUser.ImageUrl = "user-3.png";
-            ViewBag.UserDetails = currentUser;
-        }
-
         [HttpGet]
         public IActionResult Edit()
         {
@@ -69,14 +58,6 @@ namespace Pas.UI.Areas.Doctor.Controllers
         {
             return View();
         }
-
-        private async Task<AppUserDetailsVM> GetCurrentUser()
-        {
-            var userEmail = _userManager.GetUserName(HttpContext.User);
-
-            var currentUser = await _appAuthorisationService.GetActiveUserFromCache(userEmail);
-
-            return currentUser;
-        }
+        
     }
 }

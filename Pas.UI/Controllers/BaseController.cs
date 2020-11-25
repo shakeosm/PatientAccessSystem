@@ -36,6 +36,37 @@ namespace Pas.UI.Controllers
             return currentUser;
         }
 
+        /// <summary>These details will be used to show Doctor's Details in the Layout- Left Column</summary>
+        /// <param name="currentUser"></param>
+        protected void SetDoctorsProfileValues(AppUserDetailsVM currentUser)
+        {
+            CurrentUserVM vm = new CurrentUserVM()
+            {
+                DisplayName = "Dr. " + currentUser.Name,
+                Degrees = currentUser.DoctorDetails.DoctorDegrees(),
+                Chamber = currentUser.CurrentRole.OrganisationName,
+                ImageUrl = "user-3.png"
+            };
+            //currentUser.AddressBook.LocalArea = currentUser.CurrentRole.OrganisationName;     //## Current Selected Chamber
+
+            ViewBag.UserDetails = vm;
+        }
+
+        /// <summary>These details will be used to show Patient's Details in the Layout- Left Column</summary>
+        /// <param name="currentUser"></param>
+        protected void SetPatientProfileValues(AppUserDetailsVM currentUser)
+        {
+            CurrentUserVM vm = new CurrentUserVM()
+            {
+                DisplayName = currentUser.Name,
+                LocalArea = currentUser.AddressAreaLocality,
+                City = currentUser.AddressBook.City,
+                ImageUrl = currentUser.ImageUrl,
+            };
+            
+            ViewBag.UserDetails = vm;
+        }
+
         protected string GetLoggedInEmail()
         { 
             return _userManager.GetUserName(HttpContext.User);

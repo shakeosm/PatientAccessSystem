@@ -46,50 +46,17 @@ namespace Pas.UI.Areas.Patient.Controllers
             };
 
             //## Re-factor UserDetails- 'Patient' type values     
-            SetUserProfileValues(currentUser);
+            SetPatientProfileValues(currentUser);
 
             return View(vm);
         }
-
-        private void SetUserProfileValues(AppUserDetailsVM currentUser)
-        {            
-            currentUser.ImageUrl = "user-3.png";
-            ViewBag.UserDetails = currentUser;
-        }
-
-        //[HttpPost, ValidateAntiForgeryToken]
-        //public async Task<IActionResult> FindPatientByEmail(string email)
-        //{
-        //    var patient = await _patientService.FindByEmail(email);
-
-        //    return Json(patient);
-        //}
-
-        ////[ValidateAntiForgeryToken]
-        //[HttpPost]
-        //public async Task<IActionResult> FindPatientByMobile(string mobile)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //[HttpGet]
-        //public async Task<IActionResult> Search(string mobile, string shortId, string firstName, string lastName)
-        //{
-        //    PatientSearchVM searchVM = new PatientSearchVM() { FirstName = "Car", LastName = "", ShortId = "",  Mobile = "" };
-
-        //    var searchResult = await _patientService.SearchPatient(searchVM);
-
-        //    return PartialView("Views/Shared/_patientSearchResult.cshtml", searchResult);
-        //    //return View("Views/Shared/_patientSearchResult.cshtml", searchResult);
-        //}
-
 
         public async Task<IActionResult> Profile()
         {
             var currentUser = await GetCurrentUser();
 
             //## Re-factor UserDetails- 'Patient' type values     
-            SetUserProfileValues(currentUser);
+            SetPatientProfileValues(currentUser);
 
             return View(currentUser);
         }
@@ -99,7 +66,7 @@ namespace Pas.UI.Areas.Patient.Controllers
             var currentUser = await GetCurrentUser();
 
             //## Re-factor UserDetails- 'Patient' type values     
-            SetUserProfileValues(currentUser);
+            SetPatientProfileValues(currentUser);
 
             return View(currentUser);
         }

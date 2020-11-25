@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Pas.Common.Constants;
 using Pas.Common.Enums;
 using Pas.Common.Extensions;
 using Pas.Data;
@@ -8,7 +9,6 @@ using Pas.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Pas.Service
@@ -67,6 +67,7 @@ namespace Pas.Service
         {
             var appUser = _context.User
                             .Include(p=> p.UserOrganisationRoles)
+                            //.ThenInclude(p=> p.Organisation)
                             .Include(p=> p.AddressBooks)
                             .AsNoTracking()
                             .First(p=> p.Email== email);
@@ -213,7 +214,7 @@ namespace Pas.Service
                 AddressBook = MapToAddressBookVM(u.AddressBooks),
                 Age = u.Age,
                 BanglaName = u.BanglaName,
-                DateOfBirth = u.DateOfBirth.Value.ToString("dd/MM/yyyy"),
+                DateOfBirth = u.DateOfBirth.Value.ToDDMMMYYYY(),
                 Email = u.Email,
                 Gender = (Gender)u.Gender,
                 HasMultipleRoles = u.UserOrganisationRoles.Any(),
@@ -246,5 +247,85 @@ namespace Pas.Service
 
             return userSwitchRoleViewVM;
         }
+
+        public async Task<IList<SpecialityVM>> Get_DoctorSpeciality(int doctorId)
+        {
+            var redisKey = $"{CacheKey.DoctorSpeciality}_{doctorId}";
+            var specialityList = _cacheService.GetCacheValue<IList<SpecialityVM>>(redisKey);
+
+            if (specialityList is null || specialityList.Count < 1) { 
+                specialityList = await _context.DoctorSpeciality
+                                                        .Include(d => d.Speciality)
+                                                        .AsNoTracking()
+                                                        .Where(d => d.DoctorId == doctorId)
+                                                        .Select(d => new SpecialityVM()
+                                                        {
+                                                            Name = d.Speciality.Name,
+                                                            BanglaName = d.Speciality.BanglaName
+                                                        })
+                                                        .ToListAsync();
+
+                _cacheService.SetCacheValue(redisKey, specialityList);
+            }
+
+
+            return specialityList;
+        }
+
+
+        public async Task<IList<DoctorDegreesVM>> Get_DoctorDegrees(int doctorId)
+        {
+            var redisKey = $"{CacheKey.DoctorDegrees}_{doctorId}";
+            var specialityList = _cacheService.GetCacheValue<IList<DoctorDegreesVM>>(redisKey);
+
+            if (specialityList is null || specialityList.Count < 1) { 
+                specialityList = await _context.DoctorMedicalDegrees
+                                                        .Include(d => d.MedicalDegree)
+                                                        .AsNoTracking()
+                                                        .Where(d => d.DoctorId == doctorId)
+                                                        .Select(d => new DoctorDegreesVM()
+                                                        {
+                                                            Name = d.MedicalDegree.Name,
+                                                            BanglaName = d.MedicalDegree.BanglaName
+                                                        })
+                                                        .ToListAsync();
+
+                _cacheService.SetCacheValue(redisKey, specialityList);
+            }
+
+            return specialityList;
+        }
+
+        public async Task<HospitalDetailsVM> Get_DoctorChamber(string email)
+        {
+            AppUserDetailsVM currentUser = _cacheService.GetCacheValue<AppUserDetailsVM>(email);
+
+            string redisKey = $"{CacheKey.DoctorChamber}_{currentUser.OrganisationId}";
+
+            var chamber = _cacheService.GetCacheValue<HospitalDetailsVM>(redisKey);
+            if (chamber is null)
+            {
+                var organisation = await _context.Organisation
+                                                    .FindAsync(currentUser.CurrentRole.OrganisationId);
+
+                chamber = new HospitalDetailsVM()
+                {
+                    Id = organisation.Id,
+                    Name = organisation.Name,
+                    HeaderBangla = organisation.HeaderBangla,
+                    HeaderEnglish = organisation.HeaderEnglish,
+                    Address = organisation.Address,
+                    LogoImageUrl = organisation.LogoImageFile
+                };
+
+                //## Now save it in the Redis Cache- for later use
+                _cacheService.SetCacheValue(redisKey, chamber);
+            }
+
+            return chamber;
+
+        }
+
+
     }
 }

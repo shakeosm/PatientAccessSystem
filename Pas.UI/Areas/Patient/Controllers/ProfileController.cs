@@ -31,11 +31,5 @@ namespace Pas.UI.Areas.Patient.Controllers
         {
             return RedirectToAction("Index", "Home", new { Area = "Patient" });
         }
-
-        private void SetUserProfileValues(AppUserDetailsVM currentUser)
-        {
-            currentUser.ImageUrl = "user-3.png";
-            ViewBag.UserDetails = currentUser;
-        }
     }
 }

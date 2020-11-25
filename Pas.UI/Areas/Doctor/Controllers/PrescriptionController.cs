@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Pas.Common.Enums;
 using Pas.Data.Models;
 using Pas.Service.Interface;
 using Pas.UI.Controllers;
@@ -52,36 +53,30 @@ namespace Pas.UI.Areas.Doctor.Controllers
             //## Doctor has already initiated a "New Prescription" from "Doctor/Home/StartNewPrescription()"- which is their Home page
             var prescription = await _prescriptionService.Find(id);
             
-            if (prescription is null) 
+            if (prescription is null || prescription.Status != (int) PrescriptionStatus.Draft) 
                 return RedirectToAction("SearchPatient", "Home", new { Area = "Doctor" });
 
 
             var newPrescriptionId = prescription.Id;
-            
+
+            var chamber = await _appUserService.Get_DoctorChamber(currentUser.Email);
             AppUserDetailsVM patientDetails = await _appUserService.Find(prescription.PatientId, includeAddressBook: true);
-
-            IList<IndicationTypes> indicationList = await _drugService.ListAllIndicationTypes();
-            IEnumerable<DrugDetailsVM> drugList = await _drugService.ListAll();
-
-            IList<DiagnosticTestDetailsVM> diagnosticTestList = null;   //TODO
+            
             var clinicialInfo = await _patientService.GetClinicalDetails(patientDetails.Id);
             var recentMedication = await _patientService.GetRecentMedication(patientDetails.Id);
             
-            var chiefComplaints = await _patientService.GetPatientChiefComplaints(patientDetails.Id);
+            //var chiefComplaints = await _patientService.GetPatientChiefComplaints(patientDetails.Id);
 
             //## PrescriptionCreateVM- will have all necessary info to make a Prescription- 
             //## When the Doc needs to see preview of Prescription before Print/Save
-
+            
             var vm = new PrescriptionCreateVM()
             {
-                Id = newPrescriptionId,
-                Doctor = currentUser,
+                Id = newPrescriptionId,                
+                Doctor = currentUser, //## Doctor details is at- AppUserDetailsVM.DoctorDetailsVM()
+                ChamberDetails = chamber,
                 PatientDetails = patientDetails,
-                DrugList = drugList,
-                indicationList = indicationList,
-                DiagnosticTestList = diagnosticTestList,
                 AllergyList = clinicialInfo.AllergyInfo,
-                ChiefComplaints = chiefComplaints,
                 RecentMedication = recentMedication
             };
 
@@ -149,17 +144,6 @@ namespace Pas.UI.Areas.Doctor.Controllers
 
             return Json(result);
 
-        }
-
-
-        
-
-        private void SetDoctorsProfileValues(AppUserDetailsVM currentUser)
-        {
-            currentUser.Name = "Dr. " + currentUser.Name;
-            //currentUser.AddressBook.LocalArea = currentUser.CurrentRole.OrganisationName;     //## Current Selected Chamber
-            currentUser.ImageUrl = "user-3.png";
-            ViewBag.UserDetails = currentUser;
         }
 
         [HttpGet]
@@ -240,7 +224,7 @@ namespace Pas.UI.Areas.Doctor.Controllers
         [HttpGet]
         public async Task<ActionResult> ListAllInvestigationsForDiagnosis(int id)
         {
-            return Json("Not implemented: ListAllInvestigationsForDiagnosis"); //TODO
+            return Json("Not implemented: ListAllInvestigationsForDiagnosis"); //TODO: ListAllInvestigationsForDiagnosis()
 
             if (id < 1)
                 return Json(null);
@@ -259,7 +243,7 @@ namespace Pas.UI.Areas.Doctor.Controllers
         public async Task<ActionResult> ListAllDrugPatternTemplates(int id)
         {
 
-            return Json("Not implemented: ListAllDrugPatternTemplates"); //TODO
+            return Json("Not implemented: ListAllDrugPatternTemplates"); //TODO: ListAllDrugPatternTemplates()
 
             if (id < 1)
                 return Json(null);
@@ -267,6 +251,5 @@ namespace Pas.UI.Areas.Doctor.Controllers
             var result = await _drugService.ListAllDrugPatternTemplates(id);
             return Json(result);
         }
-
     }
 }

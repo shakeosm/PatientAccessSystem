@@ -23,8 +23,10 @@
                         </span>
                     </span>
                     <span class="float-left pt-1 ml-1">
-                        <span class="h4">@Model.Name</span><br>
-                        <span class="h5 text-primary">@Model.CurrentRole.OrganisationName</span>
+                        <span class="h4">Dr. @Model.Name <span class="text-primary font-italic">@Model.DoctorDetails.DoctorDegrees()</span></span>
+                        <br>
+                        <span class="h5 text-primary">@Model.CurrentRole.OrganisationName</span><br />
+                        <span>@Model.CurrentRole.OrganisationAddress</span>
                     </span>
                     @*<p class="card-text">
                         <span style="font-size: 3em; color: Dodgerblue;">

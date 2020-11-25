@@ -36,7 +36,7 @@ namespace Pas.Data.Models
 
         public virtual Organisation DiagnosticHospital { get; set; }
         public virtual DiagnosticTest DiagnosticTest { get; set; }
-        public virtual Doctors Doctor { get; set; }
+        public virtual DoctorProfile Doctor { get; set; }
         public virtual Organisation DoctorHospital { get; set; }
     }
 }

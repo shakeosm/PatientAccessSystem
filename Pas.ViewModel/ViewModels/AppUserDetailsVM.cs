@@ -33,6 +33,9 @@ namespace Pas.Web.ViewModels
         public bool HasAdditionalRoles { get; set; }
         public string ImageUrl { get; set; }
 
+        /// <summary>This will only be filled- if the current user is a Doctor</summary>
+        public DoctorDetailsVM DoctorDetails { get; set; }
+
         //## Helper Methods
         public bool Is_A_Doctor() => ApplicationRole == ApplicationRole.Doctor;
         public bool Not_A_Doctor() => ApplicationRole != ApplicationRole.Doctor;
@@ -50,5 +53,21 @@ namespace Pas.Web.ViewModels
             return $"{ApplicationRole.ToString()}/Profile";      //### Default to Patient    
             
         }
+    }
+
+    /// <summary>This will be used in the Layout Pages- to show Current User details- Name, Title, etc</summary>
+    public class CurrentUserVM
+    {
+        public string DisplayName { get; set; }
+        public string LocalArea { get; set; }
+        public string City { get; set; }
+
+        //## Followings are for Doctors
+        public string Degrees { get; set; }
+        public string Speciality { get; set; }
+
+        public string Chamber { get; set; }
+        public string ImageUrl { get; set; }
+
     }
 }

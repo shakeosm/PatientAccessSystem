@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Pas.Common.Constants;
 using Pas.Common.Enums;
 using Pas.Data;
 using Pas.Data.Models;
@@ -114,7 +116,10 @@ namespace Pas.Service
                 {
 
                     //## Cache is Empty- Does the user have any 'ActiveRole' Table?
-                    var activeRole = _context.ActiveRoles.FirstOrDefault(ar => ar.UserId == currentUser.Id);
+                    var activeRole = _context.ActiveRoles
+                                        .AsNoTracking()
+                                        .Include(ar=> ar.Organisation)
+                                        .FirstOrDefault(ar => ar.UserId == currentUser.Id);
 
                     //## Check- for any previous 'Active Role' in the DB Table?
                     if (activeRole is null)
@@ -129,7 +134,9 @@ namespace Pas.Service
                     { //## ActiveRole present in the DB- but not in the Cache.. so- Update the values from DB int to RedisCache
                         currentUser.CurrentRole = new UserRoleVM() {                             
                             RoleId = activeRole.RoleId,
-                            OrganisationId = activeRole.OrganisationId
+                            OrganisationId = activeRole.OrganisationId,                            
+                            OrganisationName = activeRole.Organisation.Name,
+                            OrganisationAddress = activeRole.Organisation.Address //+ ", " + activeRole.Organisation.Address
                         };
 
                         currentUser.ApplicationRole = (ApplicationRole)activeRole.RoleId;
@@ -137,7 +144,7 @@ namespace Pas.Service
 
                     }
 
-                    //## And now set them in the Cache- so we will have everything we need
+                    //## Set the Roles in the Cache
                     SetUserRolesInCache(userRoles, currentUser.Id);
 
                 }
@@ -146,6 +153,31 @@ namespace Pas.Service
                     currentUser.ApplicationRole = ApplicationRole.Patient;
                 }
 
+
+                //## Current User seems to have multiple roles- is this User a Doctor, as well? Then read the Degrees and Specialities of this Doctor
+                if (currentUser.Is_A_Doctor() && currentUser.DoctorDetails is null)
+                {
+                    var specialities = await _appUserService.Get_DoctorSpeciality(currentUser.Id);
+                    var doctorDegreeList = await _appUserService.Get_DoctorDegrees(currentUser.Id);
+
+                    var doctorProfile = await _context.DoctorProfile.FindAsync(currentUser.Id);
+
+                    DoctorDetailsVM doctor = new DoctorDetailsVM() { 
+                        Id = currentUser.Id,
+                        Name = currentUser.Name,
+                        BanglaName = currentUser.BanglaName,
+                        SpecialityList  = specialities,
+                        DoctorDegreeList = doctorDegreeList,
+
+                        RegistrationNumber = doctorProfile.RegistrationNumber,
+                        HeaderEnglish = doctorProfile.HeaderEnglish,
+                        HeaderBangla = doctorProfile.HeaderBangla
+                    };
+
+                    currentUser.DoctorDetails = doctor;
+                }
+
+                //## Now set the entire CurrentUserVM in the Cache- so we will have everything we need
                 SetActiveUserInCache(currentUser);
             }
 
@@ -171,39 +203,19 @@ namespace Pas.Service
             return true;
         }
 
-        /// <summary>
-        /// When User is switchig Roles- update all values at once. User Details+Roles- all info
-        /// </summary>
-        /// <param name="userEmail"></param>
-        /// <param name="organisationId"></param>
-        /// <param name="organisationName"></param>
-        /// <param name="roleId"></param>
-        /// <returns></returns>
-        public bool SetCurrentOrganisationRole(AppUserDetailsVM user) 
-        {
-             _cacheService.SetCacheValue<AppUserDetailsVM>(user.Email, user);
-            return true;
-
-            //## get the Cached Value
-            //var currentUser = _cacheService.GetCacheValue<AppUserDetailsVM>(user.Email);
-
-            //currentUser.OrganisationId = user.OrganisationId;
-            //currentUser.CurrentRole.RoleId = user.CurrentRole.RoleId;
-            //currentUser.CurrentRole.OrganisationId = user.CurrentRole.OrganisationId;
-            //currentUser.CurrentRole.OrganisationName = user.CurrentRole.OrganisationName;
-
-
-        }
-
+      
         public bool SetUserRolesInCache(IEnumerable<UserRoleVM> roles, int appUserId)
         {
-            _cacheService.SetCacheValue(appUserId.ToString(), roles);
+            string redisKey = $"{CacheKey.UserRoles}_{appUserId}";
+            _cacheService.SetCacheValue(redisKey, roles);
             return true;
         }
 
         public async Task<IEnumerable<UserRoleVM>> GetUserRolesFromCache(int appUserId)
         {
-            IEnumerable<UserRoleVM> result = _cacheService.GetCacheValue<IList<UserRoleVM>>(appUserId.ToString());
+            string redisKey = $"{CacheKey.UserRoles}_{appUserId}";
+
+            IEnumerable<UserRoleVM> result = _cacheService.GetCacheValue<IList<UserRoleVM>>(redisKey);
             if (result is null) {
                 //## If User Roles list isnt found in the cache- read from DB
                 result = await _userOrgRoleService.FindMappedRolesByUserId(appUserId);
@@ -213,6 +225,6 @@ namespace Pas.Service
             }
             return result;
             
-        }
+        }       
     }
 }

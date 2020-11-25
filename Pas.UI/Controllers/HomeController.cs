@@ -16,6 +16,8 @@ namespace Pas.UI.Controllers
     public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IPrescriptionService _prescriptionService;
+
         //private readonly UserManager<IdentityUser> _userManager;
         //private readonly IAppUserService _appUserService;
         //private readonly IUserOrgRoleService _userOrgRoleService;
@@ -23,6 +25,7 @@ namespace Pas.UI.Controllers
         //public IAppAuthorisationService _appAuthorisationService { get; }
 
         public HomeController(ILogger<HomeController> logger,
+                                IPrescriptionService PrescriptionService,
                                 UserManager<IdentityUser> UserManager,
                                 IAppUserService AppUserService,
                                 IAppAuthorisationService AppAuthorisationService,
@@ -30,6 +33,7 @@ namespace Pas.UI.Controllers
             ) : base (UserManager, AppUserService, AppAuthorisationService, UserOrgRoleService)
         {
             _logger = logger;
+            _prescriptionService = PrescriptionService;
             //_userManager = userManager;
             //_appUserService = AppUserService;
             //_appAuthorisationService = AppAuthorisationService;
@@ -100,6 +104,14 @@ namespace Pas.UI.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public async Task<IActionResult> GetPrescription_HTML(int id)
+        {            
+            var result = await _prescriptionService.GetPrescription_HTML(id);
+
+            return Json(result);
+
         }
     }
 }

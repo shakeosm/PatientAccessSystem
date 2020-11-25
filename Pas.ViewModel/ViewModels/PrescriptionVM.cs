@@ -1,4 +1,5 @@
-﻿using Pas.Data.Models;
+﻿using Pas.Common.Enums;
+using Pas.Data.Models;
 using System;
 using System.Collections.Generic;
 
@@ -7,7 +8,11 @@ namespace Pas.Web.ViewModels
     public class PrescriptionCreateVM
     {
         public int Id { get; set; }
+        public Title Title { get; set; }
         public AppUserDetailsVM Doctor { get; set; }
+        
+        public HospitalDetailsVM ChamberDetails { get; set; }
+
         public AppUserDetailsVM PatientDetails { get; set; }
 
         public int IndicationId { get; set; }

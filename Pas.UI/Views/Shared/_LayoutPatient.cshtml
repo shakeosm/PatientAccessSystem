@@ -2,52 +2,19 @@
 
 @{ 
 
-    var userDetails = (AppUserDetailsVM)ViewBag.UserDetails;
+    var currentUser = (CurrentUserVM)ViewBag.UserDetails;
 
     var profileImageUrl = "/images/profile-photos/patient.jfif";    //## Default to No-image
                                                                     //var areaLocality = "";  //## ie: 'Panchlaish, Chattogram'
 }
 <!DOCTYPE html>
-<!--
-Template Name:  SmartAdmin Responsive WebApp - Template build with Twitter Bootstrap 4
-Version: 4.5.1
-Author: Sunnyat A.
-Website: http://gootbootstrap.com
-Purchase: https://wrapbootstrap.com/theme/smartadmin-responsive-webapp-WB0573SK0?ref=myorange
-License: You must have a valid license purchased only from wrapbootstrap.com (link above) in order to legally use this theme for your project.
--->
+
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>@ViewData["Title"] - PAS</title>
-    <meta name="description" content="Contacts">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, minimal-ui">
+    @{ 
+        await Html.RenderPartialAsync("_HeaderLayout.cshtml");
+    }            
 
-    <!-- Call App Mode on ios devices -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-
-    <!-- Remove Tap Highlight on Windows Phone IE -->
-    <meta name="msapplication-tap-highlight" content="no">
-    <!-- base css -->
-    
-    @*The fa prefix has been deprecated in Font-awesome-version 5. The new default is the fas solid style and the fab style for brands.*@
-
-    <!-- For Optimization- try to use Bootstrap Styles later- and avoid the "Vendor- js/css" -->
-    @*<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="~/css/fontawesome-5.0.10.css" rel="stylesheet" />*@
-
-    <link id="vendorsbundle" rel="stylesheet" media="screen, print" href="~/css/vendors.bundle.css"> @*723KB*@
-    <link id="appbundle" rel="stylesheet" media="screen, print" href="~/css/app.bundle.css"> @*240KB*@
-
-    <link id="myskin" rel="stylesheet" media="screen, print" href="~/css/skins/skin-master.css">
-
-    <!-- Place favicon.ico in the root directory -->
-    <link rel="apple-touch-icon" sizes="180x180" href="~/images/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="~/images/favicon/favicon-32x32.png">
-    <link rel="mask-icon" href="~/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
-    <link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
-    <link rel="stylesheet" media="screen, print" href="~/css/fa-brands.css">
 </head>
 <!-- BEGIN Body -->
 
@@ -78,14 +45,14 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
                     </div>
                     <div class="info-card">
                         @*<img src="~/images/demo/avatars/avatar-dr-image.png" class="profile-image rounded-circle" alt="Dr. Rawnak Jahan">*@
-                        <img src="@profileImageUrl" class="profile-image rounded-circle" alt="@userDetails.Name">
+                        <img src="@profileImageUrl" class="profile-image rounded-circle" alt="@currentUser.DisplayName">
                         <div class="info-card-text">
                             <a href="#" class="d-flex align-items-center text-white">
                                 <span class="d-inline-block">
-                                    @userDetails.Name
+                                    @currentUser.DisplayName
                                 </span>
                             </a>
-                            <span class="d-inline-block">@userDetails.AddressBook.LocalArea, @userDetails.AddressBook.City</span>
+                            <span class="d-inline-block">@currentUser.LocalArea, @currentUser.City</span>
                         </div>
                         <img src="~/images/card-backgrounds/cover-1-lg.png" class="cover" alt="cover">
                         <a href="#" onclick="return false;" class="pull-trigger-btn" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar" data-focus="nav_filter_input">
@@ -289,9 +256,9 @@ License: You must have a valid license purchased only from wrapbootstrap.com (li
     <script src="~/js/app.bundle.js"></script>
     <script src="~/js/vendors.bundle.js"></script>
 
-    <div class="loaderbody" id="loaderbody">
-        <div class="loader"></div>
-    </div>
+    @{ 
+        await Html.RenderPartialAsync("_PageLoadingAnimation.cshtml");
+    }
 
 </body>
 

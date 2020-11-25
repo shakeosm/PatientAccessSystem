@@ -30,7 +30,10 @@ namespace Pas.Data
         public virtual DbSet<DiagnosticTest> DiagnosticTest { get; set; }
         public virtual DbSet<DiagnosticTestHistory> DiagnosticTestHistory { get; set; }
         public virtual DbSet<DoctorSpeciality> DoctorSpeciality { get; set; }
-        public virtual DbSet<Doctors> Doctors { get; set; }
+        public virtual DbSet<DoctorMedicalDegrees> DoctorMedicalDegrees { get; set; }
+        public virtual DbSet<Speciality> Speciality { get; set; }
+        public virtual DbSet<MedicalDegree> MedicalDegrees { get; set; }
+        public virtual DbSet<DoctorProfile> DoctorProfile { get; set; }
         public virtual DbSet<StrengthType> DosageTypes { get; set; }
         public virtual DbSet<DrugStrengthType> DrugDosageType { get; set; }
         public virtual DbSet<DrugModeOfDelivery> DrugModeOfDelivery { get; set; }
@@ -253,6 +256,16 @@ namespace Pas.Data
                     .HasConstraintName("FK_DiagnosticTestHistory_Doctors");
             });
 
+            modelBuilder.Entity<Speciality>(entity =>
+            {
+                entity.ToTable("Speciality", "dbo");
+            });
+
+            modelBuilder.Entity<MedicalDegree>(entity =>
+            {
+                entity.ToTable("MedicalDegrees", "dbo");
+            });
+
             modelBuilder.Entity<DoctorSpeciality>(entity =>
             {
                 entity.Property(e => e.BanglaName).HasMaxLength(100);
@@ -263,26 +276,21 @@ namespace Pas.Data
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Doctors>(entity =>
+            modelBuilder.Entity<DoctorMedicalDegrees>(entity =>
             {
+                entity.ToTable("DoctorMedicalDegrees", "dbo");
+            });
+
+            modelBuilder.Entity<DoctorProfile>(entity =>
+            {
+                entity.ToTable("DoctorProfile", "dbo");
+
                 entity.Property(e => e.Acheivements)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.BanglaName).HasMaxLength(100);
-
-                entity.Property(e => e.DateCreated).HasColumnType("datetime2(3)");
-
-                entity.Property(e => e.FullName)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.Speciality)
-                    .WithMany(p => p.Doctors)
-                    .HasForeignKey(d => d.SpecialityId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Doctors_DoctorSpeciality");
+                entity.Property(e => e.DateCreated).HasColumnType("datetime2(3)");                
+                
             });
 
             modelBuilder.Entity<StrengthType>(entity =>

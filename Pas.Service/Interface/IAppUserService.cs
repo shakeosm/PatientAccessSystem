@@ -25,5 +25,13 @@ namespace Pas.Service.Interface
         Task<IList<AppUserDetailsVM>> FindByLastName(string lastName);
 
         Task<IEnumerable<UserRoleVM>> GetRolesByUser(int id);
+        
+        Task<IList<SpecialityVM>> Get_DoctorSpeciality(int doctorId);
+        Task<IList<DoctorDegreesVM>> Get_DoctorDegrees(int doctorId);
+
+        /// <summary>Will get the Current selected Hospital/Chamber Details</summary>
+        /// <param name="email">Doctor Email- to get the Cache value</param>
+        /// <returns></returns>
+        Task<HospitalDetailsVM> Get_DoctorChamber(string email);
     }
 }

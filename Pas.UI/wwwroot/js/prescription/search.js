@@ -36,7 +36,7 @@ $("#LoadHtmlButton").click(function () {
     debugger;
     var prescriptionId = 1003;
 
-    var URL = `/Doctor/Prescription/GetPrescription_HTML/${prescriptionId}`;
+    var URL = `/Home/GetPrescription_HTML/${prescriptionId}`;
 
     axios.get(URL)
         .then(function (response) {

@@ -12,5 +12,9 @@ namespace Pas.Common.Constants
         public static string BrandsForDiagnosis = "BrandsForDiagnosis";        
         public static string PatientChiefComplaints = "PatientChiefComplaints";        
         public static string IntakePatterns = "IntakePatterns";        
+        public static string DoctorSpeciality = "DoctorSpeciality";        
+        public static string DoctorDegrees = "DoctorDegrees";        
+        public static string DoctorChamber = "DoctorChamber";        
+        public static string UserRoles = "UserRoles";        
     }
 }

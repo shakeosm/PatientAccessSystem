@@ -69,8 +69,6 @@ namespace Pas.Data.Models
         public virtual ICollection<ClinicalHistory> ClinicalHistories { get; set; }
         public virtual ICollection<PatientIndications> PatientIndications { get; private set; }
         public virtual ICollection<VitalsHistory> VitalsHistories { get; set; }
-
-
         
     }
 }

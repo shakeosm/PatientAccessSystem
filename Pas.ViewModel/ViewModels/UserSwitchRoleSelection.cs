@@ -17,6 +17,7 @@ namespace Pas.Web.ViewModels
         public string RoleName { get; set; }
         public int RoleId { get; set; }
         public string OrganisationName { get; set; }
+        public string OrganisationAddress { get; set; }
         public int OrganisationId { get; set; }
         public DateTime DateAdded { get; set; }
 

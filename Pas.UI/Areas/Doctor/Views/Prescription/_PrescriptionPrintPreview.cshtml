@@ -1,4 +1,10 @@
-﻿@using Pas.Common.Extensions
+﻿@model Pas.Web.ViewModels.PrescriptionCreateVM
+@{ 
+    var chamber = Model.ChamberDetails;
+    var doctor = Model.Doctor;
+
+}
+@using Pas.Common.Extensions
 <!-- _PrescriptionIPrintPreview -->
 <!-- Modal -->
 
@@ -8,42 +14,49 @@
         <!-- Modal content-->
         <div id="PreviewContentsDiv" class="modal-content" style="">
             <div id="HeaderDiv" class="form-row col-12">
-                <div class="col-6 border rounded p-3">
-                    <h4>BelleVue Hospital</h4>
+                <div class="mobile-device-preview d-sm-none col-xs-12">
+                    <div class="h2 patient-name">[Patient name - age - gender will be inserted here]</div>
+                    <div class="prescription-date">Date: 20 Nov 2020 20:30</div>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 border rounded p-3">
+                    <h4>@chamber.Name</h4>
                     <p>
-                        Panchlaish, Chattogram-4100<br/>
+                        @chamber.HeaderEnglish
+                    </p>
+                    <p class="d-none">
+                        Panchlaish, Chattogram-4100<br />
                         Phone: 031-123456<br />
                         Email: info@bellevue.com
                     </p>
                 </div>
-                <div class="col-6 border rounded p-3 text-right">
-                    <h5 class="text-primary">Dr Rawnak Jahan</h5>
+                <div class="col-xs-12 col-sm-6 border rounded p-3 text-right">
+                    <h5 class="text-primary">Dr @doctor.Name</h5>
                     <p>
-                        MBBS, MRCOG, FCPS<br />
-                        Phone: 018-123456<br />
-                        Email: info@bellevue.com
+                        @doctor.DoctorDetails.DoctorDegrees()<br />
+                        Speciality in @doctor.DoctorDetails.Specialities()<br />
+                        
                     </p>
-                </div>                
-            </div>
-            <div id="PrescriptionPreviewPatientDetails" class="form-row col-12">
-                <div class="h6 text-info col-6 patient-name">Shawkat Osman / 70 / Male                
                 </div>
-                <div class="h6 col-6 text-right">Date: @DateTime.Today.ToDisplay()</div>
-                <div class="col-12 patient-address">1069/A Jangi Shah Majar Lane, Badurtola, Chattogram</div>
+            </div>
+            <div id="PrescriptionPreviewPatientDetails" class="form-row col-12 d-none d-sm-block">
+                <div class="h6 text-info col-6 patient-name">
+                    <!-- Patient Details will be inserted here-->
+                </div>
+                <div class="h6 col-6 text-right float-right">Date: @DateTime.Today.ToDisplay()</div>
+                <div class="col-12 patient-address"><!-- Address will be inserted here --></div>
             </div>
             <div id="BodyDiv" class="form-row col-12">
                 <!--- Left column- Plan/Notes-->
-                <div id="LeftColumn" class="col-5 p-3 border rounded">
+                <div id="LeftColumn" class="col-xs-12 col-sm-5 p-3 border rounded">
                     <h4>
                         <i class="fas fa-diagnoses mr-2"></i>
                         C/C:
                     </h4>
-                    <div id="PrescriptionCCDiv" class="mb-5 border rounded">
-                        <ul>
-                            <li>Migraine</li>
-                            <li>Headache</li>
-                            <li>Loss of appetite</li>
-                            <li>Blurred Vision</li>
+                    <div id="PrescriptionCCDiv" class="mb-5">
+                        <!-- CC will be inserted here in UL format-->
+                        <ul id="PrescriptionCCListUL" class="list-group">
+                            <!-- CC list will be inserted here -->
                         </ul>
                     </div>
 
@@ -68,20 +81,18 @@
 
                     <h4><i class="fas fa-comment-medical mr-2"></i>Notes</h4>
                     <div id="PrescriptionPreviewNotesDiv" class="mb-5 p-2 border rounded">
-                        Notes about the patient. What the doctor has observed or something extra info
+                        @*Notes about the patient. What the doctor has observed or something extra info*@
                     </div>
 
                     <h4><i class="fas fa-laptop-medical mr-2"></i>Plan</h4>
                     <div id="PrescriptionPreviewPlanDiv" class="mb-5 p-2 border rounded">
-                        Doctor will write future plan here. <br />
-                        Next appointment date: 2 weeks later<br />
-                        Test: Blood Himoglobin, HRV
+                        <!--- WIll insert Plan and Advise here -->
 
                     </div>
                 </div>
 
                 <!--- Right column- Actual medicine items -->
-                <div id="PreviewModaBodyDiv" class="col-7">
+                <div id="PreviewModaBodyDiv" class="col-xs-12 col-sm-7">
 
                     <div id="PrintPreviewContainer" class="modal-body p-3 mb-3 border rounded">
                         <h4>Actual medicine items</h4>
@@ -121,7 +132,7 @@
 
 
             <div class="modal-footer">
-                <button id="ConfirmAndPrintPrescriptionButton" type="button" class="btn btn-default" >Confirm &amp; Print</button>
+                <button id="ConfirmAndPrintPrescriptionButton" type="button" class="btn btn-default">Confirm &amp; Print</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>

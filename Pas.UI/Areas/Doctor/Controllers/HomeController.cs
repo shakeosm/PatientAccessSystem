@@ -60,18 +60,9 @@ namespace Pas.UI.Areas.Doctor.Controllers
                 //DoctorDetails = null
             };
 
-            //## Re-factor UserDetails- 'Doctor' type values     
             SetDoctorsProfileValues(currentUser);            
             
             return View(vm);
-        }
-
-        private void SetDoctorsProfileValues(AppUserDetailsVM currentUser)
-        {
-            currentUser.Name = "Dr. " + currentUser.Name;
-            //currentUser.AddressBook.LocalArea = currentUser.CurrentRole.OrganisationName;     //## Current Selected Chamber
-            currentUser.ImageUrl = "user-3.png";
-            ViewBag.UserDetails = currentUser;
         }
 
         //private async Task<AppUserDetailsVM> GetCurrentUser()
@@ -109,7 +100,6 @@ namespace Pas.UI.Areas.Doctor.Controllers
                 DoctorDetails = null
             };
             
-            //## Re-factor UserDetails- 'Doctor' type values     
             SetDoctorsProfileValues(currentUser);
 
             return View(vm);
@@ -166,9 +156,6 @@ namespace Pas.UI.Areas.Doctor.Controllers
                 }
             };
 
-            //var patientPreviousPrescriptions
-
-            //## Re-factor UserDetails- 'Doctor' type values     
             SetDoctorsProfileValues(currentUser);
 
             return View(vm);
@@ -211,11 +198,8 @@ namespace Pas.UI.Areas.Doctor.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Drugs()
-        {
-            
-            
+        {            
             return View();
-
         }
     }
 }
