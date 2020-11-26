@@ -105,8 +105,7 @@ namespace Pas.Service
             //var userEmail = Context.HttpContext.User.FindFirst(ClaimTypes.Email).Value;
             //if (userEmail is null) return null;     //## Unauthenticated User
 
-            AppUserDetailsVM currentUser = _cacheService.GetCacheValue<AppUserDetailsVM>(userEmail);
-            IEnumerable<UserRoleVM> userRoles = null;
+            AppUserDetailsVM currentUser = _cacheService.GetCacheValue<AppUserDetailsVM>(userEmail);            
 
             if (currentUser is null) {
                 currentUser = _appUserService.FindByEmail(userEmail);   //## No CurrentUser info in RedisCache- Read from Table
@@ -145,43 +144,44 @@ namespace Pas.Service
                     }
 
                     //## Set the Roles in the Cache
-                    SetUserRolesInCache(userRoles, currentUser.Id);
+                    //SetUserRolesInCache(userRoles, currentUser.Id);
 
                 }
                 else {
                     //## This is a Patient Only
                     currentUser.ApplicationRole = ApplicationRole.Patient;
                 }
-
-
-                //## Current User seems to have multiple roles- is this User a Doctor, as well? Then read the Degrees and Specialities of this Doctor
-                if (currentUser.Is_A_Doctor() && currentUser.DoctorDetails is null)
-                {
-                    var specialities = await _appUserService.Get_DoctorSpeciality(currentUser.Id);
-                    var doctorDegreeList = await _appUserService.Get_DoctorDegrees(currentUser.Id);
-
-                    var doctorProfile = await _context.DoctorProfile.FindAsync(currentUser.Id);
-
-                    DoctorDetailsVM doctor = new DoctorDetailsVM() { 
-                        Id = currentUser.Id,
-                        Name = currentUser.Name,
-                        BanglaName = currentUser.BanglaName,
-                        SpecialityList  = specialities,
-                        DoctorDegreeList = doctorDegreeList,
-
-                        RegistrationNumber = doctorProfile.RegistrationNumber,
-                        HeaderEnglish = doctorProfile.HeaderEnglish,
-                        HeaderBangla = doctorProfile.HeaderBangla
-                    };
-
-                    currentUser.DoctorDetails = doctor;
-                }
-
+                
                 //## Now set the entire CurrentUserVM in the Cache- so we will have everything we need
                 SetActiveUserInCache(currentUser);
             }
 
-            //if (cachedUser is null) return null;     //## First Time Logged in- no cache value
+            //## Current User seems to have multiple roles- is this User a Doctor, as well? Then read the Degrees and Specialities of this Doctor
+            if (currentUser.Is_A_Doctor() && currentUser.DoctorDetails is null)
+            {
+                var specialities = await _appUserService.Get_DoctorSpeciality(currentUser.Id);
+                var doctorDegreeList = await _appUserService.Get_DoctorDegrees(currentUser.Id);
+
+                var doctorProfile = await _context.DoctorProfile.FindAsync(currentUser.Id);
+
+                DoctorDetailsVM doctor = new DoctorDetailsVM()
+                {
+                    Id = currentUser.Id,
+                    Name = currentUser.Name,
+                    BanglaName = currentUser.BanglaName,
+                    SpecialityList = specialities,
+                    DoctorDegreeList = doctorDegreeList,
+
+                    RegistrationNumber = doctorProfile.RegistrationNumber,
+                    HeaderEnglish = doctorProfile.HeaderEnglish,
+                    HeaderBangla = doctorProfile.HeaderBangla
+                };
+
+                currentUser.DoctorDetails = doctor;
+                
+                SetActiveUserInCache(currentUser);  //## Update in the Cache- with this Doctor's Details
+            }
+
 
             return currentUser;
         }

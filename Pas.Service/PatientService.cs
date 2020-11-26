@@ -332,6 +332,32 @@ namespace Pas.Service
             return true;
         }
 
+        public async Task<int> UpdateAddressBook(AddressBookVM vm)
+        {
+            if (vm.PatientId < 1) return 0;
+
+            AddressBook ab = new AddressBook() {
+                UserId = vm.PatientId,
+                AddressLine1 = vm.AddressLine1,
+                LocalArea = vm.LocalArea,
+                CityId = vm.CityId,
+                DateCreated = DateTime.Now
+            };
+
+            await _pasContext.AddressBooks.AddAsync(ab);
+            await _pasContext.SaveChangesAsync();
+
+            return ab.Id;   //## Return the newly inserted RecordId
+        }
+
+        public bool UpdateAddressInCache(AddressBookVM addressBook, AppUserDetailsVM user)
+        {
+            user.AddressBook = addressBook;
+            _cacheService.SetCacheValue(user.Email, user);
+
+            return true;
+        }
+
         /// <summary>This will Map list of Medications to MedicationListVM- 
         /// which will be used in Patient's Profile- as a Doctor/Patient or while creating a Prescription</summary>
         /// <param name="patientMedications">List of Prescription Drugs</param>

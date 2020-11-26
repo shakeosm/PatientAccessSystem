@@ -164,12 +164,77 @@ namespace Pas.Service
 
         }
 
-        public async Task<bool> Create_Prescription_HTML(int prescriptionId, string prescriptionContents)
+        public async Task<bool> Prescription_FinishAndCreate_HTML(PrescriptionConfirmSaveAndFinishVM vm)
         {
-            string filePath = $"C:\\Shawkat\\dummy\\prescription\\p-{prescriptionId}.html";
+            string filePath = $"C:\\Shawkat\\dummy\\prescription\\p-{vm.PrescriptionId}.html";
+
+            //## Chief Complaints - INSERT
+            foreach (var item in vm.ccList)
+            {
+                PrescriptionChiefComplaints cc = new PrescriptionChiefComplaints() { 
+                    PrescriptionId = vm.PrescriptionId,
+                    PatientId= vm.PatientId,
+                    SymptomId = item
+                };
+
+                _pasContext.PrescriptionChiefComplaints.Add(cc);
+            }
+
+            //## Indications/ Diagnosis
+            var diagnosisList = vm.Diagnosis.Split(",", StringSplitOptions.RemoveEmptyEntries);
+            foreach (var item in diagnosisList)
+            {
+                int diagnosisId = Convert.ToInt32(item);
+                PatientIndications pi = new PatientIndications()
+                {
+                    PrescriptionId = vm.PrescriptionId,
+                    PatientId = vm.PatientId,
+                    IndicationTypeId = diagnosisId
+                };
+
+                _pasContext.PatientIndications.Add(pi);
+            }
+
+
+
+            //##    LabTestRequestList
+            var labTestRequestList = vm.LabTestRequestList.Split(",", StringSplitOptions.RemoveEmptyEntries);
+            foreach (var item in labTestRequestList)
+            {
+                int testId = Convert.ToInt32(item);
+                PrescriptionDiagnosticTest pdt = new PrescriptionDiagnosticTest()
+                {
+                    PrescriptionId = vm.PrescriptionId,                    
+                    DiagnosticTestId = testId
+                };
+
+                _pasContext.PrescriptionDiagnosticTest.Add(pdt);
+            }
+
+            Prescription prescription = await _pasContext.Prescription.FindAsync(vm.PrescriptionId);
+            prescription.Status = (int)PrescriptionStatus.Complete;
+            prescription.IsRepeatingVisit = vm.IsFollowUpVisit;
+            prescription.Notes = vm.Notes;
+            prescription.Plans = vm.Plans;
+            prescription.Advise = vm.Advise;
+            prescription.ReferralDoctor = vm.ReferralDoctor;
+            prescription.DateCreated = DateTime.Now;
+
+            _pasContext.Prescription.Update(prescription);
+
+            try
+            {
+                await _pasContext.SaveChangesAsync();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
             using (StreamWriter writer = System.IO.File.CreateText(filePath))
             {
-                writer.WriteLine(prescriptionContents);
+                writer.WriteLine(vm.HtmlContents);
             }
 
             return await Task.FromResult(true);

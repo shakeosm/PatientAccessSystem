@@ -30,7 +30,16 @@ namespace Pas.Data.Models
         [Column(TypeName = "nvarchar(1000)")]
         public string Notes { get; set; }
 
+        [Column(TypeName = "nvarchar(500)")]
+        public string Plans { get; set; }
+
+        [Column(TypeName = "nvarchar(500)")]
+        public string Advise { get; set; }
+        
         public bool? IsRepeatingVisit { get; set; }
+
+        public string ReferralDoctor { get; set; }
+
         public int? PreviousPrescriptionId { get; set; }
 
         public int Status { get; set; }

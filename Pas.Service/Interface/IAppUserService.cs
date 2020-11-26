@@ -33,5 +33,6 @@ namespace Pas.Service.Interface
         /// <param name="email">Doctor Email- to get the Cache value</param>
         /// <returns></returns>
         Task<HospitalDetailsVM> Get_DoctorChamber(string email);
+        Task<bool> UpdatePrescriptionHeader(DoctorDetailsUpdateVM vm, AppUserDetailsVM currentUser);
     }
 }

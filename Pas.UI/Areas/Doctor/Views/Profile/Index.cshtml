@@ -16,6 +16,10 @@
         <div class="card-body">
             <div class="form-row">
 
+                <form id="DoctorProfileForm" action="/" method="post">
+                    @Html.AntiForgeryToken()
+                </form>
+
                 <div class="col-8">
                     <span class="float-left">
                         <span style="font-size: 3em; color: Mediumslateblue;">
@@ -97,7 +101,7 @@
                 <div class="card border">
                     <div class="card-header py-2">
                         <div class="card-title">
-                            Prescription Header Preview
+                            Prescription Header
                         </div>
                     </div>
 
@@ -106,32 +110,76 @@
                         <div id="PrescriptionEnglishHeader" class="col-6">
                             <div class="card">
                                 <div class="card-body">
-                                    <p class="card-text">
-                                        Dr Rawnak Jahan <br />
-                                        MBBS, MRCOG (England) <br />
-                                        Belle Vue Hospital<br />
-                                        Gynea, Medicine, Surgery<br />
-                                        Govt Reg: 0123456<br />
+                                    <p class="card-text mb-0 font-weight-bold">
+                                        Dr @Model.Name <br />
                                     </p>
-                                    <a href="#" class="btn btn-primary btn-pills waves-effect waves-themed" role="button">
-                                        <span class="fal fa-edit mr-1"></span>&nbsp;Edit
-                                    </a>
+                                    @*<div id="HeaderEnglishPreviewDiv">
+                                        <pre>
+                                        @Model.DoctorDetails.HeaderEnglish.Trim()<br />
+                                        </pre>
+                                        Govt Reg: @Model.DoctorDetails.RegistrationNumber
+                                        <div class="form-row mt-2">
+                                            
+                                        </div>
+                                    </div>*@
+
+                                    <div id="HeaderEnglishEditDiv" class="mb-2">
+                                        <textarea id="HeaderEnglish" rows="4" 
+                                                  class="form-control header-input-boxes" disabled>@Model.DoctorDetails.HeaderEnglish</textarea>
+
+                                        <div class="input-group mt-2 mb-2">
+                                            <div class="input-group-prepend">
+                                                <label for="GovtRegNumberInput" class="input-group-text">Govt Registration Number:</label>
+                                            </div>
+                                            <input id="RegistrationNumber" class="form-control header-input-boxes"
+                                                   aria-label="Registration Number Input"
+                                                   value="@Model.DoctorDetails.RegistrationNumber" disabled />
+
+                                        </div>
+                                        <button class="btn btn-primary btn-pills waves-effect waves-themed edit-header-text-button">
+                                            <span class="fal fa-edit mr-1"></span>&nbsp;Edit
+                                        </button>
+                                        <button id="SaveHeaderEnglishButton" 
+                                                class="btn btn-primary btn-pills waves-effect waves-themed d-none update-header-text-button">
+                                            <span class="fal fa-save mr-1"></span>&nbsp;Update
+                                        </button>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
                         <div id="PrescriptionBanglaHeader" class="col-6">
                             <div class="card">
                                 <div class="card-body">
-                                    <p class="card-text">
-                                        ডাঃ রউনক জাহান এমবিবিএস,  <br />
-                                        এম আর সি ও জি (ইংল্যান্ড) <br />
-                                        গাইনি, মেডিসিন, সার্জারি বিশেষজ্ঞ <br />
-                                        বেল ভিউ হাসপাতাল  <br />
-                                        গভঃ রেজি: ০১২৩৪৫৬
+                                    <p class="card-text mb-0 font-weight-bold">
+                                        ডাঃ @Model.BanglaName
                                     </p>
-                                    <a href="#" class="btn btn-primary btn-pills waves-effect waves-themed" role="button">
-                                        <span class="fal fa-edit mr-1"></span>&nbsp;Edit
-                                    </a>
+
+                                    <div id="HeaderEnglishEditDiv" class="mb-2">
+                                        <textarea id="HeaderBangla" rows="4"
+                                                  class="form-control header-input-boxes" disabled>@Model.DoctorDetails.HeaderBangla</textarea>
+
+                                        <div class="input-group mt-2 mb-2">
+                                            <div class="input-group-prepend">
+                                                <label for="GovtRegNumberInput" class="input-group-text">গভঃ রেজি:</label>
+                                            </div>
+                                            <input asp-for="@Model.DoctorDetails.RegistrationNumber" class="form-control"
+                                                   aria-label="Registration Number Input"
+                                                   value="@Model.DoctorDetails.RegistrationNumber" disabled />
+
+                                        </div>
+                                        <button class="btn btn-primary btn-pills waves-effect waves-themed edit-header-text-button">
+                                            <span class="fal fa-edit mr-1"></span>&nbsp;Edit
+                                        </button>
+                                        <button id="SaveHeaderBanglaButton"
+                                                class="btn btn-primary btn-pills waves-effect waves-themed d-none update-header-text-button">
+                                            <span class="fal fa-save mr-1"></span>&nbsp;Update
+                                        </button>
+                                        <a href="https://www.google.com/intl/bn/inputtools/try/" target="newWindow">
+                                            <span class="fal fa-window-restore mr-1"></span>গুগল এর বাংলায় টাইপ
+                                        </a>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -288,3 +336,8 @@
     </div>
 
 </div>
+
+@section Scripts{ 
+    <script src="~/js/doctor/doctor-profile.js"></script>
+
+}

@@ -14,36 +14,37 @@
         <!-- Modal content-->
         <div id="PreviewContentsDiv" class="modal-content" style="">
             <div id="HeaderDiv" class="form-row col-12">
-                <div class="mobile-device-preview d-sm-none col-xs-12">
-                    <div class="h2 patient-name">[Patient name - age - gender will be inserted here]</div>
-                    <div class="prescription-date">Date: 20 Nov 2020 20:30</div>
+                <div class="mobile-device-preview d-sm-none col-xs-12 d-print-none">
+                    <div class="h2 patient-name-age-gender">
+                        <!-- Patient Details will be inserted here- For Mobile Device View-->
+                    </div>
+                    <div class="prescription-date">
+                        @DateTime.Now.ToDisplay()
+                    </div>
                 </div>
 
                 <div class="col-xs-12 col-sm-6 border rounded p-3">
                     <h4>@chamber.Name</h4>
                     <p>
                         @chamber.HeaderEnglish
-                    </p>
-                    <p class="d-none">
-                        Panchlaish, Chattogram-4100<br />
-                        Phone: 031-123456<br />
-                        Email: info@bellevue.com
-                    </p>
+                    </p>                    
                 </div>
                 <div class="col-xs-12 col-sm-6 border rounded p-3 text-right">
                     <h5 class="text-primary">Dr @doctor.Name</h5>
-                    <p>
+                    <textarea class="col-12 border-0 text-right p-0" rows="4" readonly>@doctor.DoctorDetails.HeaderEnglish</textarea>
+                       
+                    @*<p>
                         @doctor.DoctorDetails.DoctorDegrees()<br />
                         Speciality in @doctor.DoctorDetails.Specialities()<br />
                         
-                    </p>
+                    </p>*@
                 </div>
             </div>
             <div id="PrescriptionPreviewPatientDetails" class="form-row col-12 d-none d-sm-block">
-                <div class="h6 text-info col-6 patient-name">
+                <div class="h6 text-info col-6 patient-name-age-gender">
                     <!-- Patient Details will be inserted here-->
                 </div>
-                <div class="h6 col-6 text-right float-right">Date: @DateTime.Today.ToDisplay()</div>
+                <div class="h6 col-6 text-right float-right">Date: @DateTime.Now.ToDisplay()</div>
                 <div class="col-12 patient-address"><!-- Address will be inserted here --></div>
             </div>
             <div id="BodyDiv" class="form-row col-12">
@@ -64,7 +65,8 @@
                         <i class="fas fa-stethoscope mr-2"></i>
                         Examination:
                     </h4>
-                    <div id="PrescriptionVitalsDiv" class="mb-5 text-center">
+                    @* This block will be visible only for small devices and Upper *@
+                    <div id="PrescriptionVitalsDiv" class="mb-5 text-center d-none d-sm-block">
                         <div class="form-row col-12 border-bottom thead-themed">
                             <div class="col-4">Temperature</div>
                             <div class="col-2">Pulse</div>
@@ -79,15 +81,29 @@
                         </div>
                     </div>
 
+                    @* This block is sonly for Small Mobile devixes (xs)- Hidden only on xs *@
+                    <div id="PrescriptionVitalsDivMobile" class="mb-5 text-center d-block d-sm-none">
+                        <ul class="list-group text-left">
+                            <li class="list-group-item">Temperature: <span class="vital-temperature"> </span></li>
+                            <li class="list-group-item">Pulse: <span class="vital-pulse"> </span></li>
+                            <li class="list-group-item">Pressure: <span class="vital-pressure"> </span></li>
+                            <li class="list-group-item">Weight: <span class="vital-weight"> </span></li>
+                        </ul>
+                    </div>
+
+
                     <h4><i class="fas fa-comment-medical mr-2"></i>Notes</h4>
                     <div id="PrescriptionPreviewNotesDiv" class="mb-5 p-2 border rounded">
-                        @*Notes about the patient. What the doctor has observed or something extra info*@
+                        <ul id="PrescritionPreviewNotesSelectList">
+                            @*Notes about the patient. What the doctor has observed or something extra info*@    
+                        </ul>
                     </div>
 
                     <h4><i class="fas fa-laptop-medical mr-2"></i>Plan</h4>
                     <div id="PrescriptionPreviewPlanDiv" class="mb-5 p-2 border rounded">
-                        <!--- WIll insert Plan and Advise here -->
-
+                        <ul id="PrescritionPreviewPlanSelectList">
+                            <!--- WIll insert Plan and Advise here -->                            
+                        </ul>
                     </div>
                 </div>
 
@@ -104,12 +120,12 @@
                         <h4><i class="fas fa-lightbulb mr-2"></i>Advise</h4>
                         <div id="PrescritionPreviewAdvise">
                             <!-- we will dump here Advise List-->
-                        </div>
-                        <ul>
+                        <ul id="PrescritionPreviewAdviseSelectList">
                             <li>Drink plenty of water</li>
                             <li>Walk 30 mins daily</li>
                             <li>At least 7 hours sleep</li>
                         </ul>
+                        </div>
                     </div>
 
                     <div class="col-12 border-top p-3">
@@ -131,9 +147,34 @@
 
 
 
-            <div class="modal-footer">
-                <button id="ConfirmAndPrintPrescriptionButton" type="button" class="btn btn-default">Confirm &amp; Print</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <div class="modal-footer d-print-none">
+                <div id="SaveSuccessConfirm" class="alert alert-success col-8 d-none">
+                    This prescription is successfully saved! Now you can print and the Patient can also view it online.<br/>
+                    Click on Close to go back to 'Patient Search' page.
+                </div>
+
+                @*This checkbox and the FinishButton- both will be hidden- iniitially. If there is no item in the Prescription-DrugList- then - you can't FINISH a Prescription*@
+                <div id="DisclaimerCheckBoxDiv" class="custom-control custom-checkbox my-1 mr-sm-2 d-none">
+                    <input type="checkbox" class="custom-control-input" id="ConfirmFinishCheckbox">
+                    <label class="custom-control-label" for="ConfirmFinishCheckbox">Confirm all checks are done and Ready to print</label>                
+                </div>
+                <button id="PrescriptionFinishButton" type="button" 
+                    tooltip="Finish Prescription"
+                    class="btn btn btn-primary d-none" disabled>                
+                    <i class="fal fa-check-circle fa-lg mr-2 d-none"></i>Finish
+                </button>
+
+
+
+                <button type="button" id="PrescriptionPrintButton"
+                        data-toggle="tooltip" data-placement="left" title="Print Preview"
+                        class="btn btn-primary waves-effect waves-themed float-right d-none">
+                    <i class="fal fa-print fa-lg mr-2"></i>
+                    Print
+                </button>
+                
+                <button id="ClosePreviewDialogButton" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <a href="/Doctor/Home/SearchPatient" id="BackToPatientSearchButton" type="button" class="btn btn-default d-none">Close</a>
             </div>
         </div>
 

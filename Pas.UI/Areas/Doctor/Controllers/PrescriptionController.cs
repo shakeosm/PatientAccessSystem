@@ -35,7 +35,7 @@ namespace Pas.UI.Areas.Doctor.Controllers
             _patientService = PatientService;
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> Create(int id)
         {
             AppUserDetailsVM currentUser = await GetCurrentUser();
@@ -45,22 +45,31 @@ namespace Pas.UI.Areas.Doctor.Controllers
                 return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
             }
 
+            PrescriptionCreateInitialVM vm = new PrescriptionCreateInitialVM()
+            {
+                HospitalId = currentUser.CurrentRole.OrganisationId,
+                DoctorId = currentUser.Id,
+                PatientId = id
+            };
 
-            if (id < 1) 
-                return RedirectToAction("SearchPatient", "Home", new { Area = "Doctor" });
+            int prescriptionId = await _prescriptionService.CreateInitialDefault(vm);
+
+
+            //if (id < 1) 
+            //    return RedirectToAction("SearchPatient", "Home", new { Area = "Doctor" });
 
             //## we get the PrescriptionId via Post call. use that to get Prescription info- Doctor, Hospital, Patient
             //## Doctor has already initiated a "New Prescription" from "Doctor/Home/StartNewPrescription()"- which is their Home page
-            var prescription = await _prescriptionService.Find(id);
+            //var prescription = await _prescriptionService.Find(id);
             
-            if (prescription is null || prescription.Status != (int) PrescriptionStatus.Draft) 
-                return RedirectToAction("SearchPatient", "Home", new { Area = "Doctor" });
+            //if (prescription is null || prescription.Status != (int) PrescriptionStatus.Draft) 
+            //    return RedirectToAction("SearchPatient", "Home", new { Area = "Doctor" });
 
 
-            var newPrescriptionId = prescription.Id;
+            //var newPrescriptionId = prescription.Id;
 
             var chamber = await _appUserService.Get_DoctorChamber(currentUser.Email);
-            AppUserDetailsVM patientDetails = await _appUserService.Find(prescription.PatientId, includeAddressBook: true);
+            AppUserDetailsVM patientDetails = await _appUserService.Find(vm.PatientId, includeAddressBook: true);
 
             ClinicalHistoryVM clinicialInfo = await _patientService.GetClinicalDetails(patientDetails.Id);            
             //var chiefComplaints = await _patientService.GetPatientChiefComplaints(patientDetails.Id);
@@ -68,9 +77,9 @@ namespace Pas.UI.Areas.Doctor.Controllers
             //## PrescriptionCreateVM- will have all necessary info to make a Prescription- 
             //## When the Doc needs to see preview of Prescription before Print/Save
 
-            var vm = new PrescriptionCreateVM()
+            var prescriptionVM = new PrescriptionCreateVM()
             {
-                Id = newPrescriptionId,
+                Id = prescriptionId,
                 Doctor = currentUser, //## Doctor details is at- AppUserDetailsVM.DoctorDetailsVM()
                 ChamberDetails = chamber,
                 PatientDetails = patientDetails,
@@ -81,7 +90,7 @@ namespace Pas.UI.Areas.Doctor.Controllers
             //## Re-factor UserDetails- 'Doctor' type values     
             SetDoctorsProfileValues(currentUser);
 
-            return View(vm);
+            return View(prescriptionVM);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -114,7 +123,7 @@ namespace Pas.UI.Areas.Doctor.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create_Prescription_HTML(int id, string contents)
+        public async Task<IActionResult> Create_Prescription_HTML(PrescriptionConfirmSaveAndFinishVM vm)
         {
             AppUserDetailsVM currentUser = await GetCurrentUser();
 
@@ -123,9 +132,10 @@ namespace Pas.UI.Areas.Doctor.Controllers
                 return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
             }
 
-            var result = await _prescriptionService.Create_Prescription_HTML(id, contents);
+            var result = await _prescriptionService.Prescription_FinishAndCreate_HTML(vm);
 
-            return Json(result ? "success" : "fail");
+            return Json("success");
+            //return Json(result ? "success" : "fail");
 
         }
 

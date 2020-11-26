@@ -9,6 +9,8 @@ namespace Pas.Web.ViewModels
     {
         public int Id { get; set; }
         
+        public int PatientId { get; set; }
+        
         [Required]
         public string AddressLine1 { get; set; }
 

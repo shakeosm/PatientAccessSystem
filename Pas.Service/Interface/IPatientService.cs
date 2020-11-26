@@ -22,5 +22,7 @@ namespace Pas.Service.Interface
 
         Task<IEnumerable<DrugDetailsVM>> GetRecentMedication(int id);
         Task<bool> UpdatePersonalHistory(PatientPersonalHistoryVM vm);
+        Task<int> UpdateAddressBook(AddressBookVM vm);
+        bool UpdateAddressInCache(AddressBookVM addressBook, AppUserDetailsVM user);
     }
 }

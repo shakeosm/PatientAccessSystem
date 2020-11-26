@@ -31,7 +31,7 @@ namespace Pas.Service
         public async Task<AppUserDetailsVM> Find(int id, bool includeAddressBook = false, bool trackingEnabled = false)
         {
             
-            var cacheKey = $"Find_AppUserDetailsVM_{id}";    //## Current Doctor-looking-for-Patient-and-Name for that Key
+            var cacheKey = $"{CacheKey.PatientDetails}_{id}";    //## Current Doctor-looking-for-Patient-and-Name for that Key
 
             var cachedResult = _cacheService.GetCacheValue<AppUserDetailsVM>(cacheKey); //## First always check in the Cache- have we read it previosly?
             if (cachedResult?.AddressBook is null && includeAddressBook)
@@ -171,7 +171,7 @@ namespace Pas.Service
                 Email = appUser.Email,
 
                 ShortId = appUser.ShortId ?? "",  
-                AddressBook = MapToAddressBookVM(appUser.AddressBooks),
+                AddressBook = MapToAddressBookVM(appUser.AddressBooks.OrderByDescending(ab=> ab.Id).FirstOrDefault()),
 
                 HasMultipleRoles = appUser.UserOrganisationRoles.Any()
             };
@@ -185,23 +185,23 @@ namespace Pas.Service
             return mappedVM;
         }
 
-        private AddressBookVM MapToAddressBookVM(ICollection<AddressBook> addressBooks)
+        private AddressBookVM MapToAddressBookVM(AddressBook ab)
         {
-            if (addressBooks is null)
+            if (ab is null)
             {
                 return new AddressBookVM();
             }
             else {
-                var firstAddress = addressBooks.Select(ab => new AddressBookVM()
+                var latestAddress = new AddressBookVM()
                 {
                     AddressLine1 = ab.AddressLine1,
                     City = ((Common.Enums.City)ab.CityId).ToString(),
                     CityId = ab.CityId,
                     LocalArea = ab.LocalArea,
                     Id = ab.Id
-                });
+                };
 
-                return firstAddress.FirstOrDefault();
+                return latestAddress;
             }
         }
 
@@ -212,17 +212,22 @@ namespace Pas.Service
             {
                 //Address = (u.AddressBooks.Count() >= 1 ? u.AddressBooks.FirstOrDefault().AddressLine1 : ""),
                 //AddressAreaLocality = (u.AddressBooks.Count() >= 1 ? u.AddressBooks.FirstOrDefault().LocalArea : ""),
-                AddressBook = MapToAddressBookVM(u.AddressBooks),
-                Age = u.Age,
+
+                AddressBook = MapToAddressBookVM(u.AddressBooks
+                                                         .OrderByDescending(ab => ab.Id)
+                                                         .FirstOrDefault()),
+
+                Id = u.Id,
+                ShortId = u.ShortId,
+                Name = $"{u.FirstName} {u.LastName}",
                 BanglaName = u.BanglaName,
+                Age = u.Age,
+                Gender = (Gender)u.Gender,
                 DateOfBirth = u.DateOfBirth.Value.ToDDMMMYYYY(),
                 Email = u.Email,
-                Gender = (Gender)u.Gender,
-                HasMultipleRoles = u.UserOrganisationRoles.Any(),
-                Id = u.Id,
-                Mobile = u.Mobile,
-                Name = $"{u.FirstName} {u.LastName}",
-                ShortId = u.ShortId
+                Mobile = u.Mobile
+                //HasMultipleRoles = u.UserOrganisationRoles.Any(),                                
+                
             }).ToList();
 
 
@@ -327,6 +332,25 @@ namespace Pas.Service
 
         }
 
+        public async Task<bool> UpdatePrescriptionHeader(DoctorDetailsUpdateVM vm, AppUserDetailsVM currentUser)
+        {
+            DoctorProfile dp = await _context.DoctorProfile.FindAsync(currentUser.Id);
+            dp.RegistrationNumber = vm.RegistrationNumber;
+            dp.HeaderBangla = vm.HeaderBangla;
+            dp.HeaderEnglish = vm.HeaderEnglish;
+            
+            _context.DoctorProfile.Update(dp);
+            await _context.SaveChangesAsync();
 
+            //## Now Update the Value in Redis Cache
+            currentUser.DoctorDetails.RegistrationNumber = vm.RegistrationNumber;
+            currentUser.DoctorDetails.HeaderEnglish = vm.HeaderEnglish;
+            currentUser.DoctorDetails.HeaderBangla= vm.HeaderBangla;
+
+            _cacheService.SetCacheValue(currentUser.Email, currentUser);
+
+
+            return true;
+        }
     }
 }

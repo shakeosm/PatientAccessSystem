@@ -103,6 +103,28 @@ namespace Pas.Web.ViewModels
         public string ModeOfDelivery { get; set; }
     }
 
+    public class PrescriptionConfirmSaveAndFinishVM
+    {
+        public int PrescriptionId { get; set; }
+        public int PatientId { get; set; }
+        public string HtmlContents { get; set; }
+        
+        /// <summary>List of Chief Complaints- in String Array</summary>
+        public IList<int> ccList { get; set; }
+        
+        /// <summary>This is list of Diagnosis- comma separated</summary>
+        public string Diagnosis { get; set; }
+
+        /// <summary>This is list of LabTest Requested- comma separated</summary>
+        public string LabTestRequestList { get; set; }
+
+        public string Notes { get; set; }
+        public string Plans { get; set; }
+        public string Advise { get; set; }
+        public string ReferralDoctor { get; set; }
+        public bool IsFollowUpVisit { get; set; }        
+    }
+
 
 
 }

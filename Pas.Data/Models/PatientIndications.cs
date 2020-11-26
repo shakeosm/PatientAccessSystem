@@ -18,10 +18,7 @@ namespace Pas.Data.Models
         
         [Required]
         public int IndicationTypeId { get; set; }       
-
-        [Column(TypeName = "datetime2(3)")]
-        public DateTime DateAddedd { get; set; }
-
+        
         public virtual Prescription Prescription { get; set; }
 
         public virtual User Patient { get; set; }

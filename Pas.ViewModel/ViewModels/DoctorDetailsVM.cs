@@ -42,6 +42,22 @@ namespace Pas.Web.ViewModels
         }
     } /*End of DoctorDetailsVM*/
 
+    public class DoctorDetailsUpdateVM
+    {
+        public int Id { get; set; }
+        public string Acheivements { get; set; }
+        public string AcheivementsBangla { get; set; }
+        public string Speciality { get; set; }
+        public string SpecialityBangla { get; set; }
+        public string RegistrationNumber { get; set; }
+
+        public string HeaderEnglish { get; set; }
+
+        public string HeaderBangla { get; set; }
+
+    } /*End of DoctorDetailsVM*/
+
+
     public class SpecialityVM
     {
         public string Name { get; set; }

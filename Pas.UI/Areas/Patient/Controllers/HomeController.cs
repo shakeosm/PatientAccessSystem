@@ -88,5 +88,24 @@ namespace Pas.UI.Areas.Patient.Controllers
             return Json(result ? "success" : "fail");
         }
 
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateAddressBook(AddressBookVM vm)
+        {
+            if (vm.PatientId < 1) return Json(0);
+
+            var result = await _patientService.UpdateAddressBook(vm);
+            if(result> 0)
+            {
+                var currentUser = await GetCurrentUser();
+                var cacheUpdated = _patientService.UpdateAddressInCache(vm, currentUser);
+
+                //## All Done- now send Success/Fail
+                return Json(cacheUpdated ? "success" : "fail");
+            }
+
+            //## Failed to Insert record in AddressBook
+            return Json("fail");
+        }
+
     }
 }

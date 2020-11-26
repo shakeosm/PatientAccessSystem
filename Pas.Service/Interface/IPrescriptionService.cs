@@ -51,7 +51,7 @@ namespace Pas.Service.Interface
 
         Task<bool> Delete_PescriptionItem(int prescriptionItemId);
 
-        Task<bool> Create_Prescription_HTML(int prescriptionId, string prescriptionContents);
+        Task<bool> Prescription_FinishAndCreate_HTML(PrescriptionConfirmSaveAndFinishVM vm);
 
         Task<string> GetPrescription_HTML(int id);
         Task<int> Update_Vitals(VitalsVM vm);

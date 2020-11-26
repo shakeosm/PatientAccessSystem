@@ -3,11 +3,13 @@
 //## Following 2 lines are required for Ajax call to include AntiForgeryToken; to be used in all ProviderClaim Forms (Create/Edit)
 var form = $('#PatientProfileForm');
 var token = $('input[name="__RequestVerificationToken"]', form).val();
+
 var _dateOfBirth = "";
 var _dateOfBirth_YMD  = "";
-var _patientId = GetValue("UserId");
-$(document).ready(function () {
+var _patientId = -1;
 
+$(document).ready(function () {
+    _patientId = GetValue("UserId");
 
 });
 
@@ -130,37 +132,87 @@ $("#ContactDetailsEditButton").click(function () {
     $("#ContantDetailsCardModal").modal("show");
 });
 
-$("#ContactDetailsUpdateForm").validate({
-    rules: {
-        AddressLine1: {
-            required: true,
-            minlength: 3
-        },
-        LocalArea: {
-            required: true,            
-        },
-        CityId: {
-            required: true,
-            min: 1
-        },
-    }
-});
+//$("#ContactDetailsUpdateForm").validate({
+//    rules: {
+//        AddressLine1: {
+//            required: true,
+//            minlength: 3
+//        },
+//        LocalArea: {
+//            required: true,            
+//        },
+//        CityId: {
+//            required: true,
+//            min: 1
+//        },
+//    }
+//});
 
-$("#PersonalHistoryModalSubmitButton").click(function () {
+$("#ContactDetailsModalSubmitButton").click(function (e) {
     debugger;
 
-    //$("#ContactDetailsUpdateForm").validate();
-    var validator = $("#ContactDetailsUpdateForm").validate();
-    validator.form();
-
-    // If the form isn't valid, prevent the post
-    if (!$("#ContactDetailsUpdateForm").valid()) {
-        return false;
+    var cityId = GetValue("CityId");
+    if (cityId < 1) {
+        $("#DistrictValidationErrorSpan").removeClass("d-none");
+        e.preventDefault();
+        return;
     }
 
-    e.preventDefault();
+    $("#DistrictValidationErrorSpan").addClass("d-none");
+
+    //## Create FormData object
+    var formData = new FormData();
+
+    formData.append('__RequestVerificationToken', token);  //# AntiForgeryToken
+    formData.append('PatientId', _patientId);
+    formData.append('AddressLine1', GetValue("AddressLine1"));
+    formData.append('LocalArea', GetValue("LocalArea"));
+    formData.append('CityId', cityId);
+    formData.append('PostCode', GetValue("PostCode"));
+
+    var postUrl = "/Patient/Home/UpdateAddressBook";
+    
+    $.ajax({
+        url: postUrl,
+        type: "POST",
+        processData: false,  // Not to process data
+        contentType: false,  // tell jQuery not to set contentType- bcoz its FormData
+        data: formData,
+        success: function (result) {
+            if (result === "success") {
+                var fullAddress = GetValue("AddressLine1") + ", " + GetValue("LocalArea") + ", " + $("#CityId option:selected").text();
+                $("#ContactCardFullAddress").text(fullAddress);
+                $("#AddressBookLastUpdatedSpan").text("Last updated: Today");
+                $("#ContantDetailsCardModal").modal("hide");
+                $("#ContactDetailsEditButton").prop("disabled", true);
+            }
+            else {
+                $("#ContantDetailsCardModal").modal("hide");
+                OnFail_UpdatePersonalHistory("Error updating",
+                    "There was an error updating Patient's Patient's Address. Please reload this page and try again.");
+            }
+            console.log("UpdateAddressBook=> Success");
+        },
+        error: function (xhr, status, error) {
+            $("#ContantDetailsCardModal").modal("hide");
+            OnFail_UpdatePersonalHistory("Error updating",
+                "There was an error updating Patient's Address. Please reload this page and try again.<br/>Error: " + error);
+        }
+    });
+
+    ////$("#ContactDetailsUpdateForm").validate();
+    //var validator = $("#ContactDetailsUpdateForm").validate();
+    //validator.form();
+
+    //// If the form isn't valid, prevent the post
+    //if (!$("#ContactDetailsUpdateForm").valid()) {
+    //    return false;
+    //}
+
+    //e.preventDefault();
 
 });
+
 
 $("#EditAllergryListButton").click(function () {
 

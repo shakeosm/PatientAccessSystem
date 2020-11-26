@@ -13,13 +13,13 @@
         <p class="card-text">
             <i class="fa fa-address-book" aria-hidden="true"></i>&nbsp;
 
-            Address: @Model.FullAddress() <br /><br />
+            Address: <span id="ContactCardFullAddress">@Model.FullAddress()</span> <br /><br />
             <i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;Mobile: @Model.Mobile<br />
             <i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;Email: @Model.Email
         </p>
     </div>
     <div class="card-footer">
-        <small class="text-muted">Last updated: 3 months ago</small>
+        <small id="AddressBookLastUpdatedSpan" class="text-muted">Last updated: 3 months ago</small>
         <button id="ContactDetailsEditButton" class="btn btn-primary btn-icon waves-effect waves-themed float-right" role="button">
             <i class="fal fa-edit"></i>
         </button>

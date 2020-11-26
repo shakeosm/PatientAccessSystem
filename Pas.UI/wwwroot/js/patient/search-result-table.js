@@ -1,9 +1,11 @@
 ﻿$(document).ready(function () {
     $('#PatientSearchTable').DataTable({});
     //$('#RegularPatientDiv').DataTable({});
+    $("#PasLoaderbody").hide();
 
+    //## _patientSearchOption.cshtml
     $("#SearchPatientButton").click(function () {
-
+        debugger;
         return;
 
         var getUrl = "/Patient/Home/Search";
@@ -58,32 +60,32 @@
 });
 
 //## Following 2 lines are required for Ajax call to include AntiForgeryToken; to be used in all ProviderClaim Forms (Create/Edit)
-var form = $('#StartNewPrescriptionForm');
-var token = $('input[name="__RequestVerificationToken"]', form).val();
+//var form = $('#StartNewPrescriptionForm');
+//var token = $('input[name="__RequestVerificationToken"]', form).val();
 
-$(document).on("click", "#PatientSearchTable .create-new-prescription-button", function (e) {
-    //## Create FormData object
-    var formData = new FormData();
+//$(document).on("click", "#PatientSearchTable .create-new-prescription-button", function (e) {
+//    //## Create FormData object
+//    var formData = new FormData();
 
-    formData.append('id', 123);
-    formData.append('__RequestVerificationToken', token);  //# AntiForgeryToken
+//    formData.append('id', 123);
+//    formData.append('__RequestVerificationToken', token);  //# AntiForgeryToken
 
-    var postUrl = "";
+//    var postUrl = "";
 
-    $.ajax({
-        url: postUrl,
-        type: "POST",
-        processData: false,  // Not to process data
-        contentType: false,  // tell jQuery not to set contentType- bcoz its FormData
-        data: formData,
-        success: function (result) {
-            console.log("PatientSearchTable=> Success");
-        },
-        error: function (xhr, status, error) {
-            console.log("PatientSearchTable=> ERROR");
-            //ServiceFileUploadOnError(xhr, status, error);
-        }
-    });
-});
+//    $.ajax({
+//        url: postUrl,
+//        type: "POST",
+//        processData: false,  // Not to process data
+//        contentType: false,  // tell jQuery not to set contentType- bcoz its FormData
+//        data: formData,
+//        success: function (result) {
+//            console.log("PatientSearchTable=> Success");
+//        },
+//        error: function (xhr, status, error) {
+//            console.log("PatientSearchTable=> ERROR");
+//            //ServiceFileUploadOnError(xhr, status, error);
+//        }
+//    });
+//});
 
 

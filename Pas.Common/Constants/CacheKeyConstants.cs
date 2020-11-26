@@ -14,6 +14,7 @@ namespace Pas.Common.Constants
         public static string StrengthTypes = "StrengthTypes";        
         public static string BrandsForDiagnosis = "BrandsForDiagnosis";        
         public static string PatientChiefComplaints = "PatientChiefComplaints";        
+        public static string PatientDetails = "PatientDetails";        
         public static string PatientVitals = "PatientVitals";        
         public static string PersonalHistory = "PersonalHistory";        
         public static string IntakePatterns = "IntakePatterns";        

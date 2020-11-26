@@ -59,5 +59,24 @@ namespace Pas.UI.Areas.Doctor.Controllers
             return View();
         }
         
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdatePrescriptionHeader(DoctorDetailsUpdateVM vm)
+        {
+            AppUserDetailsVM currentUser = await GetCurrentUser();
+
+            if (currentUser.Not_A_Doctor())
+            {
+                return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
+            }
+            
+            vm.Id = currentUser.Id;
+
+            var result = await _appUserService.UpdatePrescriptionHeader(vm, currentUser);
+
+            return Json(result ? "success" : "fail");
+        }
+
+
+        
     }
 }

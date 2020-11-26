@@ -593,11 +593,17 @@ $(document).ready(function () {
                 if (response !== "0" || response !== "") {
                     $("#VitalsHistoryId").val(response);    //## Update the returned RecordId
 
-                    $("#PatientVitalsInfoDiv .vital-temperature").text(temperature);
-                    $("#PatientVitalsInfoDiv .vital-pulse").text(pulseInput);
-                    $("#PatientVitalsInfoDiv .vital-pressure").text(diastolic + "/" + systolic);
-                    $("#PatientVitalsInfoDiv .vital-weight").text(weight);
+                    $(".vital-temperature").text(temperature);
+                    $(".vital-pulse").text(pulseInput);
+                    $(".vital-pressure").text(diastolic + "/" + systolic);
+                    $(".vital-weight").text(weight);
                     //$("#PatientVitalsInfoDiv .vital-height").text(height);
+
+                    //## Update the value in PrintPreview, too.. save time
+                    //$("#PrescriptionVitalsDiv .vital-temperature").text(temp);
+                    //$("#PrescriptionVitalsDiv .vital-pulse").text(pulse);
+                    //$("#PrescriptionVitalsDiv .vital-pressure").text(pressure);
+                    //$("#PrescriptionVitalsDiv .vital-weight").text(weight);
 
                     //## Once success- then hide the Modal
                     $("#PatientVitalsModalPopup").modal("hide");
@@ -653,74 +659,90 @@ $(document).ready(function () {
 
     });
 
-
-    //## Last Action in the Presction-> "Finish And Print"
-    $("#FinishAndPrintButton").click(function(e) {
-
-        //## Do Validation. All fields are filled?
-
-        //## Now POST
-        var postUrl = "/Doctor/Prescription/FinishAndPreview";
-        debugger;
-
-        $.ajax({
-            type: "POST",
-            url: postUrl,
-            data: {
-                __RequestVerificationToken: token,  //# AntiForgeryToken__Validate : token,
-                "Id": _prescriptionId,
-            },
-            dataType: "json",
-            success: function (response) {
-                $("#PrescriptionMainContainer").html(response);
-                debugger;
-
-                console.log("success")
-            },
-            error: function (xhr, status, error) {
-                console.log("failed - FinishAndPrintButton.CLick() ");
-            }
-        });
-
+    $("#PrescriptionPrintButton").click(function () {
+        window.print();
     });
+    //## Last Action in the Presction-> "Finish And Print"
+    //$("#FinishAndPrintButton").click(function(e) {
+
+    //    //## Do Validation. All fields are filled?
+
+    //    //## Now POST
+    //    var postUrl = "/Doctor/Prescription/FinishAndPreview";
+    //    debugger;
+
+    //    $.ajax({
+    //        type: "POST",
+    //        url: postUrl,
+    //        data: {
+    //            __RequestVerificationToken: token,  //# AntiForgeryToken__Validate : token,
+    //            "Id": _prescriptionId,
+    //        },
+    //        dataType: "json",
+    //        success: function (response) {
+    //            $("#PrescriptionMainContainer").html(response);
+    //            debugger;
+
+    //            console.log("success")
+    //        },
+    //        error: function (xhr, status, error) {
+    //            console.log("failed - FinishAndPrintButton.CLick() ");
+    //        }
+    //    });
+
+    //});
 
     $("#PrintPreviewButton").click(function (e) {
         debugger;
 
         //## Patient Details
         var personalDetails = $("#PersonalDetails .patient-name").text();
-        $("#PrescriptionPreviewPatientDetails .patient-name").text(personalDetails);
+        $(".patient-name-age-gender").text(personalDetails);
+
         var address = $("#PersonalDetails .patient-address").text();
         $("#PrescriptionPreviewPatientDetails .patient-address").text(address);
 
         //## CC
         $("#ChiefComplaintList option:selected").each(function (index) {
+            $("#PrescriptionCCListUL").empty();
             $("#PrescriptionCCListUL").append("<li class='list-group-item'>" + $(this).text() +"</li>");            
         });
 
-        //## Examination
-        var temp = $("#PatientVitalsInfoDiv .vital-temperature").text();
-        var pulse = $("#PatientVitalsInfoDiv .vital-pulse").text();
-        var pressure = $("#PatientVitalsInfoDiv .vital-pressure").text();
-        var weight = $("#PatientVitalsInfoDiv .vital-weight").text();
-        //var height = $("#PatientVitalsInfoDiv .vital-height").text();
-                
-        $("#PrescriptionVitalsDiv .vital-temperature").text(temp);
-        $("#PrescriptionVitalsDiv .vital-pulse").text(pulse);
-        $("#PrescriptionVitalsDiv .vital-pressure").text(pressure);
-        $("#PrescriptionVitalsDiv .vital-weight").text(weight);
-        //$("#PrescriptionVitalsDiv .vital-height").text(height);
+        //## Examination- values are already updated- when Modal Form SubmitButton Clicked.
+
                
         //## Notes
-        $("#PrescriptionPreviewNotesDiv").text($("#PrescriptionNotesInput").val());
+        var notesList = $('#PrescriptionNotesInput').val().trim().split("\n");
+        $("#PrescritionPreviewNotesSelectList").empty();
+
+        $.each(notesList, function (item) {
+            $("#PrescritionPreviewNotesSelectList").append("<li>" + notesList[item] + "</li>");
+        }); 
+        
 
         //## Planning
-        $("#PrescriptionPreviewPlanDiv").text($("#PlanInputBox").val());
+        var planList = $('#PlanInputBox').val().trim().split("\n");
+        $("#PrescritionPreviewPlanSelectList").empty();
+
+        $.each(planList, function (item) {
+            $("#PrescritionPreviewPlanSelectList").append("<li>" + planList[item] + "</li>");
+        });        
         
         //## Advise
-        $("#PrescritionPreviewAdvise").text($("#AdviseInput").val());
+        var adviseList = $('#AdviseInput').val().trim().split("\n");
+        $("#PrescritionPreviewAdviseSelectList").empty();
+
+        $.each(adviseList, function (item) {
+            $("#PrescritionPreviewAdviseSelectList").append("<li>" + adviseList[item] + "</li>");            
+        });
 
         //## Lab Test Request
+
+        //## If no DrugItem is added- then don't show the "Finish" Button in the Preview Modal
+        if ($("#PrescriptionItemsPreviewContainer .prescription-item-row").length >= 1) {
+            $("#PrescriptionFinishButton, #DisclaimerCheckBoxDiv").removeClass("d-none");
+        }
+
 
         //## Finally all the DrugItem names will be copied to the Preview Panel
         $("#PrintPreviewContainer").html($("#PrescriptionItemsPreviewContainer").html());
@@ -729,25 +751,64 @@ $(document).ready(function () {
 
     });
 
+    $("#ConfirmFinishCheckbox").click(function () {
 
-    $("#ConfirmAndPrintPrescriptionButton").click(function () {
+            $("#PrescriptionFinishButton").prop("disabled", !$(this).is(":checked"));
+        
+    });
+
+    $("#PrescriptionFinishButton").click(function () {
+        debugger;
 
         //## Now POST
         var postUrl = "/Doctor/Prescription/Create_Prescription_HTML";
         var htmlContents = $("#PreviewContentsDiv").html();
-        
+
+        //## arrange the Data- that are not saved yet
+        var ccList = $("#ChiefComplaintList").val(); //## This will return an Array of selected item values.
+
+        var diagnosisList = ""; //## We have selected Diagnosis in the radioButtons. All of them- send with Prescription
+        $("[name=DiagnosisOptions]").each(function () {
+            diagnosisList = diagnosisList + $(this).val() + ",";
+        });
+
+        var notes = GetVal("#PrescriptionNotesInput");
+        var plans = GetVal("#PlanInputBox");
+        var advise = GetVal("#AdviseInput");
+        var referredDoctor = GetVal("#ReferredDoctorNameInput");
+        var isFollowUp = IsChecked("#FollowUpVisitCheckbox");
+
         $.ajax({
             type: "POST",
             url: postUrl,
             data: {
                 __RequestVerificationToken: token,  //# AntiForgeryToken__Validate : token,
-                "id": _prescriptionId,
-                "contents": htmlContents,
+                "PrescriptionId": _prescriptionId,
+                "PatientId": _patientId,
+                "HtmlContents": htmlContents,
+                "ccList": ccList,
+                "Diagnosis": diagnosisList,
+                "LabTestRequestList": '1,2,3',
+                "Notes": notes,
+                "Plans": plans,
+                "Advise": advise,
+                "ReferralDoctor": referredDoctor,
+                "IsFollowUpVisit": isFollowUp,
             },
             dataType: "json",
             success: function (response) {
+                debugger;
+
                 if (response === "success") {
-                    window.print();
+                    $("#DisclaimerCheckBoxDiv").hide();
+                    $("#PrescriptionFinishButton").addClass("d-none");
+                    $("#PrescriptionPrintButton").removeClass("d-none");
+
+                    $("#BackToPatientSearchButton").removeClass("d-none");
+                    $("#ClosePreviewDialogButton").addClass("d-none");
+
+                    $("#SaveSuccessConfirm").removeClass("d-none");
+
                     console.log("success")
                 } else {
                     console.log("failed to create output HTML file")
@@ -788,13 +849,18 @@ $(document).ready(function () {
     }
 
     //## Description: This will get the Value in the Element and return it
-    function GetVal(elementName) {
-        return $(elementName).val();
+    function GetVal(elementId) {
+        return $(elementId).val();
     }
 
-    function GetText(elementName) {
-        return $(elementName).text();
+    function GetText(elementId) {
+        return $(elementId).text();
     }
+
+    function IsChecked(elementId) {
+        return $(elementId).is(":checked");
+    }
+
 
     //## Prepare PrescriptionPreviwe Modal- with Doctor and Hospital Details
 

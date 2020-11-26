@@ -22,7 +22,7 @@
 <html lang="en">
 <head>
     @{
-        await Html.RenderPartialAsync("Header/_HeaderLandingLayout.cshtml");
+        await Html.RenderPartialAsync("Header/_HeaderLayout.cshtml");
     }
 </head>
 <!-- BEGIN Body -->
@@ -285,8 +285,10 @@
 
     <script src="~/js/lib/jquery/dist/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="~/js/app.bundle.js"></script>
     <script src="~/js/vendors.bundle.js"></script>
+
     @*<script src="~/js/site.js"></script>*@
 
     @{

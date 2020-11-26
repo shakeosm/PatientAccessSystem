@@ -5,34 +5,35 @@
     //var patient = Model.PatientDetails;
 }
 
-    <div id="PrescriptionMainContainer" class="form-row col-12 m-0 p-0 ">
-        <div class="alert alert-info mb-2 col-12 h3 no-print">
-            <i class="fal fa-file-prescription fa-2x"></i>
-            New Prescription
-            <input type="hidden" asp-for="@Model.Id" name="PrescriptionIdInput" value="@Model.Id" />
-            <input type="hidden" asp-for="@Model.PatientDetails.Id" name="PatientId" value="@Model.PatientDetails.Id" />
-        </div>
-
-        @await Html.PartialAsync("_PrescriptionHeader", @Model)
-
-        @await Html.PartialAsync("_PrescriptionItemEntry", @Model.Id)
-
-        @await Html.PartialAsync("_NewDrugDoseTemplate")
-
-        @await Html.PartialAsync("_AddNewDrugBrand")
-
-        @await Html.PartialAsync("_AddNewAdviseInstruction")
-
-        @await Html.PartialAsync("_PatientVitalsModal")
-
-        <!-- Here we will dump the Prescription to view as a Modal Popup -->
-        @await Html.PartialAsync("_PrescriptionPrintPreview.cshtml", Model)
-
-        <form id="PrescriptionCreateForm" action="Create" method="post">
-            @Html.AntiForgeryToken()
-        </form>
+<div id="PrescriptionMainContainer" class="form-row col-12 m-0 p-0 d-print-none">
+    <div class="alert alert-info mb-2 col-12 h3 ">
+        <i class="fal fa-file-prescription fa-2x"></i>
+        New Prescription
+        <input type="hidden" asp-for="@Model.Id" name="PrescriptionIdInput" value="@Model.Id" />
+        <input type="hidden" asp-for="@Model.PatientDetails.Id" name="PatientId" value="@Model.PatientDetails.Id" />
     </div>
 
+    @await Html.PartialAsync("_PrescriptionHeader", @Model)
+
+    @await Html.PartialAsync("_PrescriptionItemEntry", @Model.Id)
+
+    @await Html.PartialAsync("_NewDrugDoseTemplate")
+
+    @await Html.PartialAsync("_AddNewDrugBrand")
+
+    @await Html.PartialAsync("_AddNewAdviseInstruction")
+
+    @await Html.PartialAsync("_PatientVitalsModal")
+
+
+</div>
+
+<!-- Here we will dump the Prescription to view as a Modal Popup -->
+@await Html.PartialAsync("_PrescriptionPrintPreview.cshtml", Model)
+
+<form id="PrescriptionCreateForm" action="Create" method="post">
+    @Html.AntiForgeryToken()
+</form>
 
 @section Scripts{
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />

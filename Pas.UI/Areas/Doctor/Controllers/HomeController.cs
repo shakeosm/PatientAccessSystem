@@ -111,7 +111,7 @@ namespace Pas.UI.Areas.Doctor.Controllers
             AppUserDetailsVM currentUser = await GetCurrentUser();
 
             //## search the patient using the Search VM
-            search.FirstName = "car";
+            
             var matchingPatients = await _patientService.SearchPatient(search);
 
             //## Doctor will Search Patients and Create a new Prescription
