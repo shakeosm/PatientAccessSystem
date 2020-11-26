@@ -1,131 +1,64 @@
 ﻿<!DOCTYPE html>
-<!--
-Template Name:  SmartAdmin Responsive WebApp - Template build with Twitter Bootstrap 4
-Version: 4.5.1
-Author: Sunnyat A.
-Website: http://gootbootstrap.com
-Purchase: https://wrapbootstrap.com/theme/smartadmin-responsive-webapp-WB0573SK0?ref=myorange
-License: You must have a valid license purchased only from wrapbootstrap.com (link above) in order to legally use this theme for your project.
--->
+
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>
-        Login - - SmartAdmin v4.5.1
-    </title>
-    <meta name="description" content="Login">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, minimal-ui">
-    <!-- Call App Mode on ios devices -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <!-- Remove Tap Highlight on Windows Phone IE -->
-    <meta name="msapplication-tap-highlight" content="no">
-    <!-- base css -->
-    <link id="vendorsbundle" rel="stylesheet" media="screen, print" href="~/css/vendors.bundle.css">
-    <link id="appbundle" rel="stylesheet" media="screen, print" href="~/css/app.bundle.css">
-    <link id="mytheme" rel="stylesheet" media="screen, print" href="#">
-    <link id="myskin" rel="stylesheet" media="screen, print" href="~/css/skins/skin-master.css">
-    <!-- Place favicon.ico in the root directory -->
-    <link rel="apple-touch-icon" sizes="180x180" href="~/images/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="~/images/favicon/favicon-32x32.png">
-    <link rel="mask-icon" href="~/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
-    <link rel="stylesheet" media="screen, print" href="~/css/fa-brands.css">
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />    
-
+    @{
+        await Html.RenderPartialAsync("Header/_HeaderLandingLayout.cshtml");
+    }    
 </head>
 <!-- BEGIN Body -->
 <body>
-    <!-- DOC: script to save and load page settings -->
-    <script>
-        /**
-         *	This script should be placed right after the body tag for fast execution
-         *	Note: the script is written in pure javascript and does not depend on thirdparty library
-         **/
-        'use strict';
-
-        var classHolder = document.getElementsByTagName("BODY")[0],
-            /**
-             * Load from localstorage
-             **/
-            themeSettings = (localStorage.getItem('themeSettings')) ? JSON.parse(localStorage.getItem('themeSettings')) :
-                {},
-            themeURL = themeSettings.themeURL || '',
-            themeOptions = themeSettings.themeOptions || '';
-        /**
-         * Load theme options
-         **/
-        if (themeSettings.themeOptions) {
-            classHolder.className = themeSettings.themeOptions;
-            console.log("%c✔ Theme settings loaded", "color: #148f32");
-        }
-        else {
-            console.log("%c✔ Heads up! Theme settings is empty or does not exist, loading default settings...", "color: #ed1c24");
-        }
-        if (themeSettings.themeURL && !document.getElementById('mytheme')) {
-            var cssfile = document.createElement('link');
-            cssfile.id = 'mytheme';
-            cssfile.rel = 'stylesheet';
-            cssfile.href = themeURL;
-            document.getElementsByTagName('head')[0].appendChild(cssfile);
-
-        }
-        else if (themeSettings.themeURL && document.getElementById('mytheme')) {
-            document.getElementById('mytheme').href = themeSettings.themeURL;
-        }
-        /**
-         * Save to localstorage
-         **/
-        var saveSettings = function () {
-            themeSettings.themeOptions = String(classHolder.className).split(/[^\w-]+/).filter(function (item) {
-                return /^(nav|header|footer|mod|display)-/i.test(item);
-            }).join(' ');
-            if (document.getElementById('mytheme')) {
-                themeSettings.themeURL = document.getElementById('mytheme').getAttribute("href");
-            };
-            localStorage.setItem('themeSettings', JSON.stringify(themeSettings));
-        }
-        /**
-         * Reset settings
-         **/
-        var resetSettings = function () {
-            localStorage.setItem("themeSettings", "");
-        }
-
-    </script>
     <div class="page-wrapper auth">
         <div class="page-inner bg-brand-gradient">
             <div class="page-content-wrapper bg-transparent m-0">
                 <div class="height-10 w-100 shadow-lg px-4 bg-brand-gradient">
                     <div class="d-flex align-items-center container p-0">
                         <div class="page-logo width-mobile-auto m-0 align-items-center justify-content-center p-0 bg-transparent bg-img-none shadow-0 height-9 border-0">
-                            <a href="javascript:void(0)" class="page-logo-link press-scale-down d-flex align-items-center">
-                                <img src="images/logo.png" alt="Patient Access System- WebApp" aria-roledescription="logo">
-                                <span class="page-logo-text mr-1">Patient Access System</span>
+                            <a href="~/" class="page-logo-link press-scale-down d-flex align-items-center">
+                                <img src="~/images/logo.png" alt="Patient Access System- WebApp" aria-roledescription="logo">
+                                <span class="h4 ml-2 text-white">Patient Access System</span>
                             </a>
                         </div>
                     </div>
                 </div>
-                <div class="d-flex flex-1" style="background: url(images/svg/pattern-1.svg) no-repeat center bottom fixed; background-size: cover;">
+                <div class="d-flex flex-1" style="background: url(~/images/svg/pattern-1.svg) no-repeat center bottom fixed; background-size: cover;">
                     <div class="container py-4 py-lg-5 my-lg-5 px-4 px-sm-0 text-white d-flex align-items-center justify-content-center">
 
-                        <div class="container">
+                        <div class="container col-sm-12">
                             <main role="main" class="pb-3">
                                 @RenderBody()
                             </main>
                         </div>
 
-                        <div class="position-absolute pos-bottom pos-left pos-right p-3 text-center text-white">
-                            2020 © SmartAdmin by&nbsp;<a href='https://www.gotbootstrap.com' class='text-white opacity-40 fw-500' title='gotbootstrap.com' target='_blank'>gotbootstrap.com</a>
-                        </div>
                     </div>
+
+                    <footer class="page-footer invisible d-none" role="contentinfo">
+                        <div class="d-flex align-items-center flex-1 text-muted">
+                            @DateTime.Today.Year &copy; Patient Access System&nbsp;<a href='https://www.ZaiyanSystems.com' class='text-white opacity-40 fw-500' title='gotbootstrap.com' target='_blank'>Zaiyan Systems</a>
+                        </div>
+                        <div>
+                            <ul class="list-table m-0">
+                                <li><a href="intel_introduction.html" class="text-secondary fw-700">About</a></li>
+                                <li class="pl-3"><a href="info_app_licensing.html" class="text-secondary fw-700">License</a></li>
+                                <li class="pl-3"><a href="info_app_docs.html" class="text-secondary fw-700">Documentation</a></li>
+                                <li class="pl-3 fs-xl"><a href="https://wrapbootstrap.com/user/MyOrange" class="text-secondary" target="_blank"><i class="fal fa-question-circle" aria-hidden="true"></i></a></li>
+                            </ul>
+                        </div>
+                    </footer>
+
                 </div>
             </div>
         </div>
     </div>
 
+    @{
+        await Html.RenderPartialAsync("_PageLoadingAnimation.cshtml");
+    }
+
     <script src="~/js/lib/jquery/dist/jquery.js"></script>
-    <script src="~/js/app.bundle.js"></script>
     <script src="~/js/vendors.bundle.js"></script>
+    @*<script src="~/js/app.bundle.js"></script>
+    *@
 
     @RenderSection("Scripts", required: false)
 

@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewData["Title"] = "Drugs";
+    Layout = "~/Views/Shared/_LayoutCustom.cshtml";
+}
+
+    <h2><i class="fal fa-cog fa-lg mr-2"></i>Configure Drugs List</h2>
+<partial name="Shared/Configure/_DrugListTable" />
+
+<ul>
+    <li>Drugs</li>
+
+    <li>Drug Categories</li>
+
+    <li>Dosage + DrugDosage</li>
+
+    <li>Mode of Delivery + DrugModeOfDelivery</li>
+
+    <li>Indications</li>
+
+    <li>Diagnostic Test</li>
+    <li>Doctors</li>
+    <li>Doctor Speciality</li>
+    <li>Organisation</li>
+    <li>Allergy Types</li>
+    <li>Checkup Types</li>
+
+
+</ul>
+
+@*<link href="~/lib/datatables/css/dataTables.bootstrap4.css" rel="stylesheet" />
+<link href="~/lib/datatables/css/jquery.dataTables.css" rel="stylesheet" />*@
+
+@section Scripts
+{
+
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/site.js"></script>
+
+
+}
+

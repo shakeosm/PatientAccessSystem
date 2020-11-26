@@ -2067,7 +2067,7 @@ var layouts = (function(setlayout) {
  **/
 $(window).resize(
 
- 	$.throttle( myapp_config.throttleDelay, function (e) {
+	$.throttle( myapp_config.throttleDelay, function (e) {
 
 		 /**
 		  * (1a) ADD CLASS WHEN BELOW CERTAIN WIDTH (MOBILE MENU)

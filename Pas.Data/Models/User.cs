@@ -12,8 +12,13 @@ namespace Pas.Data.Models
             Organisations = new HashSet<Organisation>();
             UserOrganisationRoles = new HashSet<UserOrganisationRole>();
             UserRelated = new HashSet<UserRelated>();
-            PatientAilments = new HashSet<PatientAilment>();
+            PrescriptionChiefComplaints = new HashSet<PrescriptionChiefComplaints>();
+            AddressBooks = new HashSet<AddressBook>();
+            ClinicalHistories = new HashSet<ClinicalHistory>();
+            PatientIndications = new HashSet<PatientIndications>();
         }
+        
+        public int Title { get; set; }
 
         [Required]
         [Column(TypeName = "varchar(100)")]
@@ -51,13 +56,19 @@ namespace Pas.Data.Models
 
         [Required]
         [Column(TypeName = "datetime2(3)")]
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }        
 
         public virtual ICollection<Organisation> Organisations { get; set; }
         public virtual ICollection<UserOrganisationRole> UserOrganisationRoles { get; set; }
         public virtual ICollection<UserRelated> UserRelated { get; set; }
-        public virtual ICollection<PatientAilment> PatientAilments { get; set; }
+        public virtual ICollection<PrescriptionChiefComplaints> PrescriptionChiefComplaints { get; set; }
         public virtual ICollection<PatientAllergy> PatientAllergies { get; set; }
+
+        public virtual ICollection<AddressBook> AddressBooks { get; set; }
+
+        public virtual ICollection<ClinicalHistory> ClinicalHistories { get; set; }
+        public virtual ICollection<PatientIndications> PatientIndications { get; private set; }
+        public virtual ICollection<VitalsHistory> VitalsHistories { get; set; }
         
     }
 }

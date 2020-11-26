@@ -4,9 +4,9 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>View a Prescription</h1>
 
-<form id="PrescriptionSearchForm">
+<form id="PrescriptionSearchForm" class="d-print-none col-xs-12 col-sm-4">
+<h1>View a Prescription</h1>
     <div class="form-group">
         <label for="formGroupExampleInput">Mobile Number</label>
         <input type="text" class="form-control" id="formGroupExampleInput" placeholder="01x-xxx-xxx-xxx">
@@ -16,24 +16,21 @@
         <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="123456">
     </div>
 
-    <button type="button" id="SearchPatientButton" value="Find">
+    <button type="button" id="LoadHtmlButton" class="btn btn-primary" value="Find">
         <span class="fal fa-search mr-1"></span>
         Search
     </button>
 </form>
 
-<div id="PrescriptionView" class="invisible">
-    <h2>Prescription Sample</h2>
-    @{
-        await Html.RenderPartialAsync("_prescription");
-    }
-
+<div id="LoadPrescriptionPreviewDiv" class="col-12 bg-white text-dark mt-3 mb-3">
+    <!-- Here we will dump the Prescription HTML via AJAX -->
 </div>
 
 @section scripts
 {
     <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
     <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script src="~/js/prescription/search.js"></script>
 }

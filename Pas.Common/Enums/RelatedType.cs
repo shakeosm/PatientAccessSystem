@@ -2,6 +2,30 @@
 
 namespace Pas.Common.Enums
 {
+    public enum DrinkHabit
+    {
+        No = 0,
+        Occassionaly = 1,
+        Regular = 2
+    }
+
+    public enum Title
+    {
+        Unknwon = 0,
+        Mr,
+        Ms,
+        Mrs,
+        Dr,
+        Esq,
+        Hon,
+        Prof,
+        Rt,
+        Rev,
+        Moulvi,
+        Mawlana,
+        Other = 99
+    }
+
     public enum RelatedType
     {
         Unknown = 0,
@@ -28,8 +52,8 @@ namespace Pas.Common.Enums
         Patient = 1,
         Doctor = 2,
         Director = 3,        
-        Hospital_SuperUser = 11,
-        Hospital_Technician = 12,
+        Technician = 4,
+        SuperUser = 11,
         App_SuperUser = 99
 
             
@@ -37,6 +61,7 @@ namespace Pas.Common.Enums
 
     public enum BloodGroup
     {
+        [Display(Name = "-", Description = "Unknown")]
         Unknown = 0,
 
         [Display(Name = "A+", Description = "A RhD positive (A+)")]
@@ -63,6 +88,22 @@ namespace Pas.Common.Enums
         [Display(Name = "AB-", Description = "AB RhD negative (AB-)")]
         AB_Negative,
 
+    }
+
+    public enum Sports
+    {
+        No_Sports = 0,
+        Badminton = 1, 
+        Baseball, 
+        Basketball, 
+        Bowling, 
+        Boxing, 
+        Cricket, Cycling, Fishing, 
+        Football, Golf, Gymnastics, Judo, 
+        Karate, Kickboxing, Roller_skating, 
+        Running, Scuba_diving, Skateboarding, 
+        Swimming, Table_Tennis, Taekwondo, 
+        Tennis, Volleyball, Weight_lifting
     }
 
 }

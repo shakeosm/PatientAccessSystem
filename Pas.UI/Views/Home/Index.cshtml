@@ -1,30 +1,110 @@
-﻿@{
+﻿@using Pas.UI.Infrastructure.ApplicationUserClaims
+@using Microsoft.AspNetCore.Identity
+@using Pas.Common.Models.Identity
+       
+@model Pas.Web.ViewModels.AppUserDetailsVM
+
+@inject SignInManager<IdentityUser> SignInManager
+
+@{
     Layout = "/Views/Shared/_LayoutLanding.cshtml";
     ViewData["Title"] = "Home";
+
+    bool isLoggedIn = SignInManager.IsSignedIn(User);
+    var profilePageUrl = Model.ProfilePath();
+    //bool areaName = isLoggedIn == true ? "" 
 }
 
-    <header class="bg-primary py-5 mb-5">
-        <div class="container h-100">
-            <div class="row h-100 align-items-center">
-                <div class="col-lg-12">
-                    <h1 class="display-4 text-white mt-5 mb-2">Patient Access System</h1>
-                    <p class="lead mb-5 text-white-50">
-                        Patient Access System connects you to your medical profile when you need them the most.<br/>
-                        You can manage your medical history, test results and share them with your doctor.
-                    </p>
-                </div>
+<header class="bg-primary py-5 mb-5">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-lg-12">
+                <h1 class="display-4 text-white mt-5 mb-2">Patient Access System</h1>
+                <p class="lead mb-5 text-white-50">
+                    Patient Access System connects you to your medical profile when you need them the most.<br />
+                    You can manage your medical history, test results and share them with your doctor.
+                </p>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
-    <div class="text-center form-row">
-        <div class="col-sm-4 col-xs-6" id="ButtonContainerDiv">
+<div class="form-row">
+    <div class="card border  m-auto m-lg-0 text-dark" style="width: 18rem;">
+        @if (isLoggedIn)
+        {
+            <div class="card-header">
+                Welcome <strong>@Model.Name @*@User.GetFullNameOrEmail()*@ </strong>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <a id="PrintLinkButton" class="nav-link text-dark"
+                       @*asp-action="Profile" asp-controller="AppUser"*@
+                       href="@profilePageUrl" 
+                       aria-labelledby="View Profile">
+                        <i class="fas fa-user fa-2x mr-1"></i>
+                        View Profile
+                    </a>
+                </li>
+                <li class="list-group-item">
+                    <a id="PrintLinkButton" class="nav-link text-dark"
+                       asp-action="Index" asp-controller="Prescription"
+                       aria-labelledby="Print Prescription">
+                        <i class="fal fa-file-prescription fa-2x mr-1"></i>
+                        Print Prescription
+                    </a>
+                </li>
+                @if (Model.HasMultipleRoles)
+                {
+                    <li class="list-group-item">
+                        <a id="SwitchRoleButton" class="nav-link text-dark"
+                           asp-area=""
+                           asp-action="SwitchRole" asp-controller="AppUser"
+                           aria-labelledby="Select Role">
+                            <i class="fas fa-people-arrows fa-2x mr-1"></i>
+                            Select Role
+                        </a>
+                    </li>
+
+                }
+                else
+                {
+                    <li class="list-group-item">
+                        <a id="GoDashBoardLinkButton" class="nav-link text-dark"
+                           asp-area="Patient"
+                           asp-action="Index" asp-controller="Home"
+                           aria-labelledby="Select Role">
+                            <i class="fal fa-chart-pie fa-2x mr-1"></i>
+                            Go to Dashboard
+                        </a>
+                    </li>
+
+                }
+
+                <li class="list-group-item">
+                    <a id="PrintLinkButton" class="nav-link text-dark"
+                       asp-area="Identity"
+                       asp-action="Logout" asp-controller="Account"
+                       aria-labelledby="Sign out">
+                        <i class="fal fa-sign-out fa-2x mr-1"></i>
+                        Sign out
+                    </a>
+                </li>
+            </ul>
+                }
+                else
+                {
+            //Anonymous User- Not signed in
+
+            <div class="card-header">
+                Patient Access System
+            </div>
             <ul class="list-group">
                 <li class="list-group-item">
                     <a id="LoginLinkButton" class="nav-link text-dark"
                        asp-area="Identity" asp-page="/Account/Login"
                        aria-labelledby="Access your Account">
-                        <i class="fal fa-user-alt mr-1"></i>
+                        <i class="fal fa-user-circle fa-2x mr-1"></i>
                         Access your Account
                     </a>
                 </li>
@@ -32,7 +112,7 @@
                     <a id="RegisterLinkButton" class="nav-link text-dark"
                        asp-area="Identity" asp-page="/Account/Register"
                        aria-labelledby="Create new Account">
-                        <i class="fal fa-user mr-1"></i>
+                        <i class="fal fa-hospital-user fa-2x mr-1"></i>
                         Create new Account
                     </a>
                 </li>
@@ -40,28 +120,21 @@
                     <a id="PrintLinkButton" class="nav-link text-dark"
                        asp-action="Index" asp-controller="Prescription"
                        aria-labelledby="Print Prescription">
-                        <i class="fal fa-print mr-1"></i>
+                        <i class="fal fa-print fa-2x mr-1"></i>
                         Print Prescription
                     </a>
                 </li>
-                <li class="list-group-item">
-                    <a id="SwitchRoleButton" class="nav-link text-dark"
-                       asp-area=""
-                       asp-action="SwitchRole" asp-controller="AppUser"
-                       aria-labelledby="Select Role">
-                        <i class="fal fa-users mr-1"></i>
-                        Select Role
-                    </a>
-                </li>
             </ul>
-
-            @*asp-page="/Home/SelectRole"*@
-
-        </div>
-        <div class="banner text-center col-8">
-            <img src="~/images/patient-status.png" alt="" style="width:600px; height: 386px;" />
-        </div>
-
-
-        <div class="col-4"></div>
+            <div class="alert alert-success m-2">
+                <p>Register now!</p><p>Access your data- any time, anywhere, any device.</p>
+            </div>
+        }
     </div>
+
+    <div class="banner text-center col-8 hidden-xs-down">
+        <img src="~/images/patient-status.png" alt="" style="width:600px; height: 386px;" />
+    </div>
+
+
+    <div class="col-4"></div>
+</div>

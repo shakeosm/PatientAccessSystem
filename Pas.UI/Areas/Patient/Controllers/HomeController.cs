@@ -3,69 +3,89 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pas.Service.Interface;
+using Pas.UI.Controllers;
 using Pas.Web.ViewModels;
 
 namespace Pas.UI.Areas.Patient.Controllers
 {
     [Area("Patient")]
-    public class HomeController : Controller
+    [Authorize]
+    public class HomeController : BaseController
     {
-        private IPatientService _patientService { get; }
+        private IPatientService _patientService { get; }        
 
-        public HomeController(IPatientService PatientService)
+        public HomeController(IPrescriptionService PrescriptionService,
+                                IPatientService PatientService,
+                                UserManager<IdentityUser> UserManager,
+                                IAppUserService AppUserService,
+                                IAppAuthorisationService AppAuthorisationService,
+                                IUserOrgRoleService UserOrgRoleService
+            ) : base(UserManager, AppUserService, AppAuthorisationService, UserOrgRoleService)
         {
             _patientService = PatientService;
         }
 
-        public IActionResult Index()
-        {            
-            //## Somethig like Dashboard
-            return View();
+        public async Task<IActionResult> Index()
+        {
+            //## Somethig like Patient Dashboard
+            //var _userEmail = _userManager.GetUserName(HttpContext.User);
+
+            AppUserDetailsVM currentUser = await GetCurrentUser();
+            ClinicalHistoryVM clinicalInfo = await _patientService.GetClinicalDetails(currentUser.Id);
+            
+
+            PatientProfileWrapperVM vm = new PatientProfileWrapperVM() {
+                Patient = currentUser,  //## This is Patient Profile... Patient/Home/Index Page
+                ClinicalInfo = clinicalInfo,
+                LabResults =null,   //## Not required in Profile Page
+                PrescriptionList = null,   //## Not required in Profile Page 
+            };
+
+            //## Re-factor UserDetails- 'Patient' type values     
+            SetPatientProfileValues(currentUser);
+
+            return View(vm);
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> FindPatientByEmail(string email)
+        public async Task<IActionResult> Profile()
         {
-            var patient = await _patientService.FindByEmail(email);
+            var currentUser = await GetCurrentUser();
 
-            return Json(patient);
+            //## Re-factor UserDetails- 'Patient' type values     
+            SetPatientProfileValues(currentUser);
+
+            return View(currentUser);
         }
 
-        //[ValidateAntiForgeryToken]
-        [HttpPost]
-        public async Task<IActionResult> FindPatientByMobile(string mobile)
+        public async Task<IActionResult> EditProfile()
         {
-            throw new NotImplementedException();
-        }
+            var currentUser = await GetCurrentUser();
 
-        [HttpGet]
-        public async Task<IActionResult> Search(string mobile, string shortId, string firstName, string lastName)
-        {
-            PatientSearchVM searchVM = new PatientSearchVM() { FirstName = "Car", LastName = "", ShortId = "",  Mobile = "" };
+            //## Re-factor UserDetails- 'Patient' type values     
+            SetPatientProfileValues(currentUser);
 
-            var searchResult = await _patientService.SearchPatient(searchVM);
-
-            return PartialView("Views/Shared/_patientSearchResult.cshtml", searchResult);
-            //return View("Views/Shared/_patientSearchResult.cshtml", searchResult);
-        }
-
-
-        public IActionResult Profile()
-        {
-            return View();
-        }
-
-        public IActionResult EditProfile()
-        {
-            return View();
+            return View(currentUser);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult UpdateProfile()
         {
             return View();
+        }
+
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdatePersonalHistory(PatientPersonalHistoryVM vm)
+        {
+            if (vm.PatientId < 1) return Json(false);
+
+            var result = await _patientService.UpdatePersonalHistory(vm);
+
+            return Json(result ? "success" : "fail");
         }
 
     }

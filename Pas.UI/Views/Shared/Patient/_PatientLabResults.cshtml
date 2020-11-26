@@ -1,0 +1,69 @@
+﻿<!-- _PatientLabResults.cshtml -->
+
+<div class="card">
+    <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
+        <!-- we wrap header title inside a span tag with utility padding -->
+        <div class="card-title text-white"></div>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">
+            Lab results
+            <a href="#" class="btn btn-primary btn-md btn-icon waves-effect waves-themed float-right" role="button">
+                <i class="fal fa-plus"></i>
+            </a>
+        </h5>
+        <div class="col-sm-12">
+            <table id="dt-LabResultTable" class="table table-hover table-striped w-100 dataTable dtr-inline" role="grid" aria-describedby="dt-basic-example_info">
+                <thead class="d-none">
+                    <tr role="row">
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr role="row">
+                        <td class="tabindex=" 0">Chest X-Ray</td>
+                        <td class="text-right">01/05/2020</td>
+                        <td class="text-right" style="width:50px;">
+                            <a href="#" class="btn btn-primary btn-icon rounded-circle waves-effect waves-themed" role="button">
+                                <i class="fal fa-file"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr role="row">
+                        <td class="tabindex=" 0">Allergen Specific IgE</td>
+                        <td class="text-right">01/05/2020</td>
+                        <td class="text-right">
+                            <a href="#" class="btn btn-primary btn-icon rounded-circle waves-effect waves-themed" role="button">
+                                <i class="fal fa-file"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr role="row">
+                        <td class="tabindex=" 0">Nasal Endoscopy</td>
+                        <td class="text-right">01/05/2020</td>
+                        <td class="text-right">
+                            <a href="#" class="btn btn-primary btn-icon rounded-circle waves-effect waves-themed" role="button">
+                                <i class="fal fa-file"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr role="row">
+                        <td class="tabindex=" 0">CT Scan</td>
+                        <td class="text-right">01/05/2020</td>
+                        <td class="text-right">
+                            <a href="#" class="btn btn-primary btn-icon rounded-circle waves-effect waves-themed" role="button">
+                                <i class="fal fa-file"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <div class="card-footer">
+        <small class="text-muted">Last updated 7 days ago</small>
+    </div>
+</div>

@@ -1,9 +1,10 @@
-﻿@model IEnumerable<Pas.Web.ViewModels.PatientDetailsVM>
+﻿@model IEnumerable<Pas.Web.ViewModels.AppUserDetailsVM>
 
 @{
     var counter = 1;
 }
 
+<!-- _patientSearchResult.cshtml  -->
 
 <table id="PatientSearchTable" class="data-table w-100">
     <thead>
@@ -15,6 +16,7 @@
             <th scope="col">Mobile</th>
             <th scope="col">Age</th>
             <th scope="col">Gender</th>
+            <th scope="col">Address</th>
             <th scope="col">-</th>
         </tr>
     </thead>
@@ -29,8 +31,9 @@
                 <td>@item.Mobile</td>
                 <td>@item.Age</td>
                 <td>@item.Gender</td>
+                <td>@item.AddressAreaLocality</td>
                 <td>
-                   
+
                     <a class="btn btn-general btn-primary create-new-prescription-button"
                        asp-area="Doctor"
                        asp-controller="Home"
@@ -50,7 +53,7 @@
 
 <script>
     //$(document).ready(function () {
-    //    $('#PatientSearchTable').DataTable({            
+    //    $('#PatientSearchTable').DataTable({
     //    });
     //});
 </script>

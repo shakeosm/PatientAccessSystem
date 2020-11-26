@@ -1,0 +1,161 @@
+﻿
+@{
+    ViewData["Title"] = "Prescription list";
+    Layout = "~/Views/Shared/_LayoutPatient.cshtml";
+}
+<!-- Main outside container of all cards -->
+    <div id="MainCardContainerDiv" class="form-row col-12">
+        <div class="prescription-container">
+            <div class="row prescription-header-info">
+                <div class="col-12">
+                    <span class="prescription-card-label-icon">
+                        <i class="fal fa-calendar-plus fa-xl"></i>
+                    </span>
+                    : 01 Nov 2012
+                </div>
+                <div class="col-12">
+                    <span class="prescription-card-label-icon">
+                        <i class="fal fa-user-md fa-xl"></i>
+                    </span>
+                    : Mr. Hamidur Rahman
+                </div>
+                <div class="col-12">
+                    <span class="prescription-card-label-icon">
+                        <i class="fal fa-hospital fa-xl"></i>
+                    </span>
+                    : BelleVue Hospital
+                </div>
+                <div class="prescription-drug-list-container">
+                    <strong>Drugs: </strong>Paracetemol, Dulcolux, Gaviscon, Guafenesin
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="prescription-container">
+            <div class="row prescription-header-info">
+                <div class="col-12">
+                    <span class="prescription-card-label-icon">
+                        <i class="fal fa-calendar-plus fa-xl"></i>
+                    </span>
+                    : 01 Jun 2017
+                </div>
+                <div class="col-12">
+                    <span class="prescription-card-label-icon">
+                        <i class="fal fa-user-md fa-xl"></i>
+                    </span>
+                    : Mr. Shafiqur Rahman FRCP
+                </div>
+                <div class="col-12">
+                    <span class="prescription-card-label-icon">
+                        <i class="fal fa-hospital fa-xl"></i>
+                    </span>
+                    : Royal Hospital
+                </div>
+
+                <div class="prescription-drug-list-container">
+                    <strong>Drugs: </strong>Paracetemol, Dulcolux, Gaviscon, Guafenesin
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="prescription-container">
+            <div class="row prescription-header-info">
+                <div class="col-12">
+                    <span class="prescription-card-label-icon">
+                        <i class="fal fa-calendar-plus fa-xl"></i>
+                    </span>
+                    <span class="prescription-card-label">Date</span>: 01 Sep 2019
+                </div>
+                <div class="col-12">
+                    <span class="prescription-card-label-icon">
+                        <i class="fal fa-user-md fa-xl"></i>
+                    </span>
+                    <span class="prescription-card-label">Doctor</span>: Mr. Hamidur Rahman MBBS
+                </div>
+                <div class="col-12">
+                    <span class="prescription-card-label-icon">
+                        <i class="fal fa-hospital fa-xl"></i>
+                    </span>
+                    <span class="prescription-card-label">Hospital</span>: Metropolitan Hospital
+                </div>
+                <div class="prescription-drug-list-container">
+                    <strong>Drugs: </strong>Paracetemol, Dulcolux, Gaviscon, Guafenesin
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="prescription-container card">
+            <div class="row prescription-header-info">
+                <div class="col-12">
+                    <span class="prescription-card-label-icon">
+                        <i class="fal fa-calendar-plus fa-xl"></i>
+                    </span>
+                    <span class="prescription-card-label">Date</span>: 01 Nov 2020
+                </div>
+                <div class="col-12">
+                    <span class="prescription-card-label-icon">
+                        <i class="fal fa-user-md fa-xl"></i>
+                    </span>
+                    <span class="prescription-card-label">Doctor</span>: Mr. Hamidur Rahman
+                </div>
+                <div class="col-12">
+                    <span class="prescription-card-label-icon">
+                        <i class="fal fa-hospital fa-xl"></i>
+                    </span>
+                    <span class="prescription-card-label">Hospital</span>: BelleVue Hospital
+                </div>
+                <div class="prescription-drug-list-container">
+                    <strong>Drugs: </strong>Vitamin C, Loratidine, Hajmolam Kitkat
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <table id="PrescriptionHistoryTable"
+               class="table table-bordered table-hover table-striped w-100 dataTable dtr-inline invisible d-none">
+            <tbody>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Hospital</th>
+                    <th>Date</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Last Visit</th>
+                    <th></th>
+                </tr>
+                <tr>
+                </tr>
+                <tr>
+                    <td>Shawkat Osman</td>
+                    <td>শওকত ওসমান </td>
+                    <td>0156-456789123</td>
+                    <td>65</td>
+                    <td>Male</td>
+                    <td>01 Mar 2020</td>
+                    <td>
+
+                        <a class="btn btn-general btn-primary create-new-prescription-button"
+                           role="button"
+                           asp-area="Doctor"
+                           asp-controller="Home"
+                           asp-action="ViewPatient"
+                           asp-route-id="1"
+                           data-patient-id="1"
+                           data-toggle="modal" data-target=".bd-example-modal-lg">
+                            <i class="fa fa-id-card fa-lg" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+<link href="~/css/patient-prescription.css" rel="stylesheet" />

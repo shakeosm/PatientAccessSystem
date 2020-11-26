@@ -1,14 +1,18 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 using Pas.Data.Models;
 
 namespace Pas.Data
 {
     public partial class PasContext : DbContext
     {
+        //public IConfiguration _configuration;
+
         public PasContext()
         {
+            //_configuration = Configuration;
         }
 
         public PasContext(DbContextOptions<PasContext> options)
@@ -16,38 +20,55 @@ namespace Pas.Data
         {
         }
 
-        
-        public virtual DbSet<AilmentTypes> AilmentTypes { get; set; }
+        public virtual DbSet<AddressBook> AddressBooks { get; set; }
+        public virtual DbSet<AdviseInstructions> AdviseInstructions { get; set; }        
         public virtual DbSet<AllergyTypes> AllergyTypes { get; set; }
         
         public virtual DbSet<CategoryTypes> CategoryTypes { get; set; }
+        public virtual DbSet<City> Cities { get; set; }
+        public virtual DbSet<ClinicalHistory> ClinicalHistory { get; set; }
         public virtual DbSet<DiagnosticTest> DiagnosticTest { get; set; }
         public virtual DbSet<DiagnosticTestHistory> DiagnosticTestHistory { get; set; }
         public virtual DbSet<DoctorSpeciality> DoctorSpeciality { get; set; }
-        public virtual DbSet<Doctors> Doctors { get; set; }
-        public virtual DbSet<DosageTypes> DosageTypes { get; set; }
-        public virtual DbSet<DrugDosageType> DrugDosageType { get; set; }
+        public virtual DbSet<DoctorMedicalDegrees> DoctorMedicalDegrees { get; set; }
+        public virtual DbSet<Speciality> Speciality { get; set; }
+        public virtual DbSet<MedicalDegree> MedicalDegrees { get; set; }
+        public virtual DbSet<DoctorProfile> DoctorProfile { get; set; }
+        public virtual DbSet<StrengthType> DosageTypes { get; set; }
+        public virtual DbSet<DrugStrengthType> DrugDosageType { get; set; }
         public virtual DbSet<DrugModeOfDelivery> DrugModeOfDelivery { get; set; }
         public virtual DbSet<Drugs> Drugs { get; set; }
+        public virtual DbSet<DrugBrands> DrugBrands { get; set; }
+        public virtual DbSet<BrandDoseTemplate> BrandDoseTemplates { get; set; }
+        public virtual DbSet<BrandForIndications> BrandForIndications { get; set; }
         public virtual DbSet<IndicationTypes> IndicationTypes { get; set; }
+        public virtual DbSet<DrugIndicationTypes> DrugIndicationTypes { get; set; }
+        public virtual DbSet<IntakePattern> IntakePatterns { get; set; }
+        public virtual DbSet<Manufacturer> Manufacturers { get; set; }
         public virtual DbSet<ModeOfDelivery> ModeOfDelivery { get; set; }
-        public virtual DbSet<Organisation> Organisation { get; set; }
-        public virtual DbSet<PatientAilment> PatientAilmentTypes { get; set; }
+        public virtual DbSet<Organisation> Organisation { get; set; }        
         public virtual DbSet<PatientAllergy> PatientAllergies { get; set; }
+        public virtual DbSet<PatientIndications> PatientIndications { get; set; }
         public virtual DbSet<Prescription> Prescription { get; set; }
+        public virtual DbSet<PrescriptionChiefComplaints> PrescriptionChiefComplaints { get; set; }
         public virtual DbSet<PrescriptionDiagnosticTest> PrescriptionDiagnosticTest { get; set; }
         public virtual DbSet<PrescriptionDrugs> PrescriptionDrugs { get; set; }
         public virtual DbSet<Role> Role { get; set; }
+        public virtual DbSet<Symptoms> Symptoms { get; set; }
+        public virtual DbSet<StrengthType> StrengthTypes { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserOrganisationRole> UserOrganisationRole { get; set; }
         public virtual DbSet<UserRelated> UserRelated { get; set; }
+        public virtual DbSet<ActiveRole> ActiveRoles { get; set; }
+        public virtual DbSet<VitalsHistory>  VitalsHistories{ get; set; }        
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=(LocalDb)\\MSSQLLocalDB;Initial Catalog=roogi-test;Trusted_Connection=True;");
+                throw new NotImplementedException("override void OnConfiguring-> optionsBuilder.IsConfigured = false");
+                //optionsBuilder.UseSqlServer("Server=(LocalDb)\\MSSQLLocalDB;Initial Catalog=roogi-test;Trusted_Connection=True;");
+                //optionsBuilder.UseSqlServer(_configuration.GetConnectionString("PasData"));
             }
         }
 
@@ -151,6 +172,22 @@ namespace Pas.Data
             //    entity.Property(e => e.UserName).HasMaxLength(256);
             //});
 
+            
+                 modelBuilder.Entity<AddressBook>(entity =>
+                 {
+                     entity.ToTable("AddressBook", "dbo");
+
+                     entity.HasOne(d => d.User)
+                     .WithMany(p => p.AddressBooks)
+                     .HasForeignKey(d => d.UserId)
+                     .OnDelete(DeleteBehavior.Cascade);
+                 });
+
+            modelBuilder.Entity<AdviseInstructions>(entity =>
+            {
+                entity.ToTable("AdviseInstructions", "dbo");                
+            });
+            
             modelBuilder.Entity<CategoryTypes>(entity =>
             {
                 entity.ToTable("CategoryTypes", "Drug");
@@ -159,6 +196,11 @@ namespace Pas.Data
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ClinicalHistory>(entity =>
+            {
+                entity.ToTable("ClinicalHistory", "Patient");                
             });
 
             modelBuilder.Entity<DiagnosticTest>(entity =>
@@ -214,6 +256,16 @@ namespace Pas.Data
                     .HasConstraintName("FK_DiagnosticTestHistory_Doctors");
             });
 
+            modelBuilder.Entity<Speciality>(entity =>
+            {
+                entity.ToTable("Speciality", "dbo");
+            });
+
+            modelBuilder.Entity<MedicalDegree>(entity =>
+            {
+                entity.ToTable("MedicalDegrees", "dbo");
+            });
+
             modelBuilder.Entity<DoctorSpeciality>(entity =>
             {
                 entity.Property(e => e.BanglaName).HasMaxLength(100);
@@ -224,29 +276,24 @@ namespace Pas.Data
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Doctors>(entity =>
+            modelBuilder.Entity<DoctorMedicalDegrees>(entity =>
             {
+                entity.ToTable("DoctorMedicalDegrees", "dbo");
+            });
+
+            modelBuilder.Entity<DoctorProfile>(entity =>
+            {
+                entity.ToTable("DoctorProfile", "dbo");
+
                 entity.Property(e => e.Acheivements)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.BanglaName).HasMaxLength(100);
-
-                entity.Property(e => e.DateCreated).HasColumnType("datetime2(3)");
-
-                entity.Property(e => e.FullName)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.Speciality)
-                    .WithMany(p => p.Doctors)
-                    .HasForeignKey(d => d.SpecialityId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Doctors_DoctorSpeciality");
+                entity.Property(e => e.DateCreated).HasColumnType("datetime2(3)");                
+                
             });
 
-            modelBuilder.Entity<DosageTypes>(entity =>
+            modelBuilder.Entity<StrengthType>(entity =>
             {
                 entity.ToTable("DosageTypes", "Drug");
 
@@ -256,7 +303,7 @@ namespace Pas.Data
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<DrugDosageType>(entity =>
+            modelBuilder.Entity<DrugStrengthType>(entity =>
             {
                 entity.ToTable("DrugDosageType", "Drug");
 
@@ -277,17 +324,6 @@ namespace Pas.Data
             {
                 entity.ToTable("DrugModeOfDelivery", "Drug");
 
-                entity.HasOne(d => d.Drug)
-                    .WithMany(p => p.DrugModeOfDelivery)
-                    .HasForeignKey(d => d.DrugId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_DrugModeOfDelivery_Drugs");
-
-                entity.HasOne(d => d.ModeOfDelivery)
-                    .WithMany(p => p.DrugModeOfDelivery)
-                    .HasForeignKey(d => d.ModeOfDeliveryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_DrugModeOfDelivery_ModeOfDelivery");
             });
 
             modelBuilder.Entity<Drugs>(entity =>
@@ -306,14 +342,53 @@ namespace Pas.Data
                     .HasConstraintName("FK_Drugs_DrugCategoryTypes_DrugCategoryTypeId");
             });
 
+            modelBuilder.Entity<DrugBrands>(entity =>
+            {
+                entity.ToTable("DrugBrands", "Drug");
+            
+            });
+
+            
+
             modelBuilder.Entity<IndicationTypes>(entity =>
             {
-                entity.ToTable("IndicationTypes", "Drug");
+                entity.ToTable("IndicationTypes", "dbo");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<DrugIndicationTypes>(entity =>
+            {
+                entity.ToTable("DrugIndicationTypes", "drug");
+            });
+
+            modelBuilder.Entity<IntakePattern>(entity =>
+            {
+                entity.ToTable("IntakePattern", "drug");
+            });
+
+
+            modelBuilder.Entity<BrandForIndications>(entity =>
+            {
+                entity.ToTable("BrandForIndications", "drug");
+
+                entity.HasOne(d => d.DrugBrands)
+                    .WithMany(p => p.BrandForIndications)
+                    .HasForeignKey(d => d.DrugBrandId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+
+                entity.HasOne(d => d.IndicationType)
+                    .WithMany(p => p.BrandForIndications)
+                    .HasForeignKey(d => d.IndicationTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+
+            });
+            modelBuilder.Entity<BrandDoseTemplate>(entity =>
+            {
+                entity.ToTable("BrandDoseTemplate", "drug"); 
             });
 
             modelBuilder.Entity<ModeOfDelivery>(entity =>
@@ -324,6 +399,12 @@ namespace Pas.Data
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+
+            modelBuilder.Entity<Manufacturer>(entity =>
+            {
+                entity.ToTable("Manufacturer", "dbo");
             });
 
             modelBuilder.Entity<Organisation>(entity =>
@@ -368,6 +449,12 @@ namespace Pas.Data
                 entity.Property(e => e.Notes).HasMaxLength(1000);
             });
 
+            modelBuilder.Entity<PrescriptionChiefComplaints>(entity =>
+            {
+                entity.ToTable("PrescriptionChiefComplaints", "Patient");
+            });
+
+            
             modelBuilder.Entity<PrescriptionDiagnosticTest>(entity =>
             {
                 entity.ToTable("PrescriptionDiagnosticTest", "Patient");
@@ -386,27 +473,20 @@ namespace Pas.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PrescriptionDiagnosticTest_Prescription");
             });
-
-            modelBuilder.Entity<PatientAilment>(entity =>
-            {
-                entity.ToTable("PatientAilment", "Patient");
-            });
-
-
+                       
             modelBuilder.Entity<PatientAllergy>(entity =>
             {
                 entity.ToTable("PatientAllergy", "Patient");
             });
 
+            modelBuilder.Entity<PatientIndications>(entity =>
+            {
+                entity.ToTable("PatientIndications", "Patient");
+            });
+
             modelBuilder.Entity<PrescriptionDrugs>(entity =>
             {
                 entity.ToTable("PrescriptionDrugs", "Patient");
-
-                entity.HasOne(d => d.Dosage)
-                    .WithMany(p => p.PrescriptionDrugs)
-                    .HasForeignKey(d => d.DosageId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PrescriptionDrugs_DosageTypes");
 
                 entity.HasOne(d => d.Drug)
                     .WithMany(p => p.PrescriptionDrugs)
@@ -414,11 +494,11 @@ namespace Pas.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PrescriptionDrugs_Drugs");
 
-                entity.HasOne(d => d.ModeOfDelivery)
+                entity.HasOne(d => d.DrugBrands)
                     .WithMany(p => p.PrescriptionDrugs)
-                    .HasForeignKey(d => d.ModeOfDeliveryId)
+                    .HasForeignKey(d => d.DrugBrandId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PrescriptionDrugs_ModeOfDelivery");
+                    .HasConstraintName("FK_PrescriptionDrugs_DrugBrands");
 
                 entity.HasOne(d => d.Prescription)
                     .WithMany(p => p.PrescriptionDrugs)
@@ -435,6 +515,16 @@ namespace Pas.Data
                     .IsRequired()
                     .HasMaxLength(30)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Symptoms>(entity =>
+            {
+                entity.ToTable("Symptoms", "dbo");
+            });
+
+            modelBuilder.Entity<StrengthType>(entity =>
+            {
+                entity.ToTable("StrengthType", "drug");
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -500,6 +590,12 @@ namespace Pas.Data
                     .HasConstraintName("FK_UserOrganisationRole_User");
             });
 
+
+            modelBuilder.Entity<ActiveRole>(entity =>
+            {
+                entity.ToTable("ActiveRole", "User");
+            });
+
             modelBuilder.Entity<UserRelated>(entity =>
             {
                 entity.ToTable("UserRelated", "User");
@@ -511,8 +607,13 @@ namespace Pas.Data
                     .HasForeignKey(d => d.RelatedUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UserRelated_User");
+            });      
+            
+            modelBuilder.Entity<VitalsHistory>(entity =>
+            {
+                entity.ToTable("VitalsHistory", "Patient");                
             });
-
+               
             OnModelCreatingPartial(modelBuilder);
         }
 

@@ -1,0 +1,110 @@
+﻿@model Pas.Web.ViewModels.PrescriptionCreateVM
+@{ 
+    var patient = Model.PatientDetails;
+    var clinicalInfo = Model.ClinicialInfo;
+    var recentMedications = clinicalInfo.RecentMedication;    
+    var recentDiagnosis = clinicalInfo.RecentDiagnosis;
+    var allergyList = clinicalInfo.AllergyList;
+}
+<div id="PatientHistory" class="form-row w-100 mb-2 bg-white border rounded ml-2 pt-2 no-print">
+
+    <!-- Name/Age/Gender amd Address -->
+    <div id="LeftColumn" class="col-sm-12 col-md-6 pl-3">
+        <div id="PersonalDetails" class="">
+            <div class="">
+                <div class="h2 patient-name">@patient.Title @patient.Name / @patient.Age / @patient.Gender (@patient.ShortId)</div>
+                <div class="h3 text-primary patient-address d-none">@patient.AddressBook.FullAddress()</div>
+            </div>
+
+            @await Html.PartialAsync("_PatientVitals")
+
+        </div>
+
+        <div id="ClinicalHistory" class="col-12 invisible d-none">
+            <!-- Vitals -->
+            <div id="PatientHistoryTopRow" class="col-12 form-row mb-3">
+                <div class="flex-column vital-info-box shadow-sm">
+                    <span class="vital-info-box-header">Blood</span>
+                    <h1 class="font-large">O+</h1>
+                </div>
+                <div class="flex-column vital-info-box shadow-sm">
+                    <span class="vital-info-box-header">Blood pressure</span>
+                    <h1 class="font-large">120/80</h1>
+                </div>
+                <div class="flex-column vital-info-box shadow-sm">
+                    <span class="vital-info-box-header">Pulse</span>
+                    <h1 class="font-large">70</h1>
+                </div>
+                <div class="flex-column vital-info-box shadow-sm">
+                    <span class="vital-info-box-header">RBS</span>
+                    <h1 class="font-large">6.5 mmol/L</h1>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Allergy, Ailments and Recent Medication -->
+    <div id="RightColumn" class="col-sm-12 col-md-6">
+        <div id="PatientAllergies" class="col-12 mb-3">
+            <span class="font-weight-bolder d-block mb-2">
+                <i class="fas fa-allergies fa-lg mr-2"></i>
+                Allergies:
+            </span>
+            @if (allergyList.Count > 0)
+            {
+                @foreach (var item in allergyList)
+                {
+                    <span class="alert alert-warning p-2 mr-1">@item</span>
+                }                        
+            }
+            else { 
+                <span class="h4 text-info">No known allergy</span>
+            }
+        </div>
+
+        <div id="PatientAllergies" class="col-12 mb-3">
+            <span class="font-weight-bolder d-block mb-2">
+                <i class="fas fa-procedures fa-lg mr-2"></i>Diagnosis: <!-- Indications / Diagnosis -->
+            </span>
+            @if (recentDiagnosis != null && recentDiagnosis.Count() > 0)
+            {
+                @foreach (var item in recentDiagnosis)
+                {
+                    <span class="alert alert-danger p-2 mr-1">@item</span>
+                }
+            }
+            else
+            {
+                <span class="h4 text-info">No recent Diagnosis found</span>
+            }
+        </div>
+
+        <div id="PatientAllergies" class="col-12 mb-3">
+            <span class="font-weight-bolder d-block mb-2">
+                <i class="fas fa-prescription fa-lg mr-2"></i>Recent Medications (top 5):
+            </span>
+            @if (recentMedications != null && recentMedications.Count() > 0)
+            {
+                @foreach (var item in recentMedications)
+                {
+                    <span class="alert alert-info p-2 mr-1">@item.Name - @item.Dosage</span>
+                }
+            }
+            else
+            {
+                <span class="h4 text-info">No recent Medication found</span>
+            }
+        </div>
+
+    </div>
+
+
+    <div class="row">
+
+        <div id="PatientHistorySecondRow" class="col-12 mt-2 form-row pt-2 pb-4 border-bottom">
+
+
+        </div>
+    </div>
+</div>

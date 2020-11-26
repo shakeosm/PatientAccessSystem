@@ -1,81 +1,44 @@
-﻿@*@model Pas.Web.ViewModels.PrescriptionConfirmSaveVM*@
-@model Pas.Web.ViewModels.PrescriptionCreateVM
+﻿@model Pas.Web.ViewModels.PrescriptionCreateVM
 
 @{
     ViewData["Title"] = "Prescription Create";
+    //var patient = Model.PatientDetails;
 }
 
-<h1>Doctor- Prescription Create</h1>
-
-<form id="PrescriptionCreateForm" action="Create" method="post">
-    @Html.AntiForgeryToken()
-
-    <input type="submit" name="submitCreateForm" value="Submit" />
-</form>
-<div class="input-group mb-3">
-    <div class="input-group-prepend">
-        <div class="input-group-text">
-            <input type="checkbox" aria-label="Checkbox for following text input">
+    <div id="PrescriptionMainContainer" class="form-row col-12 m-0 p-0 ">
+        <div class="alert alert-info mb-2 col-12 h3 no-print">
+            <i class="fal fa-file-prescription fa-2x"></i>
+            New Prescription
+            <input type="hidden" asp-for="@Model.Id" name="PrescriptionIdInput" value="@Model.Id" />
+            <input type="hidden" asp-for="@Model.PatientDetails.Id" name="PatientId" value="@Model.PatientDetails.Id" />
         </div>
-    </div>
-    <input type="text" class="form-control" aria-label="Text input with checkbox">
-</div>
 
-<div class="input-group">
-    <div class="input-group-prepend">
-        <div class="input-group-text">
-            <input type="radio" aria-label="Radio button for following text input">
-        </div>
-    </div>
-    <input type="text" class="form-control" aria-label="Text input with radio button">
-</div>
+        @await Html.PartialAsync("_PrescriptionHeader", @Model)
 
-<hr />
+        @await Html.PartialAsync("_PrescriptionItemEntry", @Model.Id)
 
-<div class="input-group mb-3">
-    <div class="input-group-prepend">
-        <label class="input-group-text" for="inputGroupSelect01">Options</label>
-    </div>
-    <select class="custom-select" id="inputGroupSelect01">
-        <option selected>Choose...</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-    </select>
-</div>
+        @await Html.PartialAsync("_NewDrugDoseTemplate")
 
-<div class="input-group mb-3">
-    <select class="custom-select" id="inputGroupSelect02">
-        <option selected>Choose...</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-    </select>
-    <div class="input-group-append">
-        <label class="input-group-text" for="inputGroupSelect02">Options</label>
-    </div>
-</div>
+        @await Html.PartialAsync("_AddNewDrugBrand")
 
-<div class="input-group mb-3">
-    <div class="input-group-prepend">
-        <button class="btn btn-outline-secondary" type="button">Button</button>
-    </div>
-    <select class="custom-select" id="inputGroupSelect03">
-        <option selected>Choose...</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-    </select>
-</div>
+        @await Html.PartialAsync("_AddNewAdviseInstruction")
 
-<div class="input-group">
-    <select class="custom-select" id="inputGroupSelect04">
-        <option selected>Choose...</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-    </select>
-    <div class="input-group-append">
-        <button class="btn btn-outline-secondary" type="button">Button</button>
+        @await Html.PartialAsync("_PatientVitalsModal")
+
+        <!-- Here we will dump the Prescription to view as a Modal Popup -->
+        @await Html.PartialAsync("_PrescriptionPrintPreview.cshtml", Model)
+
+        <form id="PrescriptionCreateForm" action="Create" method="post">
+            @Html.AntiForgeryToken()
+        </form>
     </div>
-</div>
+
+
+@section Scripts{
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+    <script src="~/js/prescription/prescription-create.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+}

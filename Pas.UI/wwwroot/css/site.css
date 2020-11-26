@@ -75,34 +75,10 @@ body {
     color:#fff;
 }
 
-.et_pb_button {
-    position: relative;
-    padding: .3em 1em;
-    border: 2px solid;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    background-color: transparent;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 1.7em !important;
-    -webkit-transition: all .2s;
-    -moz-transition: all .2s;
-    transition: all .2s;
-}
-
-.et_pb_button_0 {
-    border-width: 16px !important;
-    border-color: #48d14c;
-    border-radius: 100px;
-    letter-spacing: 1px;
-    font-size: 14px;
-    font-family: 'Montserrat',Helvetica,Arial,Lucida,sans-serif !important;
-    font-weight: 500 !important;
-    background-color: #48d14c;
+@media print {
+    .no-print, .no-print * {
+        display: none !important;
+    }
 }
 
 .loaderbody {

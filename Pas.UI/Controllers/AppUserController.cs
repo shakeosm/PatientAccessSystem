@@ -10,35 +10,43 @@ using Pas.Common.Models.Identity;
 using Pas.Service.Interface;
 using Pas.UI.Infrastructure.ApplicationUserClaims;
 using Pas.Web.ViewModels;
+using Pas.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Pas.UI.Controllers
 {
-    public class AppUserController : Controller
+    [Authorize]
+    public class AppUserController : BaseController
     {
-        private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
+        //private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
 
         ///private readonly ApplicationUserClaimsPrincipalFactory _applicationUserClaimsPrincipalFactory;
         private readonly IPatientService _patientService;
-        private readonly IUserOrgRoleService _userOrgRoleService;
-        private readonly ICacheService _cacheService;
-
+        //private readonly ICacheService _cacheService;
+        //private readonly IUserOrgRoleService _userOrgRoleService;
+        //private readonly IAppAuthorisationService _appAuthorisationService;
+        //public readonly UserManager<IdentityUser> _userManager;
         //private readonly ApplicationUser _userManager;
 
         //public AppUserController(IUserClaimsPrincipalFactory<ApplicationUser> UserClaimsPrincipalFactory
 
-        public AppUserController(IPatientService PatientService
-                                , IUserOrgRoleService UserOrgRoleService
-                                , ICacheService cacheService
-            //,UserManager<ApplicationUser> userManager
-            )
+        public AppUserController(IPatientService PatientService,
+                                UserManager<IdentityUser> UserManager,
+                                IAppUserService AppUserService,
+                                IAppAuthorisationService AppAuthorisationService,
+                                IUserOrgRoleService UserOrgRoleService
+            ) : base(UserManager, AppUserService, AppAuthorisationService, UserOrgRoleService)
         {
             //_userClaimsPrincipalFactory = UserClaimsPrincipalFactory;
             //_applicationUserClaimsPrincipalFactory = UserClaimsPrincipalFactory;
             _patientService = PatientService;
-            _userOrgRoleService = UserOrgRoleService;
-            _cacheService = cacheService;
+            //_userOrgRoleService = UserOrgRoleService;
+            //_cacheService = cacheService;
+            //_appAuthorisationService = AppAuthorisationService;
+            //_userManager = UserManager;
         }
 
+        
 
         [HttpGet]
         public async Task<IActionResult> SwitchRole()
@@ -46,94 +54,122 @@ namespace Pas.UI.Controllers
             //## The reason for coming here is-> You have multiple ROles, ie: Doctor+Director. 
             //##    Or You wanted to Switch between roles.
 
+            //var userEmail = GetLoggedInEmail();
 
-            ////var currentUserClaims = await _userClaimsPrincipalFactory.
-            //var currentClaims = ClaimsPrincipal.Current?.Identities.First().Claims.ToList();
-            //if (currentClaims is null) {
+            ////var userEmail = "shakeosm@gmail.com"; // HttpContext.User.FindFirst(ClaimTypes.Email).Value;
+            //if (userEmail is null) {
+            //    //## User Not Found
             //    return RedirectToAction("Login", "Account", new { Area = "Identity" });
             //}
 
-            //var x = currentClaims.FirstOrDefault();
-            //var y = currentClaims?.FirstOrDefault(x => x.Type.Equals("UserName", StringComparison.OrdinalIgnoreCase)); //?.Value;
+            var currentAppUser = await GetCurrentUser();
 
-            var userEmail = "shakeosm@gmail.com"; // HttpContext.User.FindFirst(ClaimTypes.Email).Value;
-            if (userEmail is null) { 
-                //## User Not Found
-                return RedirectToAction("Index", "Home");
+            //## is it a Patient- who is trying to access this SwitchRole page?
+            if (currentAppUser.HasMultipleRoles == false) {
+                return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
             }
 
-            var currentAppUser = await _patientService.FindByEmail(userEmail);
+            //## Read Roles From Cache, too
+            var  userRoles = await _appAuthorisationService.GetUserRolesFromCache(currentAppUser.Id);
+            
+            //## How many UserRoles we have?
+            //if (userRoles.Count() < 1)
+            //{
+            //    //## Looks like the Patient was trying to be Clever by accessing this Page--!
+            //    currentAppUser.CurrentRole = new UserRoleVM();
+            //    //## No Role in UserOrgTable - means this is a Patient- go to Patient Home Page
+            //    currentAppUser.CurrentRole.RoleId = (int)ApplicationRole.Patient;
+            //    currentAppUser.CurrentRole.RoleName = ApplicationRole.Patient.ToString();
+            //    currentAppUser.CurrentRole.OrganisationName = "Patient";
 
-            //## Go to DB.. See if this User has multiple roles or only one.
-            var userRoles = await _userOrgRoleService.FindRolesByUserId(currentAppUser.Id);
+            //    //## Add this User in the RedisCache
+            //    _appAuthorisationService.SetActiveUserInCache(currentAppUser);                               
 
-            if (userRoles is null)
-            {
-                //## No Role in UserOrgTable - means this is a Patient- go to Patient Home Page
-
-                ApplicationUser currentUser = new ApplicationUser()
-                {
-                    Email = currentAppUser.Email,
-                    FullName = currentAppUser.Name,
-                    OrganisationId = -1,
-                    OrganisationName = "Patient",
-                    RoleId = (int)ApplicationRole.Patient,
-                    RoleName = ApplicationRole.Patient.ToString()
-                };
-                //## Add this User in the RedisCache
-
-                // await _applicationUserClaimsPrincipalFactory.CreateAsync(currentUser);
-
-                return RedirectToAction("Index", "Home", new { id = currentAppUser.Id, Area = "Patient" });
-            }
-            else {
+            //    return RedirectToAction("Index", "Home", new { id = currentAppUser.Id, Area = "Patient" });
+            //}
+            //else {
                 //## We found there are roles for this User- so- we need to ask the user to Select a Role
                 //## Passing the ViewModel with some values
 
-                var  userRoleList = await _patientService.GetRolesByUser(currentAppUser.Id);
+                //var  userRoleList = await _patientService.GetRolesByUser(currentAppUser.Id);
+                //IEnumerable<UserRoleVM> userRoleList = MapToUserRoleVM(userRoles);
 
-                UserSwitchRoleViewVM vm = new UserSwitchRoleViewVM() { 
+                UserSwitchRoleViewVM vm = new UserSwitchRoleViewVM() {
+                    UserEmail = currentAppUser.Email,
                     UserId = currentAppUser.Id,
-                    UserRoleList = userRoleList
+                    UserRoleList = userRoles
                 };
 
                 //## Roles found-> As the user which role they want to select
                 return View(vm);
-            }
+            //}
             
+        }
+
+        private IEnumerable<UserRoleVM> MapToUserRoleVM(IEnumerable<UserOrganisationRole> userRoles)
+        {
+            var result = userRoles.Select(u => new UserRoleVM {
+                UserOrganisationRoleId = u.Id,
+                OrganisationId = u.OrganisationId,
+                OrganisationName = u.Organisation.Name,
+                RoleId = u.RoleId,
+                RoleName = ((ApplicationRole) u.RoleId).ToString()
+            });
+
+            return result;
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> SwitchRoleToPatient(UserSwitchRoleUpdate vm)
+        {
+            //## Get the existing UserDetails from Redis Cache- 
+            AppUserDetailsVM cachedUser = await GetCurrentUser();
+
+            //## This is a Patient- update only ApplicationRole
+            cachedUser.ApplicationRole = ApplicationRole.Patient;
+            _appAuthorisationService.SetActiveUserInCache(cachedUser);
+
+            return RedirectToAction("Index", "Home", new { Area = "Patient" });
         }
 
 
         [HttpPost]
         public async Task<IActionResult> SwitchRole(UserSwitchRoleUpdate vm)
         {
+            //## Get the existing UserDetails from Redis Cache- 
+            AppUserDetailsVM cachedUser = await GetCurrentUser();
+
             //## Check this is not a hacker trying to allocate Roles that doesn't exist
+            var selectedOrgRole = await _userOrgRoleService.Find(cachedUser.Id, vm.UserOrganisationRoleId);
 
-            var selectedOrgRole = await _userOrgRoleService.Find(vm.UserOrganisationRoleId);
             if (selectedOrgRole is null) {
-                return RedirectToAction("Index", "Login", new { Area = "Identity" });
+                //## Someone tempered the data- hence no Role found for this User in the UserOrgTable
+                return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
             }
+                        
+            //## So- now we know what the User has selected to be                
+            cachedUser.ApplicationRole = (ApplicationRole)selectedOrgRole.RoleId;
+            //cachedUser.HasAdditionalRoles = true;
 
-            //TODO: Also check- does current user has a Role in that Organisation? Is it a Genuine User selection or BOT Attack?
-
-            ApplicationRole selectedRole = (ApplicationRole)selectedOrgRole.RoleId;
-            string areaName = selectedRole.ToString();
-
-            ApplicationUser currentUser = new ApplicationUser()
-            {               
-                Email = selectedOrgRole.User.Email,
-                FullName = $"{selectedOrgRole.User.FirstName} {selectedOrgRole.User.LastName}",
+            //## Save it in the Redis Cache- with the new UserOrgRole value
+            cachedUser.CurrentRole = new UserRoleVM() { 
                 OrganisationId = selectedOrgRole.OrganisationId,
                 OrganisationName = selectedOrgRole.Organisation.Name,
                 RoleId = selectedOrgRole.RoleId,
-                RoleName = selectedOrgRole.Role.Name,
-                ImageUrl = ""
+                RoleName = selectedOrgRole.Role.Name
             };
+
+            //## Save it back in redis
+            _appAuthorisationService.SetActiveUserInCache(cachedUser);
 
             //await _applicationUserClaimsPrincipalFactory.CreateAsync(currentUser);
 
-            return RedirectToAction("Index", "Home", new { id = selectedOrgRole.UserId, Area = areaName });
+            var areaName = ((ApplicationRole)selectedOrgRole.RoleId).ToString();
+
+            return RedirectToAction("Index", "Home", new { Area = areaName });
 
         }
+
     }
 }

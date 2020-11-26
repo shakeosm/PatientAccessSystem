@@ -1,0 +1,54 @@
+﻿<!-- _PatientPrescriptionList.cshtml -->
+
+<h3>
+    Prescriptions
+</h3>
+<div class="">
+    <table id="PrescriptionHistoryTable"
+           class="table table-bordered table-hover table-striped w-100 dataTable dtr-inline">
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <th>Bangla Name</th>
+                <th>Mobile</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Last Visit</th>
+                <th></th>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+                <td>Shawkat Osman</td>
+                <td>শওকত ওসমান </td>
+                <td>0156-456789123</td>
+                <td>65</td>
+                <td>Male</td>
+                <td>01 Mar 2020</td>
+                <td>
+
+                    <a class="btn btn-general btn-primary create-new-prescription-button"
+                       role="button"
+                       asp-area="Doctor"
+                       asp-controller="Home"
+                       asp-action="ViewPatient"
+                       asp-route-id="1"
+                       data-patient-id="1"
+                       data-toggle="modal" data-target=".bd-example-modal-lg">
+                        <i class="fa fa-id-card fa-lg" aria-hidden="true"></i>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="min-height:600px;">
+            <img src="~/images/sample-prescription-01.png" style="width:326px; height:522px;" alt="Sample prescription" />
+        </div>
+    </div>
+</div>

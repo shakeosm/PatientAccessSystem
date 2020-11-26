@@ -1,0 +1,55 @@
+﻿@using Pas.Common.Enums
+@model Pas.Web.ViewModels.AddressBookVM
+<!-- _ContantDetailsCardModal -->
+
+
+<div id="ContantDetailsCardModal" class="modal fade" tabindex="-1" role="dialog" aria-label="Patient Contant Details" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="ContactDetailsUpdateForm" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Address Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Address -->
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <div class="form-row col-12 mb-2">
+                        <div class="form-row col-12">
+                            <label for="AddressLine1" class="form-label">Address</label>
+                            <input asp-for="AddressLine1" type="text" class="form-control" required placeholder="Building number, Road name">
+                            <span asp-validation-for="AddressLine1" class="text-danger"></span>
+                        </div>
+                        <div class="form-row col-12 mt-3">
+                            <div class="col">
+                                <label for="LocalArea" class="form-label">Local Area</label>
+                                <input asp-for="LocalArea" type="text" class="form-control" required placeholder="Local area name">
+                                <span asp-validation-for="LocalArea" class="text-danger"></span>
+                            </div>
+                            <div class="col">
+                                <label for="PostCode" class="form-label">Post Code</label>
+                                <input asp-for="PostCode" type="text" class="form-control" placeholder="Post Code" required>
+                            </div>
+                        </div>
+                        <div class="form-row col-12 mt-3">
+                            <label for="CityId" class="form-label">City</label>
+                            <select class="form-control" asp-items="Html.GetEnumSelectList<City>()" asp-for="CityId">
+                            </select>
+                            <span asp-validation-for="CityId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button id="PersonalHistoryModalSubmitButton" type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

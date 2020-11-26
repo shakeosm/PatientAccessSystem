@@ -4,26 +4,40 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Pas.Service.Interface;
 using Pas.UI.Models;
+using Pas.Web.ViewModels;
 
 namespace Pas.UI.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IPatientService _patientService;
-        private readonly IUserOrgRoleService _userOrgRoleService;
+        private readonly IPrescriptionService _prescriptionService;
+
+        //private readonly UserManager<IdentityUser> _userManager;
+        //private readonly IAppUserService _appUserService;
+        //private readonly IUserOrgRoleService _userOrgRoleService;
+
+        //public IAppAuthorisationService _appAuthorisationService { get; }
 
         public HomeController(ILogger<HomeController> logger,
-                                IPatientService PatientService,
-                                IUserOrgRoleService UserOrgRoleService)
+                                IPrescriptionService PrescriptionService,
+                                UserManager<IdentityUser> UserManager,
+                                IAppUserService AppUserService,
+                                IAppAuthorisationService AppAuthorisationService,
+                                IUserOrgRoleService UserOrgRoleService
+            ) : base (UserManager, AppUserService, AppAuthorisationService, UserOrgRoleService)
         {
             _logger = logger;
-            _patientService = PatientService;
-            _userOrgRoleService = UserOrgRoleService;
+            _prescriptionService = PrescriptionService;
+            //_userManager = userManager;
+            //_appUserService = AppUserService;
+            //_appAuthorisationService = AppAuthorisationService;
+            //_userOrgRoleService = UserOrgRoleService;
         }
 
         /// <summary>
@@ -31,50 +45,35 @@ namespace Pas.UI.Controllers
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> Index()
-        {
-            return View();
+        {            
+            //var userId = _userManager.GetUserId(HttpContext.User);
+            //var userEmail = _userManager.GetUserName(HttpContext.User);
 
-            bool isAnonymusUser = HttpContext.User.Claims.Count() < 1;
-            var u1 = HttpContext.User.Claims.ToList();
-            var userId = HttpContext.User.FindFirst(ClaimTypes.Email).Value;
+            //var u1 = HttpContext.User.Claims.ToList();
+            //var userClaim = HttpContext.User.FindFirst(ClaimTypes.Email).Value;            
 
+            AppUserDetailsVM currentUser = new AppUserDetailsVM();
+            var userEmail = GetLoggedInEmail();
 
-            if (isAnonymusUser) {
-                //## Not Logged in.. Show Regular Screen to Log In                
-                return View();
+            if (userEmail != null) {
+                //## if the user is Logged in- check- do we have a value in Cache for this User?
+                currentUser = await _appAuthorisationService.GetActiveUserFromCache(userEmail);
+
+                if (currentUser is null) { 
+                    //## First time Logging in this Session (1 hour)- fetch the record from DataBase
+                    currentUser = _appUserService.FindByEmail(userEmail);
+                    
+                    //## Update the Redis Cache- for this new login
+                    _appAuthorisationService.SetActiveUserInCache(currentUser);
+                }
+            
             }
+            //## Set Profile path of this User- So, that user can quickly go to the respective Profile (Doctor/Patient)
 
-            var claimList = ClaimsPrincipal.Current?.Identities.First().Claims.ToList();
-
-            var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email).Value;
-
-            var currentUser = _patientService.FindByEmail(userEmail);
-            if (currentUser is null){
-                //## Something not right.. Show Regular Screen to Log In
-                return View();
-            }
-
-            //## The User is found in the DB.. How many roles the User have. Is the User simply a Patient or a Doctor or Hospital-Director
-            var roles = await _userOrgRoleService.FindRolesByUserId(currentUser.Id);
-            if (roles is null)
-            {
-                //## This is a PatientOnly user.. redirect to Patient Landing/Dashboard page
-            }
-            else if (roles.Count() == 1)
-            {
-                //## Only One role- either a Doctor or a Technician or Simply a Director(Non-Doctor)- redirect to ther respective page
-                string areaName = GetAreaName(roles.FirstOrDefault().RoleId);
-
-                return RedirectToAction("Index", "Home", new { Area = areaName });
-            }
-            else {
-                //## More than One roles-> Doctor+Director.
-                return RedirectToAction("SwitchRole", "AppUser");
-            }
-
-            var currentClaims = ClaimsPrincipal.Current?.Identities.First().Claims.ToList();
-
-            return View();
+            //var claimList = ClaimsPrincipal.Current?.Identities.First().Claims.ToList();
+            
+            return View(currentUser);
+            
         }
 
         private string GetAreaName(int roleId)
@@ -92,10 +91,27 @@ namespace Pas.UI.Controllers
             return View();
         }
 
+
+        /// <summary>This is open for Everyone- to view their Prescription</summary>
+        /// <returns></returns>
+        public IActionResult ViewPrescription()
+        {
+            return View();
+        }
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public async Task<IActionResult> GetPrescription_HTML(int id)
+        {            
+            var result = await _prescriptionService.GetPrescription_HTML(id);
+
+            return Json(result);
+
         }
     }
 }

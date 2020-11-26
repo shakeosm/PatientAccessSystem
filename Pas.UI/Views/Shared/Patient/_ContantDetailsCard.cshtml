@@ -1,0 +1,27 @@
+﻿@model  Pas.Web.ViewModels.AddressBookVM
+
+<!-- _ContantDetailsCard.cshtml -->
+<div id="ContactDetailsDiv" class="card mb-g rounded-top col-sm-6 col-md-12">
+    <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
+        <!-- we wrap header title inside a span tag with utility padding -->
+        <div class="card-title text-white"></div>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">
+            Contact details
+        </h5>
+        <p class="card-text">
+            <i class="fa fa-address-book" aria-hidden="true"></i>&nbsp;
+
+            Address: @Model.FullAddress() <br /><br />
+            <i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;Mobile: @Model.Mobile<br />
+            <i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;Email: @Model.Email
+        </p>
+    </div>
+    <div class="card-footer">
+        <small class="text-muted">Last updated: 3 months ago</small>
+        <button id="ContactDetailsEditButton" class="btn btn-primary btn-icon waves-effect waves-themed float-right" role="button">
+            <i class="fal fa-edit"></i>
+        </button>
+    </div>
+</div>

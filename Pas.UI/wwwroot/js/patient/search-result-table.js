@@ -1,4 +1,6 @@
 ﻿$(document).ready(function () {
+    $('#PatientSearchTable').DataTable({});
+    //$('#RegularPatientDiv').DataTable({});
 
     $("#SearchPatientButton").click(function () {
 
@@ -75,49 +77,13 @@ $(document).on("click", "#PatientSearchTable .create-new-prescription-button", f
         contentType: false,  // tell jQuery not to set contentType- bcoz its FormData
         data: formData,
         success: function (result) {
-            ServiceFileUploadOnSuccess(result, uploadedFileListTable)
+            console.log("PatientSearchTable=> Success");
         },
         error: function (xhr, status, error) {
-            ServiceFileUploadOnError(xhr, status, error);
+            console.log("PatientSearchTable=> ERROR");
+            //ServiceFileUploadOnError(xhr, status, error);
         }
     });
 });
 
 
-/*
- debugger;
-        $('#PatientSearchTable').DataTable({
-            destroy: true,
-            searching: false
-        });
-
-        $("#PatientSearchTable").DataTable({
-            "processing": true,
-            "serverSide": true,
-            "filter": true,
-            "ajax": {
-                "url": formAction,
-                "type": "GET",
-                "datatype": "json"
-            },
-            "columnDefs": [{
-                "targets": [0],
-                "visible": false,
-                "searchable": false
-            }],
-            "columns": [
-                { "data": "id", "name": "Id", "autoWidth": true },
-                { "data": "shortId", "name": "ShortId", "autoWidth": true },
-                { "data": "name", "name": "Full Name", "autoWidth": true },
-                { "data": "banglaName", "name": "Bangla Name", "autoWidth": true },
-                { "data": "gender", "name": "Gender", "autoWidth": true },
-                { "data": "dateOfBirth", "name": "Date of Birth", "autoWidth": true },
-                { "data": "age", "name": "Age", "autoWidth": true },
-                {
-                    "render": function (data, row) {
-                        return "<a href='/Doctor/Prescription/Create/" + row.id + "' class='btn btn-general btn-primary'); >Delete</a>";
-                    }
-                },
-            ]
-        });
- */

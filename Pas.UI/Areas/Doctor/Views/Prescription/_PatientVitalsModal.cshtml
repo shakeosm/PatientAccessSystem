@@ -1,0 +1,88 @@
+﻿
+<!-- _PatientVitalsModal -->
+@*div class="modal fade" id="NewDrugAdviseInstructionPopupDiv" tabindex="-1" role="dialog"*@ 
+<div id="PatientVitalsModalPopup" class="modal fade" tabindex="-1" role="dialog" aria-label="New Instruction/Advise" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Patient's Vitals</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Temperature -->
+                <div class="form-row col-12 mb-2">
+                    <label class="form-label col-3">Temperature</label>
+
+                    <div class="col-6 input-group mb-3">
+                        <input id="TemperatureInput" class="form-control" type="number" aria-label="Patient body temperature" placeholder="Celcius" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-temperature-high"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pulse -->
+                <div class="form-row col-12 mb-2">
+                    <label class="form-label col-3">Pulse</label>
+
+                    <div class="col-6 input-group mb-3">
+                        <input id="PulseInput" class="form-control" type="number" aria-label="Patient blood pulse" placeholder="bpm" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-wave-square"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blood Pressure -->
+                <div class="form-row col-12 mb-2">
+                    <label class="form-label col-3">Blood Pressure</label>
+
+                    <div class="col-9 input-group mb-3">
+                        <input id="BoodPressureDiastolicInput" class="form-control col-4" type="number" placeholder="Diastolic" />
+                        <input id="BoodPressureSystolicInput" class="form-control col-4" type="number" placeholder="Systolic" />
+                    </div>
+                </div>
+
+                <!-- Weight  -->
+                <div class="form-row col-12 mb-2">
+                    <label for="WeightInput" class="form-label col-3">Weight</label>
+
+                    <div class="col-6 input-group mb-3">
+                        <input id="WeightInput" class="form-control" type="number" aria-label="Patient weight" placeholder="kilogram" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-weight"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Height: Don't show  -->
+                <div class="form-row col-12 mb-2 d-none invisible">
+                    <label for="HeightInput" class="form-label col-3">Height</label>
+
+                    <div class="col-6 input-group mb-6">
+                        <input id="HeightInput" class="form-control" type="number" aria-label="Patient weight" placeholder="5 feet 10" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-ruler-combined"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="VitalModalSubmitButton" type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

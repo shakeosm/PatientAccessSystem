@@ -1,0 +1,31 @@
+﻿<!--    _PrescriptionRightColumn    -->
+<h4 class="text-center text-info">Prescription item preview</h4>
+
+<div id="PrescriptionItemsPreviewContainer">
+    <!-- Header row -->
+    <div class="form-row col-12 border-bottom  mb-2 font-weight-bold text-primary">
+        <div class="col-1">#</div>
+        <div class="col-2">Type</div>
+        <div class="col-5">Name</div>
+        <div class="col-3">Duration</div>
+        <div class="col-1 prescription-action-column"></div>
+    </div>
+    <div id="PrescriptionItemRowTemplate" class="form-row col-12 mb-2 d-none">
+        <div class="col-1 prescription-item-number">1</div>
+        <div class="col-2 mode-of-delivery-type">[TYPE]</div>
+        <div class="col-5">
+            <span class="prescription-item-name">[drug item name]</span>
+            <span class="prescription-item-strength"></span><br />
+            <span class="prescription-item-pattern"></span><br />
+            <span class="prescription-item-instruction"></span>
+</div>
+        <div class="col-3 prescription-item-duration">[x Days]</div>
+        <div class="col-1 prescription-action-column">
+            <button type="button" class="btn btn-primary prescription-item-remove"
+                    data-item-id="-1"
+                    data-toggle="tooltip" data-placement="left" title="" data-original-title="Remove item">
+                <i class="fal fa-trash-alt fa-lg"></i>
+            </button>
+        </div>
+    </div>
+</div>

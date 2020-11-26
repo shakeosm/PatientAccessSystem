@@ -9,8 +9,8 @@ namespace Pas.Data.Models
     {
         public ModeOfDelivery()
         {
-            DrugModeOfDelivery = new HashSet<DrugModeOfDelivery>();
-            PrescriptionDrugs = new HashSet<PrescriptionDrugs>();
+            DrugModeOfDelivery = new HashSet<DrugModeOfDelivery>();            
+            BrandDoseTemplates = new HashSet<BrandDoseTemplate>();
         }
 
         [Required]
@@ -19,7 +19,11 @@ namespace Pas.Data.Models
         
         public bool? IsDeleted { get; set; }
 
-        public virtual ICollection<DrugModeOfDelivery> DrugModeOfDelivery { get; set; }
-        public virtual ICollection<PrescriptionDrugs> PrescriptionDrugs { get; set; }
+        [Column(TypeName = "tinyint")]
+        public int? RowOrder { get; set; }
+
+        public virtual ICollection<DrugModeOfDelivery> DrugModeOfDelivery { get; set; }        
+        public virtual ICollection<BrandDoseTemplate> BrandDoseTemplates { get; set; }
+
     }
 }

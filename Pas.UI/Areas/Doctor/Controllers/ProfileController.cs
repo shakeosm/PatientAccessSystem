@@ -2,16 +2,49 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Pas.Common.Enums;
+using Pas.Service;
+using Pas.Service.Interface;
+using Pas.UI.Controllers;
+using Pas.Web.ViewModels;
 
 namespace Pas.UI.Areas.Doctor.Controllers
 {
-    public class ProfileController : Controller
-    {
+    [Area("Doctor")]
+    [Authorize]
+    public class ProfileController : BaseController
+    {                
+        public ProfileController(
+                                IAppUserService AppUserService,
+                                UserManager<IdentityUser> UserManager,
+                                IAppAuthorisationService AppAuthorisationService,
+                                IUserOrgRoleService UserOrgRoleService
+            ) : base(UserManager, AppUserService, AppAuthorisationService, UserOrgRoleService)
+        {            
+
+        }
+
+
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            AppUserDetailsVM currentUser = await GetCurrentUser();
+
+            if (currentUser.Not_A_Doctor())
+            {
+                return RedirectToAction("AccessDenied", "Account", new { Area = "Identity" });
+            }
+
+            var availableRoles = await _appAuthorisationService.GetUserRolesFromCache(currentUser.Id);
+            currentUser.RolesList = availableRoles;
+
+            //## Re-factor UserDetails- 'Doctor' type values     
+            SetDoctorsProfileValues(currentUser);
+
+            return View(currentUser);
         }
 
         [HttpGet]
@@ -25,5 +58,6 @@ namespace Pas.UI.Areas.Doctor.Controllers
         {
             return View();
         }
+        
     }
 }

@@ -1,27 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using Pas.Common.Enums;
+using Pas.Data.Models;
+using System;
+using System.Collections.Generic;
 
 namespace Pas.Web.ViewModels
 {
     public class PrescriptionCreateVM
     {
         public int Id { get; set; }
-        public HospitalDetailsVM HospitalDetails { get; set; }
-        public DoctorDetailsVM DoctorDetails { get; set; }
-        public PatientDetailsVM PatientDetails { get; set; }
-
-        public int IndicatioId { get; set; }
-        public IList<IndicationVM> indicationList { get; set; }
+        public Title Title { get; set; }
+        public AppUserDetailsVM Doctor { get; set; }
         
-        public IList<DrugDetailsVM> DrugList { get; set; }
+        public HospitalDetailsVM ChamberDetails { get; set; }
+
+        public AppUserDetailsVM PatientDetails { get; set; }
+
+        public int IndicationId { get; set; }
+        public IList<IndicationTypes> indicationList { get; set; }
+        
+        public IEnumerable<DrugDetailsVM> DrugList { get; set; }
 
         public IList<DiagnosticTestDetailsVM> DiagnosticTestList { get; set; }
 
-        //## Need while posting
-        public int PreviousPrescriptionId { get; set; }
+        public IList<string> PreviousNotes { get; set; }
+                        
+        //public IList<string> AllergyList { get; set; }
 
-        public bool IsRepeatingVisit { get; set; }
-
-        public string Notes { get; set; }
+        public ClinicalHistoryVM ClinicialInfo { get; set; }        
     }
 
     /// <summary>This is for POST method
@@ -31,14 +36,15 @@ namespace Pas.Web.ViewModels
     public class PrescriptionConfirmSaveVM
     {
         public int Id { get; set; }
-        public int IndicatioId { get; set; }
+        
 
-        //## Need while posting
-        public int PreviousPrescriptionId { get; set; }
-
-        public bool IsRepeatingVisit { get; set; }
+        public bool IsFollowUpVisit { get; set; }
 
         public string Notes { get; set; }
+        public string Summary { get; set; }
+        public string ReferredDoctorName { get; set; }
+        public string Advise { get; set; }
+        public string LabTestRequested { get; set; }
     }
 
     /// <summary>
@@ -56,7 +62,7 @@ namespace Pas.Web.ViewModels
         public DoctorDetailsVM DoctorDetails { get; set; }
         
         /// <summary>Doctor may chose to select one from the regular patient and create a new Prescription</summary>
-        public IEnumerable<PatientDetailsVM> PatientsList { get; set; }
+        public IEnumerable<AppUserDetailsVM> PatientsList { get; set; }
         
         public string PatientsListTitle { get; set; }
 
@@ -72,8 +78,30 @@ namespace Pas.Web.ViewModels
         public int PatientId { get; set; }
     }
 
+    /// <summary>To show the Prescription- to a Doctor or a Patient- to view a Prescription Details</summary>
+    public class PrescriptionViewVM
+    {
+        public int Id { get; set; }
+        public int DoctorId { get; set; }
+        public string DoctorName { get; set; }
+        public int HospitalId { get; set; }
+        public string HospitalName { get; set; }
+        public DateTime DateCreated{ get; set; }
 
+        public IList<DrugItemVM> DrugItems { get; set; }
 
+    }
+
+    public class DrugItemVM
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string BrandName { get; set; }
+        public string Dosage { get; set; }
+        public int Quantity { get; set; }
+        public int Duration { get; set; }
+        public string ModeOfDelivery { get; set; }
+    }
 
 
 

@@ -1,5 +1,6 @@
 ﻿using Pas.Data.Models;
 using Pas.Web.ViewModels;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Pas.Service.Interface
@@ -39,5 +40,20 @@ namespace Pas.Service.Interface
         /// <param name="prescriptionUpdateVM">PrescriptionUpdateVM View Model</param>
         /// <returns>True/False</returns>
         Task<bool> Update(PrescriptionConfirmSaveVM prescriptionUpdateVM);
+
+        Task<IEnumerable<Prescription>> ListByPatient(int id);
+
+        /// <summary>This will Insert a New drug Item in the Prescription</summary>
+        /// <param name="vm">PrescriptionDrugCreateVM View Model</param>
+        /// <returns>A String- semi-colon separated value</returns>
+        Task<string> Insert_PescriptionItem(PrescriptionDrugCreateVM vm);
+
+
+        Task<bool> Delete_PescriptionItem(int prescriptionItemId);
+
+        Task<bool> Create_Prescription_HTML(int prescriptionId, string prescriptionContents);
+
+        Task<string> GetPrescription_HTML(int id);
+        Task<int> Update_Vitals(VitalsVM vm);
     }
 }
