@@ -1,12 +1,13 @@
 ﻿@model Pas.Web.ViewModels.PatientProfileWrapperVM
 @{
     Layout = "/Views/Shared/_LayoutPatient.cshtml";
-    ViewData["Title"] = "Patient Dashboard";
-}
 
-@{
     ViewData["Title"] = "Patient Profile";
 }
+
+    <form id="PatientProfileForm" action="/" method="post">
+        @Html.AntiForgeryToken()
+    </form>
 
 <!-- _patientProfileSummary.cshtml -->
 <div id="ProfileMainContainer" class="form-row col-12">
@@ -79,95 +80,11 @@
                 </div>
             </div>
         </div>
-
-        <div class="form-row">
-
-            <div class="col-12">
-
-
-                @* Card: Ailment History *@
-                <div class="card-deck mt-3 d-none">
-                    <div class="card">
-                        <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
-                            <!-- we wrap header title inside a span tag with utility padding -->
-                            <div class="card-title text-white"></div>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                Ailment History
-                                @*<a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
-                                        <i class="fal fa-edit"></i>
-                                    </a>*@
-                            </h5>
-
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">Last updated 7 days ago</small>
-                        </div>
-                    </div>
-
-                    @*Current Medication*@
-                    <div class="card">
-                        <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
-                            <!-- we wrap header title inside a span tag with utility padding -->
-                            <div class="card-title text-white"></div>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                Current medication
-                                @*<a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
-                                        <i class="fal fa-edit"></i>
-                                    </a>*@
-                            </h5>
-                            <table id="dt-CurrentMedicationTable" class="table table-hover table-striped w-100 dataTable dtr-inline" role="grid" aria-describedby="dt-basic-example_info">
-                                <thead class="d-none">
-                                    <tr role="row">
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr role="row">
-                                        <td style="width:50px;"><i class="fal fa-medkit"></i></td>
-                                        <td>Loratidine 10 mg</td>
-                                        <td>Daily: 1</td>
-                                        <td class="text-right">01/05/2020</td>
-                                    </tr>
-                                    <tr role="row">
-                                        <td style="width:50px;"><i class="fal fa-medkit"></i></td>
-                                        <td>Gaviscon</td>
-                                        <td>Daily: 3</td>
-                                        <td class="text-right">01/05/2020</td>
-                                    </tr>
-                                    <tr role="row">
-                                        <td style="width:50px;"><i class="fal fa-medkit"></i></td>
-                                        <td>Ranitidine 10mg</td>
-                                        <td>Daily: 2</td>
-                                        <td class="text-right">01/05/2020</td>
-                                    </tr>
-                                    <tr role="row">
-                                        <td style="width:50px;"><i class="fal fa-medkit"></i></td>
-                                        <td>Dulcolox</td>
-                                        <td>Daily: 2</td>
-                                        <td class="text-right">01/05/2020</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">Last updated 1 month ago</small>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-            @*Notes*@
-
-
-        </div>
     </div>
 
 </div>
+<!-- END: _patientProfileSummary.cshtml -->
+
+@{ await Html.RenderPartialAsync("Patient/_PatientLifeHistoryModal", Model.ClinicalInfo); }
+
+@{ await Html.RenderPartialAsync("Patient/_ContantDetailsCardModal", Model.Patient.AddressBook); }

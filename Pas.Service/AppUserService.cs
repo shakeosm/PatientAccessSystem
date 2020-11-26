@@ -192,11 +192,12 @@ namespace Pas.Service
                 return new AddressBookVM();
             }
             else {
-                var firstAddress = addressBooks.Select(ab=> new AddressBookVM()
-                {  
+                var firstAddress = addressBooks.Select(ab => new AddressBookVM()
+                {
                     AddressLine1 = ab.AddressLine1,
-                    City = ((Common.Enums.City) ab.CityId).ToString(),
-                    LocalArea  =ab.LocalArea,
+                    City = ((Common.Enums.City)ab.CityId).ToString(),
+                    CityId = ab.CityId,
+                    LocalArea = ab.LocalArea,
                     Id = ab.Id
                 });
 

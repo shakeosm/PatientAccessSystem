@@ -77,5 +77,16 @@ namespace Pas.UI.Areas.Patient.Controllers
             return View();
         }
 
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdatePersonalHistory(PatientPersonalHistoryVM vm)
+        {
+            if (vm.PatientId < 1) return Json(false);
+
+            var result = await _patientService.UpdatePersonalHistory(vm);
+
+            return Json(result ? "success" : "fail");
+        }
+
     }
 }

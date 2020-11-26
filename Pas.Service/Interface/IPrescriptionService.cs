@@ -54,7 +54,6 @@ namespace Pas.Service.Interface
         Task<bool> Create_Prescription_HTML(int prescriptionId, string prescriptionContents);
 
         Task<string> GetPrescription_HTML(int id);
-
-
+        Task<int> Update_Vitals(VitalsVM vm);
     }
 }

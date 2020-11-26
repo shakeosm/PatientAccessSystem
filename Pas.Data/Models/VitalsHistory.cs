@@ -25,11 +25,11 @@ namespace Pas.Data.Models
         [Column(TypeName = "tinyint")]
         public short Systolic { get; set; }
 
-        [Column(TypeName = "tinyint")]
-        public short Weight { get; set; }
+        [Column(TypeName = "decimal(4, 2)")]
+        public decimal Weight { get; set; }
 
         [Column(TypeName = "decimal(4, 2)")]
-        public short Temperature { get; set; }
+        public decimal Temperature { get; set; }
 
         [Column(TypeName = "datetime2(3)")]
         public DateTime DateAdded { get; set; }

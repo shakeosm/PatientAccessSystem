@@ -2,6 +2,13 @@
 
 namespace Pas.Common.Enums
 {
+    public enum DrinkHabit
+    {
+        No = 0,
+        Occassionaly = 1,
+        Regular = 2
+    }
+
     public enum Title
     {
         Unknwon = 0,
@@ -54,6 +61,7 @@ namespace Pas.Common.Enums
 
     public enum BloodGroup
     {
+        [Display(Name = "-", Description = "Unknown")]
         Unknown = 0,
 
         [Display(Name = "A+", Description = "A RhD positive (A+)")]
@@ -80,6 +88,22 @@ namespace Pas.Common.Enums
         [Display(Name = "AB-", Description = "AB RhD negative (AB-)")]
         AB_Negative,
 
+    }
+
+    public enum Sports
+    {
+        No_Sports = 0,
+        Badminton = 1, 
+        Baseball, 
+        Basketball, 
+        Bowling, 
+        Boxing, 
+        Cricket, Cycling, Fishing, 
+        Football, Golf, Gymnastics, Judo, 
+        Karate, Kickboxing, Roller_skating, 
+        Running, Scuba_diving, Skateboarding, 
+        Swimming, Table_Tennis, Taekwondo, 
+        Tennis, Volleyball, Weight_lifting
     }
 
 }

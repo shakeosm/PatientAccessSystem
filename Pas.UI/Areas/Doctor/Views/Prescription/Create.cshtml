@@ -10,9 +10,10 @@
             <i class="fal fa-file-prescription fa-2x"></i>
             New Prescription
             <input type="hidden" asp-for="@Model.Id" name="PrescriptionIdInput" value="@Model.Id" />
+            <input type="hidden" asp-for="@Model.PatientDetails.Id" name="PatientId" value="@Model.PatientDetails.Id" />
         </div>
 
-        @await Html.PartialAsync("_PrescriptionHeader", @Model.PatientDetails)
+        @await Html.PartialAsync("_PrescriptionHeader", @Model)
 
         @await Html.PartialAsync("_PrescriptionItemEntry", @Model.Id)
 

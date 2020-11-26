@@ -12,7 +12,7 @@
 <html lang="en">
 <head>
     @{ 
-        await Html.RenderPartialAsync("_HeaderLayout.cshtml");
+        await Html.RenderPartialAsync("Header/_HeaderLayout");        
     }            
 
 </head>
@@ -252,13 +252,16 @@
     </div>
 
     <script src="~/js/lib/jquery/dist/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
     <script src="~/js/app.bundle.js"></script>
     <script src="~/js/vendors.bundle.js"></script>
+    <script src="~/js/patient/patient-profile.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-    @{ 
-        await Html.RenderPartialAsync("_PageLoadingAnimation.cshtml");
-    }
+
+    @*{        await Html.RenderPartialAsync("_PageLoadingAnimation.cshtml");    }*@
 
 </body>
 

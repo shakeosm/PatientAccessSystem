@@ -11,16 +11,18 @@ namespace Pas.Web.ViewModels
         public int UserId { get; set; }
 
         public int Age { get; set; }
+        public DateTime DateOfBirth { get; set; }
 
         public BloodGroup? BloodGroupType { get; set; }
 
-        public string Smoker { get; set; }
+        public short? Smoker { get; set; }
 
         public string Drinker { get; set; }
 
-        public string Excercise { get; set; }
+        public bool Excercise { get; set; }
+        public string ExcerciseDisplay() => Excercise ? "Yes" : "No";
 
-        public string Sports { get; set; }
+        public Sports Sports { get; set; }
 
         public DateTime PersonalHistoryLastUpdated { get; set; }
 
@@ -38,9 +40,10 @@ namespace Pas.Web.ViewModels
 
         public DateTime ClinicalInfoLastUpdated { get; set; }
 
-        public string AllergyInfo { get; set; }
-        public IEnumerable<ChiefComplaintsVM> ChiefComplaints{ get; set; }
-
-        public IEnumerable<DrugDetailsVM> DrugList { get; set; }
+        /// <summary>List of known Allergies- from [Patient].[ClinicalHistory]</summary>
+        public IList<string> AllergyList { get; set; }
+        public IEnumerable<DrugDetailsVM> RecentMedication { get; set; }
+        public IEnumerable<IndicationVM> RecentDiagnosis { get; set; }
+        //public IEnumerable<ChiefComplaintsVM> ChiefComplaints{ get; set; }        
     }
 }

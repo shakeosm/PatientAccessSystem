@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Pas.Common.Constants;
 using Pas.Common.Enums;
 using Pas.Data;
 using Pas.Data.Models;
@@ -180,6 +181,48 @@ namespace Pas.Service
             string content = System.IO.File.ReadAllText(path);
 
             return await Task.FromResult(content);
+        }
+
+        public async Task<int> Update_Vitals(VitalsVM vm)
+        {
+            if (vm.PatientId < 1) return await Task.FromResult(0);
+
+            VitalsHistory vh = new VitalsHistory();
+
+            //## Its Update or INSERT
+            if (vm.Id > 0) {
+                vh = _pasContext.VitalsHistories.Find(vm.Id);
+                vh.BloodPulse = vm.BloodPulse;
+                vh.Temperature = vm.Temperature;
+                vh.Diastolic = vm.Diastolic;
+                vh.Systolic = vm.Systolic;
+                vh.Weight = vm.Weight;
+
+                _pasContext.Update(vh);
+                await _pasContext.SaveChangesAsync();
+            }
+            else
+            {
+                vh = new VitalsHistory() {
+                    PatientId = vm.PatientId,
+                    PrescriptionId = vm.PrescriptionId,
+                    BloodPulse = vm.BloodPulse,
+                    Systolic = vm.Systolic,
+                    Diastolic = vm.Diastolic,
+                    Weight = vm.Weight,
+                    DateAdded = DateTime.Now
+                };
+
+                await _pasContext.VitalsHistories.AddAsync(vh);
+                await _pasContext.SaveChangesAsync();
+            }
+
+            //## Update the Redis Cache for next read
+            string redisKey = $"{CacheKey.PatientVitals}_{vm.PatientId}";
+            _cacheService.SetCacheValue(redisKey, vm);
+
+            return vh.Id;
+
         }
 
         //private async Task<PrescriptionAddVM> MapToCreateViewModel(Prescription prescription)

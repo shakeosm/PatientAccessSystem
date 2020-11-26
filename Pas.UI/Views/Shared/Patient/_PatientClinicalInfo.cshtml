@@ -1,10 +1,14 @@
-﻿@model Pas.Web.ViewModels.ClinicalHistoryVM
-@using Pas.Common.Extensions
+﻿@using Pas.Common.Extensions
+@model Pas.Web.ViewModels.ClinicalHistoryVM
+@{ 
+    var allergyList = Model.AllergyList;
+}
 <!-- _PatientClinicalInfo.cshtml -->
 <div class="form-row col-12">
     @* Card: Life style / Personal History *@
     <div class="col-xs-12 col-lg-6 ">
         <div id="PersonalHistoryDiv" class="card">
+            <input type="hidden" asp-for="UserId" />
             <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
                 <!-- we wrap header title inside a span tag with utility padding -->
                 <div class="card-title text-white"></div>
@@ -13,39 +17,41 @@
                 <h5 class="card-title h6">
                     <i class="fas fa-notes-medical fa-lg mr-2"></i>
                     Personal History
+                    <button type="button" id="ShowPersonalHistoryModalButton"
+                            class="btn btn-primary btn-icon waves-effect waves-themed float-right">
+                        <i class="fal fa-edit"></i>
+                    </button>
                 </h5>
                 <div id="PersonalHistoryDetailsDiv" class="">
                     <div class="row">
-                        <div class="col-4 font-weight-bold">Blood group</div>
-                        <div class="col-8">: @Model.BloodGroupType.Value.Name()</div>
+                        <div class="col-4 font-weight-bold border-right">Blood group</div>
+                        <div class="col-8 blood-group">@Model.BloodGroupType.Value.Name()</div>
                     </div>
                     <div class="row">
-                        <div class="col-4 font-weight-bold">Age</div>
-                        <div class="col-8">: @Model.Age</div>
+                        <div class="col-4 font-weight-bold border-right">Date of Birth</div>
+                        <div class="col-8 date-of-birth">@Model.DateOfBirth.ToDDMMMYYYY()</div>
                     </div>
                     <div class="row">
-                        <div class="col-4 font-weight-bold">Smoker</div>
-                        <div class="col-8">: @Model.Smoker</div>
+                        <div class="col-4 font-weight-bold border-right">Smoke per day</div>
+                        <div class="col-8 smoke-unit-per-day">@Model.Smoker</div>
                     </div>
                     <div class="row">
-                        <div class="col-4 font-weight-bold">Drinker</div>
-                        <div class="col-8">: @Model.Drinker</div>
+                        <div class="col-4 font-weight-bold border-right">Drink habit</div>
+                        <div class="col-8 drink-habit"> @Model.Drinker</div>
                     </div>
                     <div class="row">
-                        <div class="col-4 font-weight-bold">Excercise</div>
-                        <div class="col-8">: @Model.Excercise</div>
+                        <div class="col-4 font-weight-bold border-right">Excercise</div>
+                        <div class="col-8 excercise">@Model.ExcerciseDisplay()</div>
                     </div>
                     <div class="row">
-                        <div class="col-4 font-weight-bold">Sports</div>
-                        <div class="col-8">: @Model.Sports</div>
+                        <div class="col-4 font-weight-bold border-right">Sports</div>
+                        <div class="col-8 sports">@Model.Sports</div>
                     </div>
                 </div>
             </div>
             <div class="card-footer">
-                <small class="text-muted">Last updated 21 days ago</small>
-                <a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
-                    <i class="fal fa-edit"></i>
-                </a>
+                <small id="PersonalHistoryLastUpdatedDiv" class="text-muted">Last updated: 21 days ago</small>
+
             </div>
         </div>
     </div>
@@ -63,7 +69,7 @@
                     Clinical information
                 </h5>
                 <div id="ClinicalInformationDetailsDiv">
-                    <div class="row">
+                    <div class="row d-none invisible">
                         <div class="col-4 font-weight-bold">Height</div>
                         <div class="col-8">: @Model.Height</div> @*1.78 m / 5" 10'*@
                     </div>
@@ -92,9 +98,9 @@
             </div>
             <div class="card-footer">
                 <small class="text-muted">Last updated 7 days ago</small>
-                <a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
+                @*<a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
                     <i class="fal fa-edit"></i>
-                </a>
+                </a>*@
             </div>
         </div>
     </div>
@@ -114,22 +120,21 @@
                     <h5 class="card-title h6">
                         <i class="fas fa-allergies fa-lg mr-2"></i>
                         Allergy History
-                        <a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
+                        <button id="EditAllergryListButton" class="btn btn-primary btn-icon waves-effect waves-themed float-right">
                             <i class="fal fa-edit"></i>
-                        </a>
+                        </button>
                     </h5>
-                    @{
-                        var allergyList = @Model.AllergyInfo.Split(",");
-                        foreach (var item in allergyList)
-                        {
-                            <span class="alert alert-warning p-2">@item</span>
-                        }
-
-                    }
-                    @if (string.IsNullOrEmpty(Model.AllergyInfo))
+                    @if (allergyList.Count > 0)
                     {
-                        <span class="alert alert-info">No allergy information is found</span>
+                        @foreach (var item in allergyList)
+                        {
+                            <span class="alert alert-warning p-2 mr-1">@item</span>
+                        }
                     }
+                    else
+                    {
+                        <span class="h4 text-info">No known allergy</span>
+                    }                    
                 </div>
 
                 <div class="w-100">&nbsp;</div>
@@ -137,13 +142,27 @@
                 <div id="AilmentHistoryCardDiv" class="mb-3">
                     <h5 class="card-title h6">
                         <i class="fas fa-procedures fa-lg mr-2"></i>
-                        Ailment History
+                        Diagnosis History
                     </h5>
+                    @if (Model.RecentDiagnosis != null || Model.RecentDiagnosis.Count() > 0)
+                    {
+                        <ul>
+                        @foreach (var item in Model.RecentDiagnosis)
+                        {
+                            <li class="list-group-item">
+                                <i class="fas fa-pills fa-lg mr-2"></i>
+                                @item.Name
+                            </li>
+                        }
+                         </ul>
+                    }
+                    else
+                    {
+                        <span class="list-group-item text-info">
+                            No recent Diagnosis found
+                        </span>
 
-                    <span class="alert alert-warning p-2">Allergy</span>
-                    <span class="alert alert-warning p-2">Diabetes</span>
-                    <span class="alert alert-warning p-2">Hayfever</span>
-                    <span class="alert alert-warning p-2">High Pressure</span>
+                    }
                 </div>
 
             </div>
@@ -163,14 +182,14 @@
                 <h5 class="card-title h6">
                     <i class="fas fa-prescription fa-lg mr-2"></i>
                     Recent Medication
-                    <a href="#" class="btn btn-primary btn-lg btn-icon waves-effect waves-themed float-right" role="button">
+                    @*<a href="#" class="btn btn-primary btn-icon waves-effect waves-themed float-right" role="button">
                         <i class="fal fa-edit"></i>
-                    </a>
+                    </a>*@
                 </h5>
                 <ul class="list-group">
-                    @if (Model.DrugList != null)
+                    @if (Model.RecentMedication != null || Model.RecentMedication.Count()> 0)
                     {
-                        @foreach (var item in Model.DrugList)
+                        @foreach (var item in Model.RecentMedication)
                         {
                             <li class="list-group-item">
                                 <i class="fas fa-pills fa-lg mr-2"></i>
@@ -182,32 +201,15 @@
                     else
                     {
                         <li class="list-group-item text-info">
-                            No medication found
+                            No recent medication found
                         </li>
 
                     }
-
-                    <li class="list-group-item">
-                        <i class="fas fa-pills fa-lg mr-2"></i>
-                        Paracetemol 1000mg
-                    </li>
-                    <li class="list-group-item">
-                        <i class="fas fa-pills fa-lg mr-2"></i>
-                        Loratidine 10mg
-                    </li>
-                    <li class="list-group-item">
-                        <i class="fas fa-prescription-bottle-alt fa-lg mr-2"></i>
-                        Gaviscon Syrup
-                    </li>
-                    <li class="list-group-item">
-                        <i class="fas fa-prescription-bottle-alt fa-lg mr-2"></i>
-                        Dulcolux
-                    </li>
                 </ul>
 
             </div>
             <div class="card-footer">
-                <small class="text-muted">Last updated 21 days ago</small>
+                <small class="text-muted">Last updated: Dr Nasif Iqbal MBBS, FCPS- 21 days ago</small>
             </div>
         </div>
     </div>

@@ -19,12 +19,13 @@ namespace Pas.Data.Models
         [Column(TypeName = "tinyint")]
         public short? Smoker { get; set; }
 
-        public bool? Drinker { get; set; }
+        [Column(TypeName = "tinyint")]
+        public short? Drinker { get; set; }
 
         public bool? Excercise  { get; set; }
 
-        [Column(TypeName = "varchar(20)")]
-        public string Sports { get; set; }
+        [Column(TypeName = "tinyint")]
+        public short Sports { get; set; }
 
         [Column(TypeName = "datetime2(3)")]
         public DateTime PersonalHistoryLastUpdated { get; set; }

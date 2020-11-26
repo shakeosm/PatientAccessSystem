@@ -61,23 +61,21 @@ namespace Pas.UI.Areas.Doctor.Controllers
 
             var chamber = await _appUserService.Get_DoctorChamber(currentUser.Email);
             AppUserDetailsVM patientDetails = await _appUserService.Find(prescription.PatientId, includeAddressBook: true);
-            
-            var clinicialInfo = await _patientService.GetClinicalDetails(patientDetails.Id);
-            var recentMedication = await _patientService.GetRecentMedication(patientDetails.Id);
-            
+
+            ClinicalHistoryVM clinicialInfo = await _patientService.GetClinicalDetails(patientDetails.Id);            
             //var chiefComplaints = await _patientService.GetPatientChiefComplaints(patientDetails.Id);
 
             //## PrescriptionCreateVM- will have all necessary info to make a Prescription- 
             //## When the Doc needs to see preview of Prescription before Print/Save
-            
+
             var vm = new PrescriptionCreateVM()
             {
-                Id = newPrescriptionId,                
+                Id = newPrescriptionId,
                 Doctor = currentUser, //## Doctor details is at- AppUserDetailsVM.DoctorDetailsVM()
                 ChamberDetails = chamber,
                 PatientDetails = patientDetails,
-                AllergyList = clinicialInfo.AllergyInfo,
-                RecentMedication = recentMedication
+                //AllergyList = clinicialInfo.AllergyList,
+                ClinicialInfo = clinicialInfo, //## AllergyList is withi ClinicalInfo
             };
 
             //## Re-factor UserDetails- 'Doctor' type values     
@@ -218,6 +216,19 @@ namespace Pas.UI.Areas.Doctor.Controllers
             var result = await _prescriptionService.Delete_PescriptionItem(prescriptionItemId);
                                   
             return Json(result ? "success" : "fail");
+        }
+
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Update_Vitals(VitalsVM vm)
+        {            
+            //## This will create a Template for a Specific Drug Brand. ie: 'Ibuprofen 200mg Tablet 4 Times a Day for 7 days'
+            if (vm.PatientId < 1)
+                return Json("error");
+            
+            int recordId = await _prescriptionService.Update_Vitals(vm);
+                                  
+            return Json(recordId);
         }
 
 

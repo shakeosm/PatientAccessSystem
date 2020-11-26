@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Pas.Web.ViewModels
@@ -8,11 +9,17 @@ namespace Pas.Web.ViewModels
     {
         public int Id { get; set; }
         
+        [Required]
         public string AddressLine1 { get; set; }
 
+        [Required]
         public string LocalArea { get; set; }
-
+        public string PostCode { get; set; }
+        
         public string City { get; set; }
+        
+        [Required]
+        public int CityId { get; set; }
 
         public DateTime DateCreated { get; set; }
 
@@ -21,6 +28,8 @@ namespace Pas.Web.ViewModels
         public string Email { get; set; }
 
         public string FullAddress() => $"{AddressLine1 ?? ""}, {LocalArea ?? ""}, {City ?? ""}";
+
+        public DateTime LastUpdated { get; set; }
 
         //public string CityName() => ((Common.Enums.City) cityId).Name();
     }

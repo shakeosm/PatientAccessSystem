@@ -31,14 +31,6 @@ namespace Pas.Common.Enums
         Three_Spoon = 7        
     }
 
-    public enum MealsCondition
-    {
-        Not_Related =0,
-        Before = 1,
-        After = 2
-
-    }
-
     public enum Tips
     {
         Advise = 1,

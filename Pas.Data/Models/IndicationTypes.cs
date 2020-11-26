@@ -9,6 +9,7 @@ namespace Pas.Data.Models
     {
         public IndicationTypes()
         {
+            PatientIndications = new HashSet<PatientIndications>();
             BrandForIndications = new HashSet<BrandForIndications>();
         }
         [Required]
@@ -20,7 +21,7 @@ namespace Pas.Data.Models
 
         public bool? Show { get; set; }
 
-        public virtual ICollection<DrugIndicationTypes> DrugIndicationTypes { get; set; }
+        public virtual ICollection<PatientIndications> PatientIndications{ get; set; }
         public virtual ICollection<BrandForIndications> BrandForIndications { get; set; }
     }
 }

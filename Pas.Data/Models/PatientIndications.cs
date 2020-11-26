@@ -25,5 +25,6 @@ namespace Pas.Data.Models
         public virtual Prescription Prescription { get; set; }
 
         public virtual User Patient { get; set; }
+        public virtual IndicationTypes IndicationType { get; set; }
     }
 }

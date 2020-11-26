@@ -23,13 +23,10 @@ namespace Pas.Web.ViewModels
         public IList<DiagnosticTestDetailsVM> DiagnosticTestList { get; set; }
 
         public IList<string> PreviousNotes { get; set; }
-        
-        public IEnumerable<ChiefComplaintsVM> ChiefComplaints { get; set; }
-        
-        /// <summary>List of known Allergies- from [Patient].[ClinicalHistory]</summary>
-        public string AllergyList { get; set; }
-        
-        public IEnumerable<DrugDetailsVM> RecentMedication { get; set; }
+                        
+        //public IList<string> AllergyList { get; set; }
+
+        public ClinicalHistoryVM ClinicialInfo { get; set; }        
     }
 
     /// <summary>This is for POST method

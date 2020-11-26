@@ -16,10 +16,12 @@ var Tooltip = (function () {
 //## This variable will be used Gloablly for all Calendar Control. One place - one head, one ache!
 window.calendarFormat = "DD MMM YYYY";
 
-var prescriptionId = -1;
+var _prescriptionId = -1;
+var _patientId = -1;
 
 $(document).ready(function () {
-    prescriptionId = $("[name='PrescriptionIdInput']").val();
+    _prescriptionId = $("[name='PrescriptionIdInput']").val();
+    _patientId = $("[name='PatientId']").val();
 
     //## Following 2 lines are required for Ajax call to include AntiForgeryToken; to be used in all ProviderClaim Forms (Create/Edit)
     var form = $('#PrescriptionCreateForm');
@@ -382,7 +384,7 @@ $(document).ready(function () {
             url: postUrl,
             data: {
                 __RequestVerificationToken: token,  //# AntiForgeryToken__Validate : token,
-                "PrescriptionId": prescriptionId,
+                "PrescriptionId": _prescriptionId,
                 "DrugBrandId": drugBrandId,
                 "BrandDoseTemplateId": doseTemplateId,
                 "AdviseInstructionId": instructionId
@@ -557,7 +559,70 @@ $(document).ready(function () {
         $("#PatientVitalsModalPopup").modal("show");
     });
 
-    
+    //## UPdate the Prescription Area with the Vital Info from the Popup Modal
+    $("#VitalModalSubmitButton").click(function () {
+        var vitalsHistoryId = GetVal("#VitalsHistoryId");
+
+        var temperature = GetVal("#TemperatureInput");
+        var pulseInput = GetVal("#PulseInput");
+        var diastolic = GetVal("#BoodPressureDiastolicInput");
+        var systolic = GetVal("#BoodPressureSystolicInput");
+        var weight = GetVal("#WeightInput");
+        //var height = GetVal("#HeightInput");
+
+        //## Now POST
+        var postUrl = "/Doctor/Prescription/Update_Vitals";
+
+        $.ajax({
+            type: "POST",
+            url: postUrl,
+            data: {
+                __RequestVerificationToken: token,  //# AntiForgeryToken__Validate : token,
+                "Id": vitalsHistoryId,
+                "PatientId": _patientId,
+                "PrescriptionId": _prescriptionId,
+                "Temperature": temperature,
+                "BloodPulse": pulseInput,
+                "Diastolic": diastolic,
+                "Systolic": systolic,
+                //"Weight": weight,
+            },
+            dataType: "json",
+            success: function (response) {
+                debugger;
+                if (response !== "0" || response !== "") {
+                    $("#VitalsHistoryId").val(response);    //## Update the returned RecordId
+
+                    $("#PatientVitalsInfoDiv .vital-temperature").text(temperature);
+                    $("#PatientVitalsInfoDiv .vital-pulse").text(pulseInput);
+                    $("#PatientVitalsInfoDiv .vital-pressure").text(diastolic + "/" + systolic);
+                    $("#PatientVitalsInfoDiv .vital-weight").text(weight);
+                    //$("#PatientVitalsInfoDiv .vital-height").text(height);
+
+                    //## Once success- then hide the Modal
+                    $("#PatientVitalsModalPopup").modal("hide");
+                    
+                } else {
+                    OnError_VitalsUpdateFailed()
+                }
+            },
+            error: function (xhr, status, error) {
+                OnError_VitalsUpdateFailed()
+            }
+        });
+
+        
+    });
+
+    function OnError_VitalsUpdateFailed() {
+        $("#PatientVitalsModalPopup").modal("hide");
+
+        swal({
+            title: "Failed to Update",
+            text: "There was an error and the Patient Vitals was not updated. Please reload the page and try again.",
+            icon: "warning",
+        });
+    }
         
 
     $("#RelatedToMealCheckBox").click(function () {
@@ -603,7 +668,7 @@ $(document).ready(function () {
             url: postUrl,
             data: {
                 __RequestVerificationToken: token,  //# AntiForgeryToken__Validate : token,
-                "Id": prescriptionId,
+                "Id": _prescriptionId,
             },
             dataType: "json",
             success: function (response) {
@@ -676,7 +741,7 @@ $(document).ready(function () {
             url: postUrl,
             data: {
                 __RequestVerificationToken: token,  //# AntiForgeryToken__Validate : token,
-                "id": prescriptionId,
+                "id": _prescriptionId,
                 "contents": htmlContents,
             },
             dataType: "json",
@@ -722,6 +787,14 @@ $(document).ready(function () {
         });
     }
 
+    //## Description: This will get the Value in the Element and return it
+    function GetVal(elementName) {
+        return $(elementName).val();
+    }
+
+    function GetText(elementName) {
+        return $(elementName).text();
+    }
 
     //## Prepare PrescriptionPreviwe Modal- with Doctor and Hospital Details
 

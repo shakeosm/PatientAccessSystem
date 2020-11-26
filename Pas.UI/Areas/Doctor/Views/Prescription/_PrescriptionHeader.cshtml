@@ -1,16 +1,22 @@
-﻿@model Pas.Web.ViewModels.AppUserDetailsVM
-
+﻿@model Pas.Web.ViewModels.PrescriptionCreateVM
+@{ 
+    var patient = Model.PatientDetails;
+    var clinicalInfo = Model.ClinicialInfo;
+    var recentMedications = clinicalInfo.RecentMedication;    
+    var recentDiagnosis = clinicalInfo.RecentDiagnosis;
+    var allergyList = clinicalInfo.AllergyList;
+}
 <div id="PatientHistory" class="form-row w-100 mb-2 bg-white border rounded ml-2 pt-2 no-print">
 
-    <!-- Name/Age/Sex amd Address -->
+    <!-- Name/Age/Gender amd Address -->
     <div id="LeftColumn" class="col-sm-12 col-md-6 pl-3">
         <div id="PersonalDetails" class="">
             <div class="">
-                <div class="h2 patient-name">@Model.Title @Model.Name / @Model.Age / @Model.Gender (@Model.ShortId)</div>
-                <div class="h3 text-primary patient-address d-none">@Model.AddressBook.FullAddress()</div>
+                <div class="h2 patient-name">@patient.Title @patient.Name / @patient.Age / @patient.Gender (@patient.ShortId)</div>
+                <div class="h3 text-primary patient-address d-none">@patient.AddressBook.FullAddress()</div>
             </div>
 
-            @await Html.PartialAsync("_PatientVitals", @Model.Id)
+            @await Html.PartialAsync("_PatientVitals")
 
         </div>
 
@@ -45,28 +51,50 @@
                 <i class="fas fa-allergies fa-lg mr-2"></i>
                 Allergies:
             </span>
-            <span class="alert alert-warning p-2 mr-1">Cat</span>
-            <span class="alert alert-warning p-2 mr-1">Nuts</span>
-            <span class="alert alert-warning p-2 mr-1">Gluten</span>
-            <span class="alert alert-warning p-2 mr-1">Anit-biotics</span>
+            @if (allergyList.Count > 0)
+            {
+                @foreach (var item in allergyList)
+                {
+                    <span class="alert alert-warning p-2 mr-1">@item</span>
+                }                        
+            }
+            else { 
+                <span class="h4 text-info">No known allergy</span>
+            }
         </div>
 
         <div id="PatientAllergies" class="col-12 mb-3">
             <span class="font-weight-bolder d-block mb-2">
                 <i class="fas fa-procedures fa-lg mr-2"></i>Diagnosis: <!-- Indications / Diagnosis -->
             </span>
-            <span class="alert alert-danger p-2 mr-1">Migrane</span>
-            <span class="alert alert-danger p-2 mr-1">Blood pressure</span>
-            <span class="alert alert-danger p-2 mr-1">Arthrities</span>
+            @if (recentDiagnosis != null && recentDiagnosis.Count() > 0)
+            {
+                @foreach (var item in recentDiagnosis)
+                {
+                    <span class="alert alert-danger p-2 mr-1">@item</span>
+                }
+            }
+            else
+            {
+                <span class="h4 text-info">No recent Diagnosis found</span>
+            }
         </div>
 
         <div id="PatientAllergies" class="col-12 mb-3">
             <span class="font-weight-bolder d-block mb-2">
-                <i class="fas fa-prescription fa-lg mr-2"></i>Recent Medication:
+                <i class="fas fa-prescription fa-lg mr-2"></i>Recent Medications (top 5):
             </span>
-            <span class="alert alert-info p-2 mr-1">Iboprofen 200mg</span>
-            <span class="alert alert-info p-2 mr-1">Renitidine 10mg</span>
-            <span class="alert alert-info p-2 mr-1">Diclofenac emulsun</span>
+            @if (recentMedications != null && recentMedications.Count() > 0)
+            {
+                @foreach (var item in recentMedications)
+                {
+                    <span class="alert alert-info p-2 mr-1">@item.Name - @item.Dosage</span>
+                }
+            }
+            else
+            {
+                <span class="h4 text-info">No recent Medication found</span>
+            }
         </div>
 
     </div>

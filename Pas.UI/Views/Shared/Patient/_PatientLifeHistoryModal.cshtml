@@ -1,0 +1,124 @@
+﻿@using Pas.Common.Enums
+@model Pas.Web.ViewModels.ClinicalHistoryVM
+
+<!-- _PatientLifeHistoryModal -->
+@*div class="modal fade" id="NewDrugAdviseInstructionPopupDiv" tabindex="-1" role="dialog"*@
+<div id="PatientLifeHistoryModal" class="modal fade" tabindex="-1" role="dialog" aria-label="Patient Life history" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Patient Life history</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Blood group -->
+                <div class="form-row col-12 mb-2">
+                    <label for="BloodGroupInputSelect" class="form-label col-3">Blood group</label>
+
+                    <div class="col-6 input-group mb-3">
+                        <select class="form-control"                                
+                                asp-items="Html.GetEnumSelectList<BloodGroup>()" asp-for="BloodGroupType" id="BloodGroupInputSelect">
+                        </select>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-tint"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Age / Date of Birth -->
+                <div class="form-row col-12 mb-2">
+                    <label for="AgeInput_DD" class="form-label col-3">Date of birth</label>
+
+                    <div class="col-9 input-group mb-3">
+                        <input id="AgeInput_DD" class="form-control text-center" type="number" value="@Model.DateOfBirth.Day"
+                               aria-label="Date of birth Day" placeholder="DD" maxlength="2" />
+                        <input id="AgeInput_MM" class="form-control text-center" type="number" value="@Model.DateOfBirth.Month"
+                               aria-label="Date of birth Month" placeholder="MM" maxlength="2" />
+                        <input id="AgeInput_YYYY" class="form-control text-center" type="number" value="@Model.DateOfBirth.Year"
+                               aria-label="Date of birth Year" placeholder="YYYY" maxlength="4" />
+                        <input type="hidden" asp-for="DateOfBirth" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Smoker -->
+                <div class="form-row col-12 mb-2">
+                    <label form="SmokePerDayInput" class="form-label col-3">Smoker</label>
+
+                    <div class="col-6 input-group mb-3">
+                        <input id="SmokePerDayInput" 
+                               asp-for="Smoker"
+                               class="form-control" type="number" placeholder="Units Per Day" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-smoking"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drinker  -->
+                <div class="form-row col-12 mb-2">
+                    <label for="DrinkHabitInputSelect" class="form-label col-3">Drink habit</label>
+
+                    <div class="col-6 input-group mb-3">
+                        <select id="DrinkHabitInputSelect" 
+                                asp-for="Drinker"
+                                class="form-control" asp-items="@Html.GetEnumSelectList(typeof(DrinkHabit))">
+                        </select>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-glass-martini-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Excercise  -->
+                <div class="form-row col-12">
+                    <label for="ExcerciseSelectionCheckbox" class="form-label col-3">Excercise</label>
+
+                    <div class="col-6 input-group mb-6">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" asp-for="Excercise"
+                                   class="custom-control-input" id="ExcerciseSelectionCheckbox">
+                            <label class="custom-control-label" for="ExcerciseSelectionCheckbox">Yes</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sports  -->
+                <div class="form-row col-12 mb-2">
+                    <label for="SportsInputSelect" class="form-label col-3">Sports</label>
+
+                    <div class="col-6 input-group mb-2">
+                        <select id="SportsInputSelect" 
+                                asp-for="Sports"
+                                class="form-control" asp-items="@Html.GetEnumSelectList(typeof(Sports))">
+                        </select>
+
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fas fa-futbol"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="PersonalHistotyModalSubmitButton" type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

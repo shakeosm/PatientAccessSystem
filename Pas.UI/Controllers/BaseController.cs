@@ -59,7 +59,7 @@ namespace Pas.UI.Controllers
             CurrentUserVM vm = new CurrentUserVM()
             {
                 DisplayName = currentUser.Name,
-                LocalArea = currentUser.AddressAreaLocality,
+                LocalArea = currentUser.AddressBook.LocalArea,
                 City = currentUser.AddressBook.City,
                 ImageUrl = currentUser.ImageUrl,
             };

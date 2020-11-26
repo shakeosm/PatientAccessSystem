@@ -21,5 +21,6 @@ namespace Pas.Service.Interface
         Task<IEnumerable<ChiefComplaintsVM>> GetPatientChiefComplaints(int id);
 
         Task<IEnumerable<DrugDetailsVM>> GetRecentMedication(int id);
+        Task<bool> UpdatePersonalHistory(PatientPersonalHistoryVM vm);
     }
 }
