@@ -82,11 +82,11 @@ namespace Pas.Service
             return prescription;
         }
 
-        public async Task<IEnumerable<Prescription>> ListByPatient(int id)
+        public async Task<IEnumerable<PrescriptionViewVM>> ListByPatient(int id)
         {
 
             string cacheKey = $"prescriptionList_{id}";
-            var prescriptionList = _cacheService.GetCacheValue<List<Prescription>>(cacheKey);
+            var prescriptionList = _cacheService.GetCacheValue<List<PrescriptionViewVM>>(cacheKey);
 
             if (prescriptionList is null)
             {
@@ -94,7 +94,19 @@ namespace Pas.Service
                                         .Include(p => p.Doctor)
                                         .Include(p => p.Hospital)
                                         .Include(p => p.PrescriptionDrugs)
-                                        .Where(p => p.PatientId == id).ToListAsync();
+                                        .AsNoTracking()
+                                        .Where(p => p.PatientId == id)
+                                        .Select(p=> new PrescriptionViewVM() { 
+                                            Id = p.Id,
+                                            DateCreated = p.DateCreated,
+                                            DoctorId = p.DoctorId,
+                                            DoctorName = $"{p.Doctor.FirstName} {p.Doctor.LastName}",
+                                            HospitalId = p.HospitalId,
+                                            HospitalName = p.Hospital.Name
+                                        })
+                                        .ToListAsync();
+
+
 
                 _cacheService.SetCacheValue(cacheKey, prescriptionList);
             }

@@ -41,7 +41,7 @@ namespace Pas.Service.Interface
         /// <returns>True/False</returns>
         Task<bool> Update(PrescriptionConfirmSaveVM prescriptionUpdateVM);
 
-        Task<IEnumerable<Prescription>> ListByPatient(int id);
+        Task<IEnumerable<PrescriptionViewVM>> ListByPatient(int id);
 
         /// <summary>This will Insert a New drug Item in the Prescription</summary>
         /// <param name="vm">PrescriptionDrugCreateVM View Model</param>

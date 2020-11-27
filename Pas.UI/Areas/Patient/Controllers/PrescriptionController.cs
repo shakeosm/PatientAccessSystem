@@ -36,18 +36,12 @@ namespace Pas.UI.Areas.Patient.Controllers
 
             var currentUser = await GetCurrentUser();
 
-            var prescriptionList = _prescriptionService.ListByPatient(currentUser.Id);
+            IEnumerable<PrescriptionViewVM> prescriptionList = await _prescriptionService.ListByPatient(currentUser.Id);
 
             //## Re-factor UserDetails- 'Patient' type values     
-            SetUserProfileValues(currentUser);
+            SetPatientProfileValues(currentUser);
 
             return View(prescriptionList);
-        }
-
-        private void SetUserProfileValues(AppUserDetailsVM currentUser)
-        {
-            currentUser.ImageUrl = "user-3.png";
-            ViewBag.UserDetails = currentUser;
         }
     }
 }

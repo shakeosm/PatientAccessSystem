@@ -145,6 +145,8 @@ namespace Pas.Service
                 var search = await _pasContext.ClinicalHistory
                         .AsNoTracking()
                         .Include(c => c.User)
+                        .Include(c => c.User.VitalsHistories)
+                        .OrderByDescending(ch=> ch.Id)
                         .FirstOrDefaultAsync(c => c.UserId == id);
 
                 cachedResult = MapToClinicalHistoryVM(search);
@@ -178,6 +180,7 @@ namespace Pas.Service
                                                         pi.IndicationType.Id,
                                                         pi.IndicationType.Name
                                                     })
+                                                    .Distinct()
                                                     .ToListAsync();
 
                 medicationList = patientMedications.Select(p=> new IndicationVM() { 
@@ -197,6 +200,8 @@ namespace Pas.Service
         {
             try
             {
+                var latestVitals = ch.User.VitalsHistories.OrderByDescending(ch => ch.Id).First();
+
                 ClinicalHistoryVM clinicalHistoryVM = new ClinicalHistoryVM()
                 {
                     UserId = ch.UserId,
@@ -207,12 +212,14 @@ namespace Pas.Service
                     Excercise = ch.Excercise.Value,
                     Sports = (Sports) ch.Sports,
 
-                    BloodPressure = (ch.PressureSystolic is null ? "-" : $"{ch.PressureSystolic} / {ch.PressureDiastolic}"),
-                    Pulse = ch.Pulse.ToString(),
                     Cholesterol = ch.Cholesterol?.ToString(),
                     Diabetes = ch.Diabetes?.ToString(),
+
+                    BloodPressure = (latestVitals.Systolic < 1 ? "-" : $"{latestVitals.Systolic} / {latestVitals.Diastolic}"),
+                    Pulse = latestVitals.BloodPulse.ToString(),
+                    Weight = latestVitals.Weight.ToString(),
+                    
                     Height = ch.Height,
-                    Weight = ch.Weight?.ToString(),
 
                     AllergyList = ch.AllergyInfo.Split(",", StringSplitOptions.RemoveEmptyEntries),
 
@@ -242,10 +249,16 @@ namespace Pas.Service
                                                                     .Include(pc=> pc.Symptom)
                                                                     .AsNoTracking()
                                                                     .Where(pa => pa.PatientId == id)
+                                                                    .Distinct()
+                                                                    .Select(cc=> new { 
+                                                                        cc.Id,
+                                                                        cc.Symptom.Description
+                                                                    })                                                                    
                                                                     .ToListAsync();
+
                 complaints = prescriptionChiefComplaints.Select(pc => new ChiefComplaintsVM() { 
                     Id = pc.Id,
-                    Name = pc.Symptom.Description
+                    Name = pc.Description
                 });
 
                 _cacheService.SetCacheValue(redisKey, complaints);
@@ -273,6 +286,7 @@ namespace Pas.Service
                                                         p.DrugBrands.BrandName, 
                                                         p.BrandDoseTemplate.StrengthType.Name 
                                                     })
+                                                    .Distinct()
                                                     .ToListAsync();
 
                 //medicationList = MapToMedicationListVM(patientMedications);

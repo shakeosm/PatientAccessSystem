@@ -1,161 +1,95 @@
-﻿
+﻿@model IEnumerable<Pas.Web.ViewModels.PrescriptionViewVM>
+
 @{
     ViewData["Title"] = "Prescription list";
     Layout = "~/Views/Shared/_LayoutPatient.cshtml";
 }
-<!-- Main outside container of all cards -->
-    <div id="MainCardContainerDiv" class="form-row col-12">
-        <div class="prescription-container">
-            <div class="row prescription-header-info">
-                <div class="col-12">
-                    <span class="prescription-card-label-icon">
-                        <i class="fal fa-calendar-plus fa-xl"></i>
-                    </span>
-                    : 01 Nov 2012
-                </div>
-                <div class="col-12">
-                    <span class="prescription-card-label-icon">
-                        <i class="fal fa-user-md fa-xl"></i>
-                    </span>
-                    : Mr. Hamidur Rahman
-                </div>
-                <div class="col-12">
-                    <span class="prescription-card-label-icon">
-                        <i class="fal fa-hospital fa-xl"></i>
-                    </span>
-                    : BelleVue Hospital
-                </div>
-                <div class="prescription-drug-list-container">
-                    <strong>Drugs: </strong>Paracetemol, Dulcolux, Gaviscon, Guafenesin
-                </div>
 
-            </div>
+<!--    Patient Prescription index-->
+<h2>Prescription Explorer</h2>
+@if (Model.Count() < 1)
+{
+    <div class="alert alert-info">
+        <h4>You do not have any prescription yet in the system.</h4>
+        <br />
+        <h4>আপনার কোন প্রেসক্রিপশন সিস্টেম-এ নেই..</h4>
+    </div>
+}
+else
+{
 
+    <div class="form-row col-12">
+        <div class="form-row col-3 border rounded p-3">
+            <h4>Prescription list</h4>        
+            @foreach (var item in Model)
+            {
+                <div class="row prescription-header-info card col-12 p-2 mb-2">
+                    <div class="col-12">
+                        <span class="prescription-card-label-icon">
+                            <i class="fal fa-calendar-plus fa-xl"></i>
+                        </span>
+                        : @item.DateCreated.ToLongDateString()
+                    </div>
+                    <div class="col-12">
+                        <span class="prescription-card-label-icon">
+                            <i class="fal fa-user-md fa-xl"></i>
+                        </span>
+                        : Dr. @item.DoctorName
+                    </div>
+                    <div class="col-12">
+                        <span class="prescription-card-label-icon">
+                            <i class="fal fa-hospital fa-xl"></i>
+                        </span>
+                        : @item.HospitalName
+                    </div>
+
+                <div class="float-right p-3 position-absolute pos-right border mt-2" style="width:90px;">
+                    <a href="#" data-prescription-id="@item.Id" role="button">
+                        <img src="~/images/prescription-icon-2.png" alt="Prescription view icon" style="width:90%;" />
+                    </a>
+                </div>
+                </div>
+            }
+        </div>
+        <div class="col-9 border rounded p-3">
+            <div class="h4 col-12 alert alert-info">Prescription Preview</div>
+            <div class="h6 col-12">Select a Prescrition on the left to Preview it.</div>
+            <div class="h6 col-12">বাম পাশের লিস্ট থেকে যে কোনো প্রেসক্রিপশন -এ ক্লিক করুন- বিস্তারিত দেখতে।</div>
         </div>
 
-        <div class="prescription-container">
-            <div class="row prescription-header-info">
-                <div class="col-12">
-                    <span class="prescription-card-label-icon">
-                        <i class="fal fa-calendar-plus fa-xl"></i>
-                    </span>
-                    : 01 Jun 2017
-                </div>
-                <div class="col-12">
-                    <span class="prescription-card-label-icon">
-                        <i class="fal fa-user-md fa-xl"></i>
-                    </span>
-                    : Mr. Shafiqur Rahman FRCP
-                </div>
-                <div class="col-12">
-                    <span class="prescription-card-label-icon">
-                        <i class="fal fa-hospital fa-xl"></i>
-                    </span>
-                    : Royal Hospital
-                </div>
-
-                <div class="prescription-drug-list-container">
-                    <strong>Drugs: </strong>Paracetemol, Dulcolux, Gaviscon, Guafenesin
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="prescription-container">
-            <div class="row prescription-header-info">
-                <div class="col-12">
-                    <span class="prescription-card-label-icon">
-                        <i class="fal fa-calendar-plus fa-xl"></i>
-                    </span>
-                    <span class="prescription-card-label">Date</span>: 01 Sep 2019
-                </div>
-                <div class="col-12">
-                    <span class="prescription-card-label-icon">
-                        <i class="fal fa-user-md fa-xl"></i>
-                    </span>
-                    <span class="prescription-card-label">Doctor</span>: Mr. Hamidur Rahman MBBS
-                </div>
-                <div class="col-12">
-                    <span class="prescription-card-label-icon">
-                        <i class="fal fa-hospital fa-xl"></i>
-                    </span>
-                    <span class="prescription-card-label">Hospital</span>: Metropolitan Hospital
-                </div>
-                <div class="prescription-drug-list-container">
-                    <strong>Drugs: </strong>Paracetemol, Dulcolux, Gaviscon, Guafenesin
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="prescription-container card">
-            <div class="row prescription-header-info">
-                <div class="col-12">
-                    <span class="prescription-card-label-icon">
-                        <i class="fal fa-calendar-plus fa-xl"></i>
-                    </span>
-                    <span class="prescription-card-label">Date</span>: 01 Nov 2020
-                </div>
-                <div class="col-12">
-                    <span class="prescription-card-label-icon">
-                        <i class="fal fa-user-md fa-xl"></i>
-                    </span>
-                    <span class="prescription-card-label">Doctor</span>: Mr. Hamidur Rahman
-                </div>
-                <div class="col-12">
-                    <span class="prescription-card-label-icon">
-                        <i class="fal fa-hospital fa-xl"></i>
-                    </span>
-                    <span class="prescription-card-label">Hospital</span>: BelleVue Hospital
-                </div>
-                <div class="prescription-drug-list-container">
-                    <strong>Drugs: </strong>Vitamin C, Loratidine, Hajmolam Kitkat
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <table id="PrescriptionHistoryTable"
-               class="table table-bordered table-hover table-striped w-100 dataTable dtr-inline invisible d-none">
-            <tbody>
-                <tr>
-                    <th>Doctor</th>
-                    <th>Hospital</th>
-                    <th>Date</th>
-                    <th>Age</th>
-                    <th>Gender</th>
-                    <th>Last Visit</th>
-                    <th></th>
-                </tr>
-                <tr>
-                </tr>
-                <tr>
-                    <td>Shawkat Osman</td>
-                    <td>শওকত ওসমান </td>
-                    <td>0156-456789123</td>
-                    <td>65</td>
-                    <td>Male</td>
-                    <td>01 Mar 2020</td>
-                    <td>
-
-                        <a class="btn btn-general btn-primary create-new-prescription-button"
-                           role="button"
-                           asp-area="Doctor"
-                           asp-controller="Home"
-                           asp-action="ViewPatient"
-                           asp-route-id="1"
-                           data-patient-id="1"
-                           data-toggle="modal" data-target=".bd-example-modal-lg">
-                            <i class="fa fa-id-card fa-lg" aria-hidden="true"></i>
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
 
     </div>
+}
+
+
+<!-- Main outside container of all cards -->
+<div id="MainCardContainerDiv" class="form-row col-12 d-none">
+    <div class="prescription-container">
+        <div class="row prescription-header-info">
+            <div class="col-12">
+                <span class="prescription-card-label-icon">
+                    <i class="fal fa-calendar-plus fa-xl"></i>
+                </span>
+                : 01 Nov 2012
+            </div>
+            <div class="col-12">
+                <span class="prescription-card-label-icon">
+                    <i class="fal fa-user-md fa-xl"></i>
+                </span>
+                : Mr. Hamidur Rahman
+            </div>
+            <div class="col-12">
+                <span class="prescription-card-label-icon">
+                    <i class="fal fa-hospital fa-xl"></i>
+                </span>
+                : BelleVue Hospital
+            </div>
+            <div class="prescription-drug-list-container">
+                <strong>Drugs: </strong>Paracetemol, Dulcolux, Gaviscon, Guafenesin
+            </div>
+
+        </div>
+
+    </div>
+</div>
 <link href="~/css/patient-prescription.css" rel="stylesheet" />
