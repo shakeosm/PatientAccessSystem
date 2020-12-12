@@ -64,6 +64,162 @@ $(document).ready(function () {
     });
 
 
+    $('#ExaminationItemAddedAlert').fadeOut();
+
+    $("#ExaminationItemAddButton").click(function () {
+
+        var examFindings = $("#ExaminationFindingInput").val();
+        var category = $("#ExminationCategorySelect option:selected").text();
+        var genericOption = $("#ExminationGenericItemsSelect option:selected").text();
+        var nervousOption = $("#ExminationNervousSystemItemsSelect option:selected").text();
+
+        var examItem = genericOption === "" ? nervousOption : genericOption;
+        var examPointId = genericOption === "" ? $("#ExminationNervousSystemItemsSelect").val() : $("#ExminationGenericItemsSelect").val();
+
+        if (examFindings === "" || category === "" || examItem === "") {
+            $("#ExaminationFindingInput").parent().find(".error-feedback").removeClass("invisible");
+            return;
+        }
+                
+        var examinationItem = category.concat("- ", examItem, ": ", examFindings);
+
+        $(this).prop("disabled", true); //## to stop from clicking multiple times
+
+        //## Post via Ajax to Controller
+        Post_NewExaminationItem($("#ExminationCategorySelect").val(), examPointId, examFindings, examinationItem);                
+
+    });
+
+    function Post_NewExaminationItem(categoryId, pointId, findings, examinationItem) {
+
+        var postUrl = "/Doctor/Prescription/Insert_PescriptionExaminationItem";
+        console.log("token: " + token);        
+
+        $.ajax({
+            url: postUrl,
+            type: "POST",
+            dataType: 'json',
+            data: {
+                __RequestVerificationToken: token,  //# AntiForgeryToken
+                'PrescriptionId': _prescriptionId,
+                'CategoryId': categoryId,
+                'PointId': pointId,
+                'Findings': findings
+            },
+            success: function (result) {
+                if (result >= 1) {
+                    $("#DefaultExamintionText").slideUp();
+                    var deleteButton = " <i role='button' class='fal fa-minus-circle p-1 text-danger delete-examination-item' " +
+                        "data-examination-item-id='"+ result +"' data-toggle='tooltip' data-placement='right' title='Remove Examination item'></i> ";
+                    
+                    console.log(examinationItem);
+
+                    $("#ExaminationSelectedItemsUL").append("<li>" + examinationItem + deleteButton + "</li>");
+
+                    //## Reset the Form
+                    $("#ExaminationFindingInput").val("");
+                    $("#ExaminationFindingInput").parent().find(".error-feedback").addClass("invisible");
+                    $(".exam-option-list").val(''); //## remove all previous selection
+
+                    //## show the alert for a second.. and then hide
+                    $('#ExaminationItemAddedAlert').fadeIn();
+                    $('#ExaminationItemAddedAlert').delay(1000).fadeOut();
+
+                    $("#ExaminationItemAddButton").prop("disabled", false); 
+
+                    $('[data-toggle="tooltip"]').tooltip();
+                    
+
+
+                } else {
+                    swal({
+                        title: "Adding Failed!",
+                        text: "System has failed to save this new Examination item. Please reload the page and try again!",
+                        icon: "warning",
+                    });
+
+                    $(this).prop("disabled", false); 
+                }
+            },
+            error: function (err) {
+                console.log(err.statusText);
+                return false;
+            }
+        });
+    }
+
+    $(document).on("click", ".delete-examination-item", function (e) {
+        var examinationItemId = $(this).data("examinationItemId");
+        var listItem = $(this).parent();    //## if confirmed- we will deelte this <li>
+
+        Swal.fire({
+            title: 'Confirm delete',
+            text: "Do you want to delete this examination item?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Delete!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Post_DeleteExaminationItem(examinationItemId, listItem);
+                
+            }
+        })
+
+    });
+
+    function Post_DeleteExaminationItem(examinationItemId, listItem) {
+
+        var postUrl = "/Doctor/Prescription/Delete_PescriptionExaminationItem";
+
+        $.ajax({
+            url: postUrl,
+            type: "POST",
+            dataType: 'json',
+            data: {
+                __RequestVerificationToken: token,  //# AntiForgeryToken
+                'id': examinationItemId,
+            },
+            success: function (result) {
+                if (result === "success") {
+                    $(listItem).remove();   //## remove the list item
+
+                    //## if all Examination items are removed- show the default text- ""
+                    if ($("#ExaminationSelectedItemsUL .delete-examination-item").length < 1) {
+                        $("#DefaultExamintionText").slideDown();
+                    }
+
+                } else {
+                    swal({
+                        title: "Delete Failed!",
+                        text: "System has failed to delete this Examination item. Please try again later!",
+                        icon: "info",
+                    });
+                }
+            },
+            error: function (err) {
+                console.log(err.statusText);
+                return false;
+            }
+        });
+    }
+
+
+    $("#ExminationCategorySelect").click(function() {
+        var category = $("#ExminationCategorySelect").val();
+        if (category === "5") { //## ExminationCategory.Nervous = 5
+            $("#ExminationNervousSystemItemsSelect").removeClass("d-none");
+            $("#ExminationGenericItemsSelect").addClass("d-none");
+        } else {
+            if ($("#ExminationNervousSystemItemsSelect").is(":visible")) {
+                $("#ExminationNervousSystemItemsSelect").addClass("d-none");
+                $("#ExminationGenericItemsSelect").removeClass("d-none");
+            }
+        }
+    });
+
+
     //## Change of 'Diagnosis/Indications' Dropdown box
     $('#DiagnosisListSelect').on('select2:select', function (e) {
 
@@ -709,7 +865,8 @@ $(document).ready(function () {
         });
 
         //## Examination- values are already updated- when Modal Form SubmitButton Clicked.
-
+        $("#PrescriptionPreviewExaminationList").html($("#ExaminationSelectedItemsUL").html());
+        $("#PrescriptionPreviewExaminationList").find(".delete-examination-item").remove();
                
         //## Notes
         var notesList = $('#PrescriptionNotesInput').val().trim().split("\n");
@@ -746,7 +903,9 @@ $(document).ready(function () {
 
         //## Finally all the DrugItem names will be copied to the Preview Panel
         $("#PrintPreviewContainer").html($("#PrescriptionItemsPreviewContainer").html());
-        $("#PrintPreviewContainer .prescription-action-column").remove();
+        $("#PrintPreviewContainer .prescription-action-column").remove();   //## we don't need the action buttons in the Preview
+        $("#PrintPreviewContainer .prescription-item-details").removeClass("col-6").addClass("col-7");   //## Increase the width of all Drug item columns
+
         $("#PrintPreviewContainerModalPopup").modal("show");
 
     });

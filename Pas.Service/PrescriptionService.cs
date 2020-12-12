@@ -302,6 +302,39 @@ namespace Pas.Service
 
         }
 
+        public async Task<int> Insert_PrescriptionExaminationItem(PrescriptionExaminationItemVM vm)
+        {
+            var newExamination = new PrescriptionExamination() 
+            {
+                PrescriptionId = vm.PrescriptionId,
+                ExaminationCategoryId = vm.CategoryId,
+                ExaminationTypeId = vm.PointId,
+                Result = vm.Findings
+            };
+            try
+            {
+                await _pasContext.PrescriptionExaminations.AddAsync(newExamination);
+                await _pasContext.SaveChangesAsync();
+
+                return newExamination.Id;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return 0;
+            }
+
+        }
+
+        public async Task<bool> Delete_PrescriptionExaminationItem(int id)
+        {
+            var examItem = new PrescriptionExamination() { Id = id };
+            _pasContext.Remove(examItem);
+            await _pasContext.SaveChangesAsync();
+
+            return true;
+        }
+
         //private async Task<PrescriptionAddVM> MapToCreateViewModel(Prescription prescription)
         //{
         //    var doctor = await _pasContext.UserOrganisationRole.FindAsync(prescription.DoctorOrgRoleId);

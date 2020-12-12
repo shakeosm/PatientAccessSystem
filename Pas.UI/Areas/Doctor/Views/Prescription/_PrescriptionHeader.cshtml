@@ -1,10 +1,19 @@
-﻿@model Pas.Web.ViewModels.PrescriptionCreateVM
-@{ 
+﻿@using Pas.Service.Interface
+
+@model Pas.Web.ViewModels.PrescriptionCreateVM
+@inject IDrugService DrugService
+
+@{
     var patient = Model.PatientDetails;
     var clinicalInfo = Model.ClinicialInfo;
-    var recentMedications = clinicalInfo.RecentMedication;    
+    var recentMedications = clinicalInfo.RecentMedication.Take(6);
     var recentDiagnosis = clinicalInfo.RecentDiagnosis;
     var allergyList = clinicalInfo.AllergyList;
+
+    var symptomList = await DrugService.ListAllSymptoms();
+    var symptomListSource = new SelectList(symptomList, "Id", "Description");
+
+    int counter = 0;
 }
 <div id="PatientHistory" class="form-row w-100 mb-2 bg-white border rounded ml-2 pt-2 no-print">
 
@@ -16,8 +25,28 @@
                 <div class="h3 text-primary patient-address d-none">@patient.AddressBook.FullAddress()</div>
             </div>
 
-            @await Html.PartialAsync("_PatientVitals")
+            <!-- CC: Chief Complaints -->
+            @*https://stackoverflow.com/questions/34624034/select-tag-helper-in-asp-net-core-mvc*@
+            <div class="form-row col-12 mb-3">
+                <label for="ChiefComplaintTextArea" class="col-sm-2 form-label">Chief complaints</label>
+                <div class="col-sm-10">
+                    @Html.DropDownList("ChiefComplaintList", symptomListSource, "Select a CC",
+                            new
+                                 {
+                                     id = "ChiefComplaintList",
+                                     @class = "form-control",
+                                multiple = "multiple",
+                                     placeholder = "Select a CC",
+                                     style = "width:100%;"
+                                 })
 
+                    <span class="help-block">Select at least on CC</span>
+                </div>
+
+            </div>
+
+
+            @await Html.PartialAsync("_PatientVitals")
         </div>
 
         <div id="ClinicalHistory" class="col-12 invisible d-none">
@@ -56,14 +85,15 @@
                 @foreach (var item in allergyList)
                 {
                     <span class="alert alert-warning p-2 mr-1">@item</span>
-                }                        
+                }
             }
-            else { 
+            else
+            {
                 <span class="h4 text-info">No known allergy</span>
             }
         </div>
 
-        <div id="PatientAllergies" class="col-12 mb-3">
+        <div id="PatientDiagnosis" class="col-12 mb-3">
             <span class="font-weight-bolder d-block mb-2">
                 <i class="fas fa-procedures fa-lg mr-2"></i>Diagnosis: <!-- Indications / Diagnosis -->
             </span>
@@ -80,16 +110,24 @@
             }
         </div>
 
-        <div id="PatientAllergies" class="col-12 mb-3">
+        <div id="PatientRecentMedications" class="col-12 mb-3 overflow-auto">
             <span class="font-weight-bolder d-block mb-2">
-                <i class="fas fa-prescription fa-lg mr-2"></i>Recent Medications (top 5):
+                <i class="fas fa-prescription fa-lg mr-2"></i>Recent Medications (top 6):
             </span>
             @if (recentMedications != null && recentMedications.Count() > 0)
             {
                 @foreach (var item in recentMedications)
                 {
                     <span class="alert alert-info p-2 mr-1">@item.Name - @item.Dosage</span>
+                    
+                    counter += 1;
+                    if (counter == 3) { 
+                        <div class="w-100">&nbsp;</div>    
+                    }
                 }
+
+                
+
             }
             else
             {

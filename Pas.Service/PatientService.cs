@@ -200,7 +200,7 @@ namespace Pas.Service
         {
             try
             {
-                var latestVitals = ch.User.VitalsHistories.OrderByDescending(ch => ch.Id).First();
+                var latestVitals = ch.User.VitalsHistories.OrderByDescending(ch => ch.Id).FirstOrDefault();
 
                 ClinicalHistoryVM clinicalHistoryVM = new ClinicalHistoryVM()
                 {
@@ -215,17 +215,19 @@ namespace Pas.Service
                     Cholesterol = ch.Cholesterol?.ToString(),
                     Diabetes = ch.Diabetes?.ToString(),
 
-                    BloodPressure = (latestVitals.Systolic < 1 ? "-" : $"{latestVitals.Systolic} / {latestVitals.Diastolic}"),
-                    Pulse = latestVitals.BloodPulse.ToString(),
-                    Weight = latestVitals.Weight.ToString(),
-                    
                     Height = ch.Height,
 
                     AllergyList = ch.AllergyInfo.Split(",", StringSplitOptions.RemoveEmptyEntries),
 
                     ClinicalInfoLastUpdated = ch.ClinicalInfoLastUpdated,
                     PersonalHistoryLastUpdated = ch.PersonalHistoryLastUpdated
-                };                                
+                };
+
+                if (latestVitals != null) {
+                    clinicalHistoryVM.BloodPressure = (latestVitals.Systolic < 1 ? "-" : $"{latestVitals.Systolic} / {latestVitals.Diastolic}");
+                    clinicalHistoryVM.Pulse = latestVitals.BloodPulse.ToString();
+                    clinicalHistoryVM.Weight = latestVitals.Weight.ToString();             
+                }
 
                 return clinicalHistoryVM;
             }

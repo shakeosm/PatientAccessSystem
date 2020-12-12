@@ -24,6 +24,8 @@
     @await Html.PartialAsync("_AddNewAdviseInstruction")
 
     @await Html.PartialAsync("_PatientVitalsModal")
+    
+    @await Html.PartialAsync("_ExaminationModal")
 
 
 </div>
@@ -41,5 +43,5 @@
 
     <script src="~/js/prescription/prescription-create.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    @*<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>*@
 }

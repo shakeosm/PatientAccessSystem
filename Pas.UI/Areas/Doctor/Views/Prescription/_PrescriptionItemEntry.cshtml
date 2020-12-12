@@ -13,32 +13,29 @@
 
     var instructionList = await DrugService.ListAllDrugTips(Tips.Instructions);
     var instructionListSource = new SelectList(instructionList, "Id", "DescriptionBangla");
-
-    var symptomList = await DrugService.ListAllSymptoms();
-    var symptomListSource = new SelectList(symptomList, "Id", "Description");
+    
 }
 
     <div id="PrescriptionFormDiv" class="form-row col-12 ml-2 bg-white border rounded p-3 no-print">
         <div id="DrugAndBrandsRowDiv" class="form-row col-md-6 col-sm-12">
             <div id="PrescriptionItemEntryTopDiv" class="form-row">
 
-                <!-- CC: Chief Complaints -->
-                @*https://stackoverflow.com/questions/34624034/select-tag-helper-in-asp-net-core-mvc*@
-                <div class="form-row col-12 mb-3">
-                    <label for="ChiefComplaintTextArea" class="col-sm-2 form-label">Chief complaints</label>
-                    <div class="col-sm-10">
-                        @Html.DropDownList("ChiefComplaintList", symptomListSource, "Select a CC",
-                                new
-                                     {
-                                         id = "ChiefComplaintList",
-                                         @class = "form-control",
-                                    multiple = "multiple",
-                                         placeholder = "Select a CC",
-                                         style = "width:100%;"
-                                     })
+                <div id="OnExaminationListDiv" class="col-12">
+                    <button id="ExaminationItemEntryShowModalButton" type="button" class="btn btn-primary float-right mr-3"
+                            data-toggle="modal" data-target="#ExaminationModalPopup">
+                        <i class="fal fa-stethoscope fa-lg mr-2"></i>
+                        Examination Entry
+                    </button>
 
-                        <span class="help-block">Select at least on CC</span>
-                    </div>
+                    <h4>Examination findings:</h4>
+                        <span id="DefaultExamintionText" class="text-info">No examination item added</span>
+                        <ul id="ExaminationSelectedItemsUL">
+                            @*<li>Cardiovascular- Auscultation- abnormal beat</li>
+                            <li>Respiratory- Auscultation- murmor sound</li>
+                            <li>Respiratory- Precussion- Pain on left side</li>
+                            <li>Nervous system- Gait- Slow reflex</li>*@
+                            <!-- here insert the selected Examination Items by jQuery- from the Modal -->
+                        </ul>
 
                 </div>
 
@@ -47,7 +44,8 @@
                     <label for="DiagnosisListSelect" class="col-sm-2 form-label">Diagnosis</label>
                     <div class="col-sm-10">
                         @Html.DropDownList("DiagnosisListSelect", diagnosisListSource, "Select a Diagnosis",
-                               new{
+                               new
+                                    {
                                    id = "DiagnosisListSelect",
                                    @class = "form-control",
                                    placeholder = "Select a Diagnosis",
@@ -78,7 +76,7 @@
                             <option value="">Select a Diagnosis</option>
                         </select>
 
-                        <button type="button" id="AddNewDrugBrandButton" 
+                        <button type="button" id="AddNewDrugBrandButton"
                                 class="btn btn-primary waves-effect waves-themed float-right mt-2"
                                 data-toggle="tooltip" data-placement="left" title="Add a new Drug Brand">
                             <i class="fal fa-notes-medical fa-lg mr-2"></i>Add
@@ -202,7 +200,7 @@
                                 <input type="tel" class="form-control" id="DrugNotes" rows="3"
                                        placeholder="Extra tips/notes for this Drug item" />
 
-                                <button type="button" id="AddDrugItemButton" class="btn btn-primary waves-effect waves-themed mt-2 float-left">Add this Drug</button>                                
+                                <button type="button" id="AddDrugItemButton" class="btn btn-primary waves-effect waves-themed mt-2 float-left">Add this Drug</button>
                             </div>
                         </div>
                     </div>

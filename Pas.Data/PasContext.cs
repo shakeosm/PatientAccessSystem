@@ -31,6 +31,7 @@ namespace Pas.Data
         public virtual DbSet<DiagnosticTestHistory> DiagnosticTestHistory { get; set; }
         public virtual DbSet<DoctorSpeciality> DoctorSpeciality { get; set; }
         public virtual DbSet<DoctorMedicalDegrees> DoctorMedicalDegrees { get; set; }
+        public virtual DbSet<ExaminationTypes> ExaminationTypes{ get; set; }
         public virtual DbSet<Speciality> Speciality { get; set; }
         public virtual DbSet<MedicalDegree> MedicalDegrees { get; set; }
         public virtual DbSet<DoctorProfile> DoctorProfile { get; set; }
@@ -53,6 +54,7 @@ namespace Pas.Data
         public virtual DbSet<PrescriptionChiefComplaints> PrescriptionChiefComplaints { get; set; }
         public virtual DbSet<PrescriptionDiagnosticTest> PrescriptionDiagnosticTest { get; set; }
         public virtual DbSet<PrescriptionDrugs> PrescriptionDrugs { get; set; }
+        public virtual DbSet<PrescriptionExamination> PrescriptionExaminations { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Symptoms> Symptoms { get; set; }
         public virtual DbSet<StrengthType> StrengthTypes { get; set; }
@@ -281,6 +283,11 @@ namespace Pas.Data
                 entity.ToTable("DoctorMedicalDegrees", "dbo");
             });
 
+            modelBuilder.Entity<ExaminationTypes>(entity =>
+            {
+                entity.ToTable("ExaminationTypes", "dbo");
+            });
+
             modelBuilder.Entity<DoctorProfile>(entity =>
             {
                 entity.ToTable("DoctorProfile", "dbo");
@@ -482,6 +489,11 @@ namespace Pas.Data
             modelBuilder.Entity<PatientIndications>(entity =>
             {
                 entity.ToTable("PatientIndications", "Patient");
+            });
+
+            modelBuilder.Entity<PrescriptionExamination>(entity =>
+            {
+                entity.ToTable("PrescriptionExamination", "Patient");
             });
 
             modelBuilder.Entity<PrescriptionDrugs>(entity =>

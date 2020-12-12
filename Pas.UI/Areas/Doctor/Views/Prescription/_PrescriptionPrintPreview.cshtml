@@ -79,6 +79,9 @@
                             <div class="col-4 vital-pressure">120/80</div>
                             <div class="col-2 vital-weight">72 kgs</div>
                         </div>
+                        <div id="PrescriptionPreviewExaminationList" class="text-left">
+                            <!-- we will dump the Examination List items here by jQuery-->
+                        </div>
                     </div>
 
                     @* This block is sonly for Small Mobile devixes (xs)- Hidden only on xs *@
@@ -153,7 +156,7 @@
                     Click on Close to go back to 'Patient Search' page.
                 </div>
 
-                @*This checkbox and the FinishButton- both will be hidden- iniitially. If there is no item in the Prescription-DrugList- then - you can't FINISH a Prescription*@
+                @*This checkbox and the FinishButton- both will be hidden- initially. If there is no item in the Prescription-DrugList- then - you can't FINISH a Prescription*@
                 <div id="DisclaimerCheckBoxDiv" class="custom-control custom-checkbox my-1 mr-sm-2 d-none">
                     <input type="checkbox" class="custom-control-input" id="ConfirmFinishCheckbox">
                     <label class="custom-control-label" for="ConfirmFinishCheckbox">Confirm all checks are done and Ready to print</label>                

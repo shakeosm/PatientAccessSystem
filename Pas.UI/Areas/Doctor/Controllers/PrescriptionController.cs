@@ -52,7 +52,7 @@ namespace Pas.UI.Areas.Doctor.Controllers
                 PatientId = id
             };
 
-            int prescriptionId = await _prescriptionService.CreateInitialDefault(vm);
+            int prescriptionId = 2004;// await _prescriptionService.CreateInitialDefault(vm);
 
 
             //if (id < 1) 
@@ -61,8 +61,8 @@ namespace Pas.UI.Areas.Doctor.Controllers
             //## we get the PrescriptionId via Post call. use that to get Prescription info- Doctor, Hospital, Patient
             //## Doctor has already initiated a "New Prescription" from "Doctor/Home/StartNewPrescription()"- which is their Home page
             //var prescription = await _prescriptionService.Find(id);
-            
-            //if (prescription is null || prescription.Status != (int) PrescriptionStatus.Draft) 
+
+            //if (prescription is null || prescription.Status != (int)PrescriptionStatus.Draft)
             //    return RedirectToAction("SearchPatient", "Home", new { Area = "Doctor" });
 
 
@@ -214,6 +214,30 @@ namespace Pas.UI.Areas.Doctor.Controllers
             var result = await _prescriptionService.Insert_PescriptionItem(vm);
                                     
             return Json(result);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Insert_PescriptionExaminationItem(PrescriptionExaminationItemVM vm)
+        {
+            if (!TryValidateModel(vm)){
+                return Json("error");
+            }
+
+            var insertedId = await _prescriptionService.Insert_PrescriptionExaminationItem(vm);
+                                    
+            return Json(insertedId);
+            //return Json(101);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Delete_PescriptionExaminationItem(int id)
+        {            
+            if (id < 1)
+                return Json("error");
+
+            var result = await _prescriptionService.Delete_PrescriptionExaminationItem(id);
+
+            return Json(result ? "success" : "fail");
         }
 
         [HttpPost, ValidateAntiForgeryToken]

@@ -47,6 +47,13 @@ namespace Pas.Service.Interface
         /// <param name="vm">PrescriptionDrugCreateVM View Model</param>
         /// <returns>A String- semi-colon separated value</returns>
         Task<string> Insert_PescriptionItem(PrescriptionDrugCreateVM vm);
+        
+        /// <summary>This will insert an Examination Item for a patient in the Prescription</summary>
+        /// <param name="vm">View Model with Full Examintion Data</param>
+        /// <returns>Insered Record Id</returns>
+        Task<int> Insert_PrescriptionExaminationItem(PrescriptionExaminationItemVM vm);
+        
+        Task<bool> Delete_PrescriptionExaminationItem(int id);
 
 
         Task<bool> Delete_PescriptionItem(int prescriptionItemId);
