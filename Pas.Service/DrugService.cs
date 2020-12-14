@@ -145,7 +145,10 @@ namespace Pas.Service
 
             if (symptomList is null)
             {
-                symptomList = await _context.Symptoms.ToListAsync();
+                symptomList = await _context.Symptoms
+                                            .AsNoTracking()
+                                            .OrderBy(s=> s.Description)
+                                            .ToListAsync();
 
                 _cacheService.SetCacheValue(cacheKey, symptomList);
 

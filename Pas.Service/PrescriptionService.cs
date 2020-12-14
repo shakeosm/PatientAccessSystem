@@ -335,16 +335,79 @@ namespace Pas.Service
             return true;
         }
 
-        //private async Task<PrescriptionAddVM> MapToCreateViewModel(Prescription prescription)
-        //{
-        //    var doctor = await _pasContext.UserOrganisationRole.FindAsync(prescription.DoctorOrgRoleId);
+        public async Task<IEnumerable<InvestigationVM>> ListAll_Investigations()
+        {
+            var cachedResult = _cacheService.GetCacheValue<IEnumerable<InvestigationVM>>(CacheKey.Investigations);
 
-        //    return new PrescriptionAddVM()
-        //    {
-        //        DoctorId = doctor.UserId,
-        //        PatientId = prescription.PatientId,
-        //        HospitalId = doctor.OrganisationId
-        //    };
-        //}
+            if (cachedResult is null) {
+                cachedResult = await _pasContext.Investigation.Select(i=> new InvestigationVM()
+                {
+                    Id = i.Id,
+                    Description = i.Description,
+                    ParentId = i.ParentId
+                })
+                    .OrderBy(i=> i.Description)
+                    .ToListAsync()
+                ;
+
+                _cacheService.SetCacheValue(CacheKey.Investigations, cachedResult);
+            }
+
+            return cachedResult;
+        }
+
+        public async Task<IList<InvestigationVM>> ListAllInvestigationChildItems(int id)
+        {
+            var cachedResult = _cacheService.GetCacheValue<List<InvestigationVM>>(CacheKey.Investigations);
+            
+            if (cachedResult is null) {
+                cachedResult = await _pasContext.Investigation
+                                                    .AsNoTracking()
+                                                    //.Where(i => i.ParentId == id)
+                                                    .Select(i => new InvestigationVM() 
+                                                    {
+                                                        Id = i.Id,
+                                                        Description = i.Description,
+                                                        ParentId = i.ParentId
+                                                    }).ToListAsync();
+
+                _cacheService.SetCacheValue(CacheKey.Investigations, cachedResult);
+                    
+            }
+
+            //## Now take all the Children of that ParentId
+            var filteredList = cachedResult
+                                    .Where(c => c.ParentId == id)
+                                    .ToList();
+
+            return filteredList;
+        }
+
+        public async Task<int> Insert_InvestigationItem(PrescriptionInvestigationVM vm)
+        {
+            PrescriptionInvestigation pv = new PrescriptionInvestigation() { 
+                InvestigationId = vm.InvestigationId,
+                PrescriptionId = vm.PrescriptionId,
+                Notes = vm.Notes
+            };
+
+            await _pasContext.PrescriptionInvestigations.AddAsync(pv);
+            await _pasContext.SaveChangesAsync();
+
+            return pv.Id;
+        }
+
+        public async Task<bool> Delete_InvestigationItem(int investiogtionItemId)
+        {
+            var pv = new PrescriptionInvestigation() { Id = investiogtionItemId };
+
+            _pasContext.Remove(pv);
+            await _pasContext.SaveChangesAsync();
+
+            return true;
+
+
+        }
+        
     }
 }

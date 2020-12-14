@@ -32,7 +32,12 @@ namespace Pas.Service.Interface
         /// <param name="prescriptionDiagnosticTest">PrescriptionDiagnosticTestCreateVM View Model</param>
         /// <returns>Id of the new Record</returns>
         Task<int> AddTestToPrescription(PrescriptionDiagnosticTestCreateVM prescriptionDiagnosticTest);
+
+
+        Task<IEnumerable<InvestigationVM>> ListAll_Investigations();
         
+        Task<IList<InvestigationVM>> ListAllInvestigationChildItems(int id);
+
         /// <summary>
         /// Drug List will be saved via Ajax. Diagnostis Test recommendation will be saved via Ajax, too
         /// Just last few details will be saved - once all data is entered
@@ -52,6 +57,10 @@ namespace Pas.Service.Interface
         /// <param name="vm">View Model with Full Examintion Data</param>
         /// <returns>Insered Record Id</returns>
         Task<int> Insert_PrescriptionExaminationItem(PrescriptionExaminationItemVM vm);
+        
+        Task<int> Insert_InvestigationItem(PrescriptionInvestigationVM vm);
+        
+        Task<bool> Delete_InvestigationItem(int investiogtionItemId);
         
         Task<bool> Delete_PrescriptionExaminationItem(int id);
 

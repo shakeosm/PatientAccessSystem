@@ -2,6 +2,9 @@
 @{ 
     var chamber = Model.ChamberDetails;
     var doctor = Model.Doctor;
+    var patient = Model.PatientDetails;
+
+    var patientDisplayName = $"{@patient.Title} {@patient.Name} / {@patient.Age} / {@patient.Gender} ({@patient.ShortId})";
 
 }
 @using Pas.Common.Extensions
@@ -13,23 +16,24 @@
 
         <!-- Modal content-->
         <div id="PreviewContentsDiv" class="modal-content" style="">
-            <div id="HeaderDiv" class="form-row col-12">
+            <div id="HeaderDiv" class="form-row col-12 mb-2 border-bottom">
                 <div class="mobile-device-preview d-sm-none col-xs-12 d-print-none">
                     <div class="h2 patient-name-age-gender">
                         <!-- Patient Details will be inserted here- For Mobile Device View-->
+                        @patientDisplayName
                     </div>
                     <div class="prescription-date">
                         @DateTime.Now.ToDisplay()
                     </div>
                 </div>
 
-                <div class="col-xs-12 col-sm-6 border rounded p-3">
+                <div id="PrintPreviewHospitalDetails" class="col-xs-12 col-sm-6">
                     <h4>@chamber.Name</h4>
                     <p>
                         @chamber.HeaderEnglish
                     </p>                    
                 </div>
-                <div class="col-xs-12 col-sm-6 border rounded p-3 text-right">
+                <div id="PrintPreviewDoctorDetails" class="col-xs-12 col-sm-6 text-right">
                     <h5 class="text-primary">Dr @doctor.Name</h5>
                     <textarea class="col-12 border-0 text-right p-0" rows="4" readonly>@doctor.DoctorDetails.HeaderEnglish</textarea>
                        
@@ -40,9 +44,9 @@
                     </p>*@
                 </div>
             </div>
-            <div id="PrescriptionPreviewPatientDetails" class="form-row col-12 d-none d-sm-block">
-                <div class="h6 text-info col-6 patient-name-age-gender">
-                    <!-- Patient Details will be inserted here-->
+            <div id="PrescriptionPreviewPatientDetails" class="form-row col-12 ">                @*d-none d-sm-block*@
+                <div class="h6 text-info col-6 patient-name-age-gender float-left">
+                    @patientDisplayName
                 </div>
                 <div class="h6 col-6 text-right float-right">Date: @DateTime.Now.ToDisplay()</div>
                 <div class="col-12 patient-address"><!-- Address will be inserted here --></div>
@@ -86,11 +90,11 @@
 
                     @* This block is sonly for Small Mobile devixes (xs)- Hidden only on xs *@
                     <div id="PrescriptionVitalsDivMobile" class="mb-5 text-center d-block d-sm-none">
-                        <ul class="list-group text-left">
-                            <li class="list-group-item">Temperature: <span class="vital-temperature"> </span></li>
-                            <li class="list-group-item">Pulse: <span class="vital-pulse"> </span></li>
-                            <li class="list-group-item">Pressure: <span class="vital-pressure"> </span></li>
-                            <li class="list-group-item">Weight: <span class="vital-weight"> </span></li>
+                        <ul id="PrescriptionVitalsDivMobileUL" class="text-left">
+                            <li class="">Temperature: <span class="vital-temperature"> </span></li>
+                            <li class="">Pulse: <span class="vital-pulse"> </span></li>
+                            <li class="">Pressure: <span class="vital-pressure"> </span></li>
+                            <li class="">Weight: <span class="vital-weight"> </span></li>
                         </ul>
                     </div>
 
@@ -124,21 +128,16 @@
                         <div id="PrescritionPreviewAdvise">
                             <!-- we will dump here Advise List-->
                         <ul id="PrescritionPreviewAdviseSelectList">
-                            <li>Drink plenty of water</li>
-                            <li>Walk 30 mins daily</li>
-                            <li>At least 7 hours sleep</li>
                         </ul>
                         </div>
                     </div>
 
                     <div class="col-12 border-top p-3">
                         <h4>
-                            <i class="fas fa-vials mr-2"></i>Lab test requested
+                            <i class="fas fa-vials mr-2"></i>Investigations
                         </h4>
-                        <ul>
-                            <li>Blood Himoglobin</li>
-                            <li>Urine test</li>
-                            <li>Chest X-ray</li>
+                        <ul id="PreviewInvestigationListUL">
+                            <!-- we will dump here Investigation List-->
                         </ul>
                     </div>
 

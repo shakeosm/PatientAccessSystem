@@ -243,7 +243,6 @@ namespace Pas.UI.Areas.Doctor.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete_PescriptionItem(int prescriptionItemId)
         {            
-            //## This will create a Template for a Specific Drug Brand. ie: 'Ibuprofen 200mg Tablet 4 Times a Day for 7 days'
             if (prescriptionItemId < 1)
                 return Json("error");
             
@@ -256,7 +255,6 @@ namespace Pas.UI.Areas.Doctor.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Update_Vitals(VitalsVM vm)
         {            
-            //## This will create a Template for a Specific Drug Brand. ie: 'Ibuprofen 200mg Tablet 4 Times a Day for 7 days'
             if (vm.PatientId < 1)
                 return Json("error");
             
@@ -296,5 +294,46 @@ namespace Pas.UI.Areas.Doctor.Controllers
             var result = await _drugService.ListAllDrugPatternTemplates(id);
             return Json(result);
         }
+
+        /// <summary>This will get the list of Subcategory for an Investigation category. ie: 'MICROBIOLOGY'-> 'Blood C/S'</summary>
+        /// <param name="id">Category Id</param>
+        /// <returns>List of Sub Category</returns>
+        [HttpGet]
+        public async Task<ActionResult> ListAllInvestigationSubCategory(int id)
+        {
+            if (id < 1)
+                return Json("error");
+
+            IList<InvestigationVM> result = await _prescriptionService.ListAllInvestigationChildItems(id);
+
+            return Json(result);
+        }
+
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Insert_InvestigationItem(PrescriptionInvestigationVM vm)
+        {
+            if (vm.PrescriptionId < 1 || vm.InvestigationId < 1){
+                return Json("error");
+            }
+
+            var insertedId = await _prescriptionService.Insert_InvestigationItem(vm);
+
+            return Json(insertedId);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Delete_InvestigationItem(int id)
+        {
+            if (id < 1){
+                return Json("error");
+            }
+
+            var isDeleted = await _prescriptionService.Delete_InvestigationItem(id);
+
+            return Json(isDeleted ? "success" : "error");
+        }
+
+
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Pas.Common.Constants
+﻿namespace Pas.Common.Constants
 {
     public static class CacheKey
     {
@@ -11,6 +7,7 @@ namespace Pas.Common.Constants
         public static object RecentDiagnosis = "RecentDiagnosis";
         public static string ModeOfDeliveries = "ModeOfDeliveries";
         public static string ClinicalDetails = "ClinicalDetails";
+        public static string Investigations = "Investigations";
         public static string StrengthTypes = "StrengthTypes";        
         public static string BrandsForDiagnosis = "BrandsForDiagnosis";        
         public static string PatientChiefComplaints = "PatientChiefComplaints";        

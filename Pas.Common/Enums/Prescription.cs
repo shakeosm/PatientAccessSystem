@@ -81,4 +81,36 @@ namespace Pas.Common.Enums
         Sensory = 12
     }
 
+    public enum InvestigationCategory
+    {
+        [Display(Name = "Biochemistry")]
+        Biochemistry = 1,
+        [Display(Name = "Blood Typing & Rh Factor")]
+        Blood_Typing_And_Rh_Factor,
+        [Display(Name = "Cross Matching")] 
+        Cross_Matching,
+        [Display(Name = "Cytology")]
+        Cytology,
+        [Display(Name = "Fluid")]
+        Fluid,
+        [Display(Name = "Haematology")]
+        Haematology,
+        [Display(Name = "Cross Matching")]
+        Histopathology,
+        [Display(Name = "Immunology")]
+        Immunology,
+        [Display(Name = "Microbiology")]
+        Microbiology,
+        [Display(Name = "Semen Analysis")]
+        Semen_Analysis,
+        [Display(Name = "Serology")]
+        Serology,
+        [Display(Name = "Stool")]
+        Stool,
+        [Display(Name = "Urine")]
+        Urine
+
+
+    }
+
 }

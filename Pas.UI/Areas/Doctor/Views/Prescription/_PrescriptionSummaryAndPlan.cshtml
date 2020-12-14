@@ -10,12 +10,12 @@
                     <input type="checkbox" class="custom-control-input" id="FollowUpVisitCheckbox">
                     <label class="custom-control-label" for="FollowUpVisitCheckbox">Yes</label>
                 </div>
-                    <span class="help-block">Is this a Follow up visit?</span>
+                <span class="help-block">Is this a Follow up visit?</span>
             </div>
         </div>
 
         <!-- Referred Patient -->
-        <div class="form-row col-12 mb-3">
+        <div class="form-row col-12 mb-3 d-none">
             <div class="form-group form-row col-12">
                 <label for="ReferredPatientCheckBox" class="col-sm-2 form-label">Referred?</label>
 
@@ -33,7 +33,7 @@
                                 <i class="fal fa-retweet fa-lg"></i>
                             </div>
                         </div>
-                        <input type="text" class="form-control" aria-label="text input with checkbox" 
+                        <input type="text" class="form-control" aria-label="text input with checkbox"
                                id="ReferredDoctorNameInput" disabled
                                placeholder="Referred Doctor Name">
                     </div>
@@ -66,6 +66,29 @@
             </div>
         </div>
 
+        <!-- Investigation requested-->
+        <div id="InvestigationRequestDiv" class="form-group row col-12 mb-3">
+
+            <label for="PlanInputBox" class="col-sm-2 form-label">Investigations</label>
+            <div class="col-sm-10">
+
+                <button id="InvestigationRequestShowModalButton" type="button" class="btn btn-primary float-right"
+                        data-toggle="modal" data-target="#InvestigationModalModalPopup">
+                    <i class="fal fa-microscope fa-lg mr-2"></i>
+                    Investigation Entry
+                </button>
+
+                <span id="DefaultInvestigationText" class="text-info">No Investigation item added</span>
+                <ul id="InvestigationSelectedItemsUL">
+                    <!-- here insert the selected Investigation Items by jQuery- from the Modal -->
+                </ul>
+
+            </div>
+
+
+
+        </div>
+
 
 
         <div id="NavigationButtonsDiv" class="col-12 mb-2 pr-4">
@@ -76,12 +99,13 @@
                 Back
             </button>
             <!--
-                On Click of "Finish" button- will prompt user to confirm- if YES- then update in the DB and show the "Print" button
-                -->
-            <button type="button" id="PrintPreviewButton" 
-                    data-toggle="tooltip" data-placement="left" title="Preview the Prescription"
+            On Click of "Finish" button- will prompt user to confirm- if YES- then update in the DB and show the "Print" button
+            -->
+            <button type="button" id="PrintPreviewButton"
+                    @*data-toggle="tooltip" data-placement="left" title="Preview the Prescription"*@
                     class="btn btn-primary mt-2 ml-2 float-right">
-                <i class="fal fa-file-prescription fa-lg mr-2"></i>Print Preview</button>
+                <i class="fal fa-file-prescription fa-lg mr-2"></i>Print Preview
+            </button>
         </div>
 
         <div class="col-12">

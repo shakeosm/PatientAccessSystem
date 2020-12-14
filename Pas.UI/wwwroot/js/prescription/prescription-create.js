@@ -67,6 +67,7 @@ $(document).ready(function () {
     $('#ExaminationItemAddedAlert').fadeOut();
 
     $("#ExaminationItemAddButton").click(function () {
+        debugger;
 
         var examFindings = $("#ExaminationFindingInput").val();
         var category = $("#ExminationCategorySelect option:selected").text();
@@ -107,6 +108,8 @@ $(document).ready(function () {
                 'Findings': findings
             },
             success: function (result) {
+                debugger;
+
                 if (result >= 1) {
                     $("#DefaultExamintionText").slideUp();
                     var deleteButton = " <i role='button' class='fal fa-minus-circle p-1 text-danger delete-examination-item' " +
@@ -132,11 +135,8 @@ $(document).ready(function () {
 
 
                 } else {
-                    swal({
-                        title: "Adding Failed!",
-                        text: "System has failed to save this new Examination item. Please reload the page and try again!",
-                        icon: "warning",
-                    });
+                    $("#ExaminationModalPopup").modal("hide");
+                    ShowAlert('error', 'Adding Failed', 'System has failed to save this new Examination item. Please reload the page and try again!');
 
                     $(this).prop("disabled", false); 
                 }
@@ -151,7 +151,7 @@ $(document).ready(function () {
     $(document).on("click", ".delete-examination-item", function (e) {
         var examinationItemId = $(this).data("examinationItemId");
         var listItem = $(this).parent();    //## if confirmed- we will deelte this <li>
-
+        
         Swal.fire({
             title: 'Confirm delete',
             text: "Do you want to delete this examination item?",
@@ -172,6 +172,7 @@ $(document).ready(function () {
     function Post_DeleteExaminationItem(examinationItemId, listItem) {
 
         var postUrl = "/Doctor/Prescription/Delete_PescriptionExaminationItem";
+        $("#PasLoaderbody").removeClass('invisible');
 
         $.ajax({
             url: postUrl,
@@ -182,6 +183,8 @@ $(document).ready(function () {
                 'id': examinationItemId,
             },
             success: function (result) {
+                $("#PasLoaderbody").addClass('invisible');
+
                 if (result === "success") {
                     $(listItem).remove();   //## remove the list item
 
@@ -191,12 +194,9 @@ $(document).ready(function () {
                     }
 
                 } else {
-                    swal({
-                        title: "Delete Failed!",
-                        text: "System has failed to delete this Examination item. Please try again later!",
-                        icon: "info",
-                    });
+                    ShowAlert('error', 'Delete Failed!', 'System has failed to delete this Examination item. Please try again later!');
                 }
+
             },
             error: function (err) {
                 console.log(err.statusText);
@@ -281,6 +281,222 @@ $(document).ready(function () {
         }
     }
 
+
+    //####      Investigation Add/ Remove
+    $("#InvestigationItemAddedAlert").fadeOut();
+
+    $("#InvestigationCategorySelect").click(function () {
+        debugger;
+        var parentId = $(this).val();
+
+        AddInvestigationChildItems(parentId, "#InvestigationSubCategorySelect")
+
+        $("#InvestigationSubCategoryItemSelect").empty();
+        
+    });
+
+    //## InvestigationSubCategorySelect
+    $("#InvestigationSubCategorySelect").click(function () {
+        debugger;
+        var parentId = $(this).val();
+        AddInvestigationChildItems(parentId, "#InvestigationSubCategoryItemSelect")
+
+    });
+
+    //### This will get list of Child Items for a Specific Parent and then add those to a specific SelectList Input box
+    function AddInvestigationChildItems(parentId, targetSelectListId) {
+        if (parentId < 1 || parentId === "undefined")
+            return;
+
+        ShowPreloader();
+        
+        var targetSelectListId = $(targetSelectListId);
+        targetSelectListId.empty();
+
+        var URL = `/Doctor/Prescription/ListAllInvestigationSubCategory/${parentId}`;
+        axios.get(URL)
+            .then(function (response) {
+                debugger;
+                if (response.data !== "error") {
+                    if (response.data.length > 0) { //## if any result is returned- then add to the target SelectList control
+                        $(targetSelectListId).prop("disabled", false);
+
+                        for (i = 0; i < response.data.length; i++) {
+                            $(targetSelectListId).append("<option value=" + response.data[i].id + ">" + response.data[i].description + "</option>");
+                        }
+
+                    } else {    //## if no Child Items found- then disable the target SelectList input
+                        $(targetSelectListId).prop("disabled", true);
+                    }
+                }
+
+                HidePreloader();
+            });
+    }
+
+    $("#InvestigationItemAddButton").click(function(e) {
+
+        var itemSelected = true;
+
+        debugger;
+
+        if ($("#InvestigationSubCategoryItemSelect").prop("disabled") === false) {
+            if ($("#InvestigationSubCategoryItemSelect").val() < 1) {
+                itemSelected = false;
+            }
+        } else {
+            if ($("#InvestigationSubCategorySelect").val() < 1) {
+                itemSelected = false;
+            }
+        }
+
+        if (itemSelected === false) {
+            //ShowAlert('warning', 'Investigation missing!', 'You must select an Investigation first, to add to the Prescription!');
+            $(this).parent().find(".error-feedback").removeClass("invisible");
+            return;
+        }
+
+        $(this).parent().find(".error-feedback").addClass("invisible");
+
+        var investigationItemId = -1;
+        var selectedcategoryId = $("#InvestigationCategorySelect").val();
+
+        var categoryText = "";
+
+        if (selectedcategoryId == 12 || selectedcategoryId == 13) {
+            categoryText = GetSelectListText("#InvestigationCategorySelect") + "- ";
+        }
+
+
+        var subCategoryItem = $("#InvestigationSubCategoryItemSelect").val();
+
+        var displayText = categoryText + GetSelectListText("#InvestigationSubCategorySelect");
+
+        if (subCategoryItem > 0) {
+            investigationItemId = subCategoryItem;
+            //var subItem = GetSelectListText("#InvestigationSubCategoryItemSelect");
+            displayText = displayText + " - " + GetSelectListText("#InvestigationSubCategoryItemSelect");
+
+        } else {
+            investigationItemId = $("#InvestigationSubCategorySelect").val();
+        }
+        
+        
+        Post_NewInvestigationItem(investigationItemId, displayText);
+
+    });
+
+    function Post_NewInvestigationItem(investigationId, displayText) {
+        var postUrl = "/Doctor/Prescription/Insert_InvestigationItem";
+
+        ShowPreloader();
+
+        SetDisabled("#InvestigationItemAddButton", true);
+
+        $.ajax({
+            url: postUrl,
+            type: "POST",
+            dataType: 'json',
+            data: {
+                __RequestVerificationToken: token,  //# AntiForgeryToken
+                'PrescriptionId': _prescriptionId,
+                'InvestigationId': investigationId,
+                //'Notes': newBrandName,
+            },
+            success: function (result) {
+                debugger;                
+
+                SetDisabled("#InvestigationItemAddButton", false);
+
+                if (result >= 1) {
+                    $("#DefaultInvestigationText").fadeOut();   //## for the firs time- once an item is added- hide the default text
+
+                    var deleteButton = " <i role='button' class='fal fa-minus-circle p-1 text-danger delete-investigation-item' " +
+                        "data-investigation-item-id='" + result + "' data-toggle='tooltip' data-placement='right' title='Remove investigation item'></i> ";
+
+                    $("#InvestigationSelectedItemsUL").append("<li>" + displayText.trim() + deleteButton + "</li>")
+                    
+                    $('[data-toggle="tooltip"]').tooltip();
+
+                    HidePreloader();                    
+
+                    $('#InvestigationItemAddedAlert').fadeIn();
+                    $('#InvestigationItemAddedAlert').delay(1000).fadeOut();
+
+                } else {                    
+                    $("#InvestigationModalModalPopup").modal("hide");
+                    ShowAlert('warning', 'Update Failed!', 'System has failed to add this new Investigation Item. Please reload the page and try again!');
+                }
+            },
+            error: function (err) {
+                console.log(err.statusText);
+                return false;
+            }
+        });
+    }
+
+
+    $(document).on("click", ".delete-investigation-item", function (e) {
+        var investigationItemId = $(this).data("investigationItemId");
+        var listItem = $(this).parent();    //## if confirmed- we will delete this <li>
+
+        Swal.fire({
+            title: 'Confirm delete',
+            text: "Do you want to delete this investigation item?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Delete!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Post_DeleteInvestigationItem(investigationItemId, listItem);
+
+            }
+        })
+
+    });
+
+    function Post_DeleteInvestigationItem(investigationItemId, listItem) {
+
+        var postUrl = "/Doctor/Prescription/Delete_InvestigationItem";
+        ShowPreloader();
+
+        $.ajax({
+            url: postUrl,
+            type: "POST",
+            dataType: 'json',
+            data: {
+                __RequestVerificationToken: token,  //# AntiForgeryToken
+                'id': investigationItemId,
+            },
+            success: function (result) {
+                HidePreloader();
+
+                if (result === "success") {
+                    $(listItem).remove();   //## remove the list item
+
+                    //## if all investigation items are removed- show the default text-
+                    if ($("#InvestigationSelectedItemsUL .delete-investigation-item").length < 1) {
+                        $("#DefaultInvestigationText").fadeIn();
+                    }
+
+                } else {
+                    ShowAlert('error', 'Delete Failed!', 'System has failed to delete this Investigation item. Please try again later!');
+                }
+
+            },
+            error: function (err) {
+                console.log(err.statusText);
+                return false;
+            }
+        });
+    }
+
+
+
+    //## End of Investigation
+
     //## Drug Brand Selection Change-> Load all DrugDoseTemplates
     $("#BrandListSelect").click(function() {
 
@@ -334,11 +550,7 @@ $(document).ready(function () {
             $("#NewDrugBrandEntryPopupModal").modal("show");
             return;
         } else {
-            swal({
-                title: "Diagnosis missing",
-                text: "You must select a Diagnosis first, to create a Drug template!",
-                icon: "warning",
-            });
+            ShowAlert('warning', 'Diagnosis missing!', 'You must select a Diagnosis first, to create a Drug template!');
         }        
     });
 
@@ -395,11 +607,8 @@ $(document).ready(function () {
 
                     $("#DrugDoseTemplateListSelect").empty();
                 } else {
-                    swal({
-                        title: "Update Failed!",
-                        text: "System has failed to save this new Brand Details. Please reload the page and try again!",
-                        icon: "warning",
-                    });
+                    $("#NewDrugBrandEntryPopupModal").modal("hide");
+                    ShowAlert('warning', 'Update Failed!', 'System has failed to save this new Brand Details. Please reload the page and try again!');
                 }
 
                 $("#NewDrugBrandEntryPopupModal").modal("hide");
@@ -422,6 +631,8 @@ $(document).ready(function () {
     //## Create New Brand Dose Template
     $("#CreateBrandDoseTemplateButton").click(function () {
 
+        debugger;
+
         var postUrl = "/Doctor/Prescription/Insert_BrandDoseTemplate";        
         
         var modeOfDelivery = $("#ModeOfDeliverySelectList").val();
@@ -432,6 +643,14 @@ $(document).ready(function () {
         var doseFrequency = $("input[name='DoseFrequencyRadioOption']:checked").val();
         var durationDays = $("#DurationDays").val();
         var intakePatternId = $("#IntakePatternSourceSelect").val();
+
+        //## Validation
+        if (modeOfDelivery === "" || doseStrength == undefined || strengthTypeText == undefined || durationDays < 1 || intakePatternId === "") {
+            showElement("#DoseTemplateAddError");
+            return false;
+        }
+
+        hideElement("#DoseTemplateAddError");
 
         var brandDoseTemplateCreateVM = {
             __RequestVerificationToken: token,  //# AntiForgeryToken__Validate : token,
@@ -458,7 +677,7 @@ $(document).ready(function () {
 
                     console.log(response);
                     $("#NewDrugDoseTemplatePopupModal").modal("hide")
-                    alert("response -" + newPatternId + "-" + newPatternId);
+                    //alert("response -" + newPatternId + "-" + newPatternId);
                     $("#DrugDoseTemplateListSelect").append($('<option></option>').attr('value', newPatternId).text(pattern));
                     $("#DrugDoseTemplateListSelect").val(newPatternId);
                 } else {
@@ -496,7 +715,7 @@ $(document).ready(function () {
 
                 console.log(response.data);
                 $("#NewDrugDoseTemplatePopupModal").modal("hide")
-                alert("response -" + response.data[0] + "-" + newPatternId);    
+                //alert("response -" + response.data[0] + "-" + newPatternId);    
                 $("#DrugDoseTemplateListSelect").append($('<option></option>').attr('value', newPatternId).text(pattern));
                 $("#DrugDoseTemplateListSelect").val(newPatternId);
             } else {
@@ -511,11 +730,8 @@ $(document).ready(function () {
     });
 
     function OnFail_DrugDoseTemplate_Create() {
-        swal({
-            title: "Update Failed!",
-            text: "System has failed to save this new Drug Dose template. Please reload the page and try again!",
-            icon: "warning",
-        });
+        $("#NewDrugDoseTemplatePopupModal").modal("hide");
+        ShowAlert('error', 'Update Failed!', 'System has failed to save this new Drug Dose template. Please reload the page and try again!');
     }
 
 
@@ -569,11 +785,7 @@ $(document).ready(function () {
         var templateSelected = $("#DrugDoseTemplateListSelect option:selected").length > 0;
 
         if (ccSelected == false || templateSelected == false) {
-            swal({
-                title: "Data missing",
-                text: "You must select: Complaint, Diagnosis, Drug Brand and a Drug Template- to add an item to the prescription.",
-                icon: "warning",
-            });
+            ShowAlert('warning', 'Data missing!', 'You must select: Complaint, Diagnosis, Drug Brand and a Drug Template- to add an item to the prescription.');
 
             return true;    //## Prescription header is incomplete
         }
@@ -693,7 +905,8 @@ $(document).ready(function () {
 
     //## Add new Drug Dose Template, ie (1 + 1 + 1)
     $("#AddNewDrugDosageTemplateButton").click(function () {
-        if ($("#BrandListSelect").val() != null) {
+
+        if ($("#BrandListSelect").val() >= 1) {
             var selectedDrugBrand = $("#BrandListSelect option:selected").text();
             $("#NewDrugDoseTemplateTitleSpan").text(selectedDrugBrand); //## Title of the Modal Popup
             $("#NewDrugDoseTemplateExampleSpan").text(selectedDrugBrand);   //## Example Text- to show how it will look like on the Prescription
@@ -701,11 +914,7 @@ $(document).ready(function () {
             $("#NewDrugDoseTemplatePopupModal").modal("show");
             return;
         } else {
-            swal({
-                title: "Drug not selected",
-                text: "You must select a Drug brand first, to create a Dose template!",
-                icon: "warning",
-            });
+            ShowAlert('warning', 'Drug not selected!', 'You must select a Drug brand first, to create a Dose template!');
         }
 
         
@@ -851,31 +1060,30 @@ $(document).ready(function () {
     $("#PrintPreviewButton").click(function (e) {
         debugger;
 
-        //## Patient Details
-        var personalDetails = $("#PersonalDetails .patient-name").text();
-        $(".patient-name-age-gender").text(personalDetails);
-
         var address = $("#PersonalDetails .patient-address").text();
         $("#PrescriptionPreviewPatientDetails .patient-address").text(address);
 
         //## CC
         $("#ChiefComplaintList option:selected").each(function (index) {
             $("#PrescriptionCCListUL").empty();
-            $("#PrescriptionCCListUL").append("<li class='list-group-item'>" + $(this).text() +"</li>");            
+            $("#PrescriptionCCListUL").append("<li class='list-group-item'>" + $(this).text() + "</li>");
         });
 
         //## Examination- values are already updated- when Modal Form SubmitButton Clicked.
+        $("#PrescriptionVitalsDivMobileUL").append($("#ExaminationSelectedItemsUL").html());
+        $("#PrescriptionVitalsDivMobileUL").find(".delete-examination-item").remove();
         $("#PrescriptionPreviewExaminationList").html($("#ExaminationSelectedItemsUL").html());
         $("#PrescriptionPreviewExaminationList").find(".delete-examination-item").remove();
-               
+        
+
         //## Notes
         var notesList = $('#PrescriptionNotesInput').val().trim().split("\n");
         $("#PrescritionPreviewNotesSelectList").empty();
 
         $.each(notesList, function (item) {
             $("#PrescritionPreviewNotesSelectList").append("<li>" + notesList[item] + "</li>");
-        }); 
-        
+        });
+
 
         //## Planning
         var planList = $('#PlanInputBox').val().trim().split("\n");
@@ -883,17 +1091,20 @@ $(document).ready(function () {
 
         $.each(planList, function (item) {
             $("#PrescritionPreviewPlanSelectList").append("<li>" + planList[item] + "</li>");
-        });        
-        
+        });
+
         //## Advise
         var adviseList = $('#AdviseInput').val().trim().split("\n");
         $("#PrescritionPreviewAdviseSelectList").empty();
 
         $.each(adviseList, function (item) {
-            $("#PrescritionPreviewAdviseSelectList").append("<li>" + adviseList[item] + "</li>");            
+            $("#PrescritionPreviewAdviseSelectList").append("<li>" + adviseList[item] + "</li>");
         });
 
         //## Lab Test Request
+        $("#PreviewInvestigationListUL").empty();
+        $("#PreviewInvestigationListUL").append($("#InvestigationSelectedItemsUL").html())
+        $("#PreviewInvestigationListUL").find(".delete-investigation-item").remove();
 
         //## If no DrugItem is added- then don't show the "Finish" Button in the Preview Modal
         if ($("#PrescriptionItemsPreviewContainer .prescription-item-row").length >= 1) {
@@ -1016,10 +1227,41 @@ $(document).ready(function () {
         return $(elementId).text();
     }
 
+    function GetSelectListText(selectListId) {
+        var selectedText = $(selectListId + " option:selected").text();
+        return selectedText;
+    }
+
     function IsChecked(elementId) {
         return $(elementId).is(":checked");
     }
 
+    function ShowPreloader() {
+        $("#PasLoaderbody").removeClass('invisible');
+    }
+
+    function HidePreloader() {
+        $("#PasLoaderbody").addClass('invisible');
+
+    }
+
+    function SetDisabled(controlName, disableOption) {
+        $(controlName).prop("disabled", disableOption);
+    }
+
+
+    function ShowAlert(swalIcon, messageTitle, messageText) {
+        HidePreloader(); 
+
+        Swal.fire({
+            icon: swalIcon,
+            title: messageTitle,
+            text: messageText,
+        })
+    }
+
+    function showElement(element) { $(element).removeClass('d-none'); } //## Used in AccessRequest.js
+    function hideElement(element) { $(element).addClass('d-none'); }
 
     //## Prepare PrescriptionPreviwe Modal- with Doctor and Hospital Details
 

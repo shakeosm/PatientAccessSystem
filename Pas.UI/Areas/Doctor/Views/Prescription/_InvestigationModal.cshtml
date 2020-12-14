@@ -1,0 +1,65 @@
+﻿@using Pas.Common.Enums
+<!-- _InvestigationModal.cshtml -->
+
+<div id="InvestigationModalModalPopup" class="modal fade" tabindex="-1" role="dialog" aria-label="Investigation Modal Popup" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-info font-weight-bold">
+                    <i class="fal fa-microscope fa-lg mr-2"></i>
+                    Investigations
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row col-12">
+                    <div class="form-row col-12">
+                        <div id="InvestigationCategoryDiv" class="col-5">                        
+                            @Html.DropDownList("InvestigationCategorySelect", Html.GetEnumSelectList<InvestigationCategory>(),
+                                   new
+                                        {
+                                       id = "InvestigationCategorySelect",
+                                       @class = "form-control exam-option-list",
+                                       size = "7"
+                                   })
+
+                        </div>
+                        <div id="InvestigationSubCategoryDiv" class="col-7">
+                            <select id="InvestigationSubCategorySelect" class="form-control" size="7">
+                                <option value="-1">Select Category...</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div id="InvestigationSubCategoryItemDiv" class="col-12 mt-2">
+                        <select id="InvestigationSubCategoryItemSelect" class="form-control" size="5">
+                            <option value="-1">Select an item</option>
+                        </select>
+
+                    </div>
+
+                </div>
+                <div class="col-12 mt-2">
+                    <div class="error-feedback text-danger invisible">
+                        Please select a Category and an Investigation item.
+                    </div>
+                    
+                    <button id="InvestigationItemAddButton" type="button" class="btn btn-primary float-right">
+                        <i class="fal fa-notes-medical fa-lg mr-2"></i>
+                        Add
+                    </button>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div id="InvestigationItemAddedAlert" class="alert alert-info" role="alert">
+                    Investigation item is added to the prescription
+                </div>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

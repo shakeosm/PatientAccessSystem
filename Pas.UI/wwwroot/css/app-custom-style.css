@@ -13,6 +13,14 @@
     /*text-shadow: 10px 7px 7px #333;*/
 }
 
+.clinical-info-item{
+    padding: 2px 5px;
+    border: 1px solid black;
+    border-radius:5px;
+    margin-right:10px;
+    margin-bottom:5px;
+}
+
 
 .btn-drug-template {
     width: 80px !important;
@@ -21,6 +29,20 @@
 @media print {
     .no-print, .no-print * {
         display: none !important;
+    }
+
+    #PrintPreviewHospitalDetails, #PrintPreviewDoctorDetails {
+        width: 50%;
+        border:0;
+    }
+    #LeftColumn {
+        width:40%;
+        border:0;
+        border-right: 1px solid grey;
+    }
+    #PreviewModaBodyDiv {
+        width: 60%;
+        border: 0;
     }
 }
 

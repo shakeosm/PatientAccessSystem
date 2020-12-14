@@ -3,8 +3,7 @@
 @model Pas.Web.ViewModels.PrescriptionCreateVM
 @inject IDrugService DrugService
 
-@{
-    var patient = Model.PatientDetails;
+@{    
     var clinicalInfo = Model.ClinicialInfo;
     var recentMedications = clinicalInfo.RecentMedication.Take(6);
     var recentDiagnosis = clinicalInfo.RecentDiagnosis;
@@ -20,10 +19,6 @@
     <!-- Name/Age/Gender amd Address -->
     <div id="LeftColumn" class="col-sm-12 col-md-6 pl-3">
         <div id="PersonalDetails" class="">
-            <div class="">
-                <div class="h2 patient-name">@patient.Title @patient.Name / @patient.Age / @patient.Gender (@patient.ShortId)</div>
-                <div class="h3 text-primary patient-address d-none">@patient.AddressBook.FullAddress()</div>
-            </div>
 
             <!-- CC: Chief Complaints -->
             @*https://stackoverflow.com/questions/34624034/select-tag-helper-in-asp-net-core-mvc*@
@@ -75,64 +70,127 @@
 
     <!-- Allergy, Ailments and Recent Medication -->
     <div id="RightColumn" class="col-sm-12 col-md-6">
-        <div id="PatientAllergies" class="col-12 mb-3">
+
+        <div class="accordion" id="PatientClinicalDetailsAccordion">
+            <div class="card AllergyAccordion">
+                <div class="card-header">
+                    <a href="javascript:void(0);" class="card-title px-3 py-2 bg-success-600 text-white" data-toggle="collapse" data-target="#AllergyAccordion" aria-expanded="true">
+                        <i class="fas fa-allergies fa-lg mr-2"></i>
+                        Allergies:
+                        <span class="ml-auto">
+                            <span class="collapsed-reveal">
+                                <i class="fal fa-minus fs-xl"></i>
+                            </span>
+                            <span class="collapsed-hidden">
+                                <i class="fal fa-plus fs-xl"></i>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div id="AllergyAccordion" class="collapse show" data-parent="#PatientClinicalDetailsAccordion" style="">
+                    <div class="card-body bg-success-50 p-3">
+                        @if (allergyList.Count > 0)
+                        {
+                            @foreach (var item in allergyList)
+                            {
+                                <span class="alert alert-warning p-2 mr-1">@item</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="h4 text-info">No known allergy</span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="card DiagnosisAccordion">
+                <div class="card-header">
+                    <a href="javascript:void(0);" class="card-title px-3 py-2 bg-warning-500 text-dark collapsed" data-toggle="collapse" data-target="#DiagnosisAccordion" aria-expanded="false">
+                        <i class="fas fa-procedures fa-lg mr-2"></i>Diagnosis: <!-- Indications / Diagnosis -->
+
+                        <span class="ml-auto">
+                            <span class="collapsed-reveal">
+                                <i class="fal fa-minus fs-xl"></i>
+                            </span>
+                            <span class="collapsed-hidden">
+                                <i class="fal fa-plus fs-xl"></i>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div id="DiagnosisAccordion" class="collapse" data-parent="#PatientClinicalDetailsAccordion" style="">
+                    <div class="card-body bg-warning-50 p-3">
+                        @if (recentDiagnosis != null && recentDiagnosis.Count() > 0)
+                        {
+                            @foreach (var item in recentDiagnosis)
+                            {
+                                <span class="alert alert-danger p-2 mr-1">@item.Name</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="h4 text-info">No recent Diagnosis found</span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="card RecentMedicationsAccordion">
+                <div class="card-header">
+                    <a href="javascript:void(0);" class="card-title px-3 py-2 bg-info-700 text-white collapsed" data-toggle="collapse" data-target="#RecentMedicationsAccordion" aria-expanded="false">
+                        <i class="fas fa-prescription fa-lg mr-2"></i>Recent Medications (top 6):
+                        <span class="ml-auto">
+                            <span class="collapsed-reveal">
+                                <i class="fal fa-minus fs-xl"></i>
+                            </span>
+                            <span class="collapsed-hidden">
+                                <i class="fal fa-plus fs-xl"></i>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div id="RecentMedicationsAccordion" class="collapse" data-parent="#PatientClinicalDetailsAccordion" style="">
+                    <div class="card-body bg-info-50 p-2">
+                        <div class="d-flex flex-wrap">
+                            @if (recentMedications != null && recentMedications.Count() > 0)
+                            {
+                                @foreach (var item in recentMedications)
+                                {
+                                    @*<span class="alert alert-info p-2 mr-1">@item.Name - @item.Dosage</span>*@
+                                    <span class="clinical-info-item">@item.Name - @item.Dosage</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="h4 text-info">No recent Medication found</span>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @*<div id="PatientAllergies" class="col-12 mb-3">
             <span class="font-weight-bolder d-block mb-2">
                 <i class="fas fa-allergies fa-lg mr-2"></i>
                 Allergies:
             </span>
-            @if (allergyList.Count > 0)
-            {
-                @foreach (var item in allergyList)
-                {
-                    <span class="alert alert-warning p-2 mr-1">@item</span>
-                }
-            }
-            else
-            {
-                <span class="h4 text-info">No known allergy</span>
-            }
-        </div>
 
-        <div id="PatientDiagnosis" class="col-12 mb-3">
+        </div>*@
+
+        @*<div id="PatientDiagnosis" class="col-12 mb-3">
             <span class="font-weight-bolder d-block mb-2">
-                <i class="fas fa-procedures fa-lg mr-2"></i>Diagnosis: <!-- Indications / Diagnosis -->
+                
             </span>
-            @if (recentDiagnosis != null && recentDiagnosis.Count() > 0)
-            {
-                @foreach (var item in recentDiagnosis)
-                {
-                    <span class="alert alert-danger p-2 mr-1">@item.Name</span>
-                }
-            }
-            else
-            {
-                <span class="h4 text-info">No recent Diagnosis found</span>
-            }
-        </div>
+
+        </div>*@
 
         <div id="PatientRecentMedications" class="col-12 mb-3 overflow-auto">
             <span class="font-weight-bolder d-block mb-2">
-                <i class="fas fa-prescription fa-lg mr-2"></i>Recent Medications (top 6):
-            </span>
-            @if (recentMedications != null && recentMedications.Count() > 0)
-            {
-                @foreach (var item in recentMedications)
-                {
-                    <span class="alert alert-info p-2 mr-1">@item.Name - @item.Dosage</span>
-                    
-                    counter += 1;
-                    if (counter == 3) { 
-                        <div class="w-100">&nbsp;</div>    
-                    }
-                }
-
                 
+            </span>
 
-            }
-            else
-            {
-                <span class="h4 text-info">No recent Medication found</span>
-            }
         </div>
 
     </div>

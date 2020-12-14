@@ -33,7 +33,7 @@
                         <label for="DrugIntakeRadioOption" class="col-sm-2 form-label">Intake Type</label>
                         <div class="form-row col-sm-10">
 
-                            @Html.DropDownList("ModeOfDeliverySelectList", modeOfDeliverySource, "Select a pattern",
+                            @Html.DropDownList("ModeOfDeliverySelectList", modeOfDeliverySource, "Select Intake Type",
                                 new { id = "ModeOfDeliverySelectList", @class = "form-control" })
 
                             <div class="btn-group btn-group-toggle d-none invisible" data-toggle="buttons">
@@ -208,6 +208,7 @@
                         <label for="QuantityInput" class="col-sm-2 form-label"></label>
                         <div class="col-sm-12">
                             <div class="alert alert-success">Example: <br /><span id="NewDrugDoseTemplateExampleSpan">Paracetemol Tablet</span> 10mg (1 + 0 + 0 + 1) for 14 Days</div>
+                            <div id="DoseTemplateAddError" class="alert alert-danger d-none">You must fill all the details to create a new Dose template.</div>
                         </div>
 
                     </div>

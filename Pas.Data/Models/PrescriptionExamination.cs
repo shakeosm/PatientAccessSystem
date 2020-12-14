@@ -22,7 +22,6 @@ namespace Pas.Data.Models
         [Column(TypeName = "varchar(100)")]
         public string Result { get; set; }
 
-        public virtual Prescription Prescription { get; set; }
-        public virtual ExaminationTypes ExaminationType { get; set; }
+        public virtual Prescription Prescription { get; set; }       
     }
 }

@@ -32,7 +32,7 @@ namespace Pas.Service.Interface
         /// <returns>List of Dose Templates</returns>
         Task<IList<BrandDoseTemplateViewVM>> ListAllBrandsDoseTemplates(int drugBrandId);      
         Task<IList<DrugIntakePatternsForDiagnosisVM>> ListAllDrugPatternTemplates(int id);
-        Task<IList<InvestigationForDiagnosisVM>> ListAllInvestigationsForDiagnosis(int id);
+        Task<IList<InvestigationForDiagnosisVM>> ListAllInvestigationsForDiagnosis(int id);               
         Task<IList<IntakePattern>> ListAllIntakePatterns ();
         Task<IList<ModeOfDelivery>> LisAllModeOfDeliveries();
         

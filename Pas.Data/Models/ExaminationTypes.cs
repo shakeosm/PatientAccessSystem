@@ -6,10 +6,6 @@ namespace Pas.Data.Models
 {
     public partial class ExaminationTypes : BaseEntityModel
     {
-        public ExaminationTypes()
-        {
-            Examinations = new HashSet<PrescriptionExamination>();
-        }
 
         [Required]
         public int Category { get; set; }
@@ -19,7 +15,5 @@ namespace Pas.Data.Models
         public string Name { get; set; }
 
         public bool? IsDeleted { get; set; }
-
-        public virtual ICollection<PrescriptionExamination> Examinations { get; set; }
     }
 }

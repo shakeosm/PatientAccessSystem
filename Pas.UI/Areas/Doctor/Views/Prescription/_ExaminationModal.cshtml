@@ -5,7 +5,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">
+                <h5 class="modal-title text-info font-weight-bold">
                     <i class="fal fa-stethoscope mr-2"></i>On Examination</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -22,10 +22,7 @@
                                    @class = "form-control exam-option-list",
                                    size = "7"
                                })
-
-                        @*<select id="ExminationCategorySelect" class="form-control"
-                asp-items="Html.GetEnumSelectList<ExminationCategory>()" size="7">
-        </select>*@
+                        
                     </div>
                     <div id="ExaminationItemDiv" class="col-7">
                         <label class="" for="ExminationGenericItemsSelect">Points</label>
@@ -47,9 +44,6 @@
 
                         @*<select id="ExminationGenericItemsSelect" class="form-control"
                 asp-items="Html.GetEnumSelectList<ExminationGenericItems>()" size="7">
-        </select>*@
-                        @*<select id="ExminationNervousSystemItemsSelect" class="form-control d-none"
-                asp-items="Html.GetEnumSelectList<ExminationNervousSystemItems>()" size="7">
         </select>*@
                     </div>
                 </div>              

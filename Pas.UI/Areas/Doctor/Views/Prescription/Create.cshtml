@@ -2,13 +2,19 @@
 
 @{
     ViewData["Title"] = "Prescription Create";
+    var patient = Model.PatientDetails;
+    var patientDisplayName = $"{@patient.Title} {@patient.Name} / {@patient.Age} / {@patient.Gender} ({@patient.ShortId})";
     //var patient = Model.PatientDetails;
 }
 
 <div id="PrescriptionMainContainer" class="form-row col-12 m-0 p-0 d-print-none">
     <div class="alert alert-info mb-2 col-12 h3 ">
         <i class="fal fa-file-prescription fa-2x"></i>
-        New Prescription
+        New Prescription: 
+        <span id="PersonalDisplayDetails">
+            @patientDisplayName
+        </span>
+
         <input type="hidden" asp-for="@Model.Id" name="PrescriptionIdInput" value="@Model.Id" />
         <input type="hidden" asp-for="@Model.PatientDetails.Id" name="PatientId" value="@Model.PatientDetails.Id" />
     </div>
@@ -26,6 +32,8 @@
     @await Html.PartialAsync("_PatientVitalsModal")
     
     @await Html.PartialAsync("_ExaminationModal")
+
+    @await Html.PartialAsync("_InvestigationModal")
 
 
 </div>

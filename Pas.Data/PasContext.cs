@@ -32,6 +32,7 @@ namespace Pas.Data
         public virtual DbSet<DoctorSpeciality> DoctorSpeciality { get; set; }
         public virtual DbSet<DoctorMedicalDegrees> DoctorMedicalDegrees { get; set; }
         public virtual DbSet<ExaminationTypes> ExaminationTypes{ get; set; }
+        public virtual DbSet<Investigation> Investigation { get; set; }
         public virtual DbSet<Speciality> Speciality { get; set; }
         public virtual DbSet<MedicalDegree> MedicalDegrees { get; set; }
         public virtual DbSet<DoctorProfile> DoctorProfile { get; set; }
@@ -55,6 +56,7 @@ namespace Pas.Data
         public virtual DbSet<PrescriptionDiagnosticTest> PrescriptionDiagnosticTest { get; set; }
         public virtual DbSet<PrescriptionDrugs> PrescriptionDrugs { get; set; }
         public virtual DbSet<PrescriptionExamination> PrescriptionExaminations { get; set; }
+        public virtual DbSet<PrescriptionInvestigation> PrescriptionInvestigations { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Symptoms> Symptoms { get; set; }
         public virtual DbSet<StrengthType> StrengthTypes { get; set; }
@@ -256,6 +258,11 @@ namespace Pas.Data
                     .HasForeignKey(d => d.DoctorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DiagnosticTestHistory_Doctors");
+            });
+
+            modelBuilder.Entity<Investigation>(entity =>
+            {
+                entity.ToTable("Investigation", "dbo");
             });
 
             modelBuilder.Entity<Speciality>(entity =>
@@ -494,6 +501,11 @@ namespace Pas.Data
             modelBuilder.Entity<PrescriptionExamination>(entity =>
             {
                 entity.ToTable("PrescriptionExamination", "Patient");
+            });
+
+            modelBuilder.Entity<PrescriptionInvestigation>(entity =>
+            {
+                entity.ToTable("PrescriptionInvestigation", "Patient");
             });
 
             modelBuilder.Entity<PrescriptionDrugs>(entity =>
