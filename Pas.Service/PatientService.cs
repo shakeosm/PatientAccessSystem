@@ -142,19 +142,28 @@ namespace Pas.Service
             var cachedResult = _cacheService.GetCacheValue<ClinicalHistoryVM>(redisKey);
             if (cachedResult is null)
             {
-                var search = await _pasContext.ClinicalHistory
+                try
+                {
+                    var search = await _pasContext.ClinicalHistory
                         .AsNoTracking()
                         .Include(c => c.User)
                         .Include(c => c.User.VitalsHistories)
-                        .OrderByDescending(ch=> ch.Id)
+                        .OrderByDescending(ch => ch.Id)
                         .FirstOrDefaultAsync(c => c.UserId == id);
 
-                cachedResult = MapToClinicalHistoryVM(search);
+                    cachedResult = MapToClinicalHistoryVM(search);
 
-                cachedResult.RecentMedication = await GetRecentMedication(id);
-                cachedResult.RecentDiagnosis = await GetRecentDiagnosis(id);
+                    cachedResult.RecentMedication = await GetRecentMedication(id);
+                    cachedResult.RecentDiagnosis = await GetRecentDiagnosis(id);
 
-                _cacheService.SetCacheValue(redisKey, cachedResult);
+                    _cacheService.SetCacheValue(redisKey, cachedResult);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    throw;
+                }
+                
             }
             
             return cachedResult;
