@@ -16,9 +16,11 @@ namespace Pas.Data.Models
             PrescriptionInvestigations = new HashSet<PrescriptionInvestigation>();
         }
 
+        //[ForeignKey("Patient")]
         [Required]
         public int PatientId { get; set; }
 
+        //[ForeignKey("Doctor")]
         [Required]
         public int DoctorId { get; set; }
 

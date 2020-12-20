@@ -9,6 +9,8 @@
     <Compile Remove="Migrations\Pas\20201101184839_prescription-drug-changes.Designer.cs" />
     <Compile Remove="Migrations\Pas\20201219204958_initial-setup.cs" />
     <Compile Remove="Migrations\Pas\20201219204958_initial-setup.Designer.cs" />
+    <Compile Remove="Migrations\Pas\20201219205145_initial-setup.cs" />
+    <Compile Remove="Migrations\Pas\20201219205145_initial-setup.Designer.cs" />
     <Compile Remove="Models\AilmentTypes.cs" />
     <Compile Remove="Models\PatientAilmentType.cs" />
   </ItemGroup>

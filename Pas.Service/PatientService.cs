@@ -223,14 +223,17 @@ namespace Pas.Service
 
                     Cholesterol = ch.Cholesterol?.ToString(),
                     Diabetes = ch.Diabetes?.ToString(),
+                    AllergyList = new List<string>(),
 
                     Height = ch.Height,
-
-                    AllergyList = ch.AllergyInfo.Split(",", StringSplitOptions.RemoveEmptyEntries),
 
                     ClinicalInfoLastUpdated = ch.ClinicalInfoLastUpdated,
                     PersonalHistoryLastUpdated = ch.PersonalHistoryLastUpdated
                 };
+
+                if(ch.AllergyInfo != null){
+                    clinicalHistoryVM.AllergyList = ch.AllergyInfo.Split(",", StringSplitOptions.RemoveEmptyEntries);
+                }
 
                 if (latestVitals != null) {
                     clinicalHistoryVM.BloodPressure = (latestVitals.Systolic < 1 ? "-" : $"{latestVitals.Systolic} / {latestVitals.Diastolic}");

@@ -280,18 +280,30 @@ namespace Pas.Service
             }
             else
             {
-                vh = new VitalsHistory() {
-                    PatientId = vm.PatientId,
-                    PrescriptionId = vm.PrescriptionId,
-                    BloodPulse = vm.BloodPulse,
-                    Systolic = vm.Systolic,
-                    Diastolic = vm.Diastolic,
-                    Weight = vm.Weight,
-                    DateAdded = DateTime.Now
-                };
+                try
+                {
+                    vh = new VitalsHistory()
+                    {
+                        Id= 0,
+                        PatientId = vm.PatientId,
+                        PrescriptionId = vm.PrescriptionId,
+                        Temperature = vm.Temperature,
+                        BloodPulse = vm.BloodPulse,
+                        Systolic = vm.Systolic,
+                        Diastolic = vm.Diastolic,
+                        Weight = vm.Weight,
+                        DateAdded = DateTime.Now
+                    };
 
-                await _pasContext.VitalsHistories.AddAsync(vh);
-                await _pasContext.SaveChangesAsync();
+                    await _pasContext.VitalsHistories.AddAsync(vh);
+                    await _pasContext.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine(ex.ToString());
+                }
+
             }
 
             //## Update the Redis Cache for next read

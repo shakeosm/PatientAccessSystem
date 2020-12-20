@@ -52,11 +52,11 @@ namespace Pas.UI.Areas.Doctor.Controllers
                 PatientId = id
             };
 
-            int prescriptionId = 2004;// await _prescriptionService.CreateInitialDefault(vm);
+            int prescriptionId = 1003;// await _prescriptionService.CreateInitialDefault(vm);
 
 
-            //if (id < 1) 
-            //    return RedirectToAction("SearchPatient", "Home", new { Area = "Doctor" });
+            if (id < 1)
+                return RedirectToAction("SearchPatient", "Home", new { Area = "Doctor" });
 
             //## we get the PrescriptionId via Post call. use that to get Prescription info- Doctor, Hospital, Patient
             //## Doctor has already initiated a "New Prescription" from "Doctor/Home/StartNewPrescription()"- which is their Home page

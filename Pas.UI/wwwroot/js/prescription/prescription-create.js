@@ -927,6 +927,7 @@ $(document).ready(function () {
     //## UPdate the Prescription Area with the Vital Info from the Popup Modal
     $("#VitalModalSubmitButton").click(function () {
         var vitalsHistoryId = GetVal("#VitalsHistoryId");
+        debugger;
 
         var temperature = GetVal("#TemperatureInput");
         var pulseInput = GetVal("#PulseInput");
@@ -950,12 +951,13 @@ $(document).ready(function () {
                 "BloodPulse": pulseInput,
                 "Diastolic": diastolic,
                 "Systolic": systolic,
+                "Weight": weight,
                 //"Weight": weight,
             },
             dataType: "json",
             success: function (response) {
                 debugger;
-                if (response !== "0" || response !== "") {
+                if (response !== 0) {
                     $("#VitalsHistoryId").val(response);    //## Update the returned RecordId
 
                     $(".vital-temperature").text(temperature);
@@ -988,11 +990,7 @@ $(document).ready(function () {
     function OnError_VitalsUpdateFailed() {
         $("#PatientVitalsModalPopup").modal("hide");
 
-        swal({
-            title: "Failed to Update",
-            text: "There was an error and the Patient Vitals was not updated. Please reload the page and try again.",
-            icon: "warning",
-        });
+        ShowAlert("warning", "Failed to update", "There was an error and the Patient Vitals was not updated. Please reload the page and try again.");
     }
         
 

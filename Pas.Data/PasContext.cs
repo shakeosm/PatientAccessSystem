@@ -458,6 +458,18 @@ namespace Pas.Data
             {
                 entity.ToTable("Prescription", "Patient");
 
+                entity.HasOne(d => d.Patient)
+                    .WithMany(p => p.Prescriptions)
+                    .HasForeignKey(d => d.PatientId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Prescription_User_PatientId");
+
+                //entity.HasOne(d => d.Doctor)
+                //    .WithMany(p => p.Prescriptions)
+                //    .HasForeignKey(d => d.DoctorId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("FK_Prescription_User_DoctorId");
+
                 entity.Property(e => e.DateCreated).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Notes).HasMaxLength(1000);
