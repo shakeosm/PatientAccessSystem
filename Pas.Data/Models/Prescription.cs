@@ -41,11 +41,7 @@ namespace Pas.Data.Models
         public string Advise { get; set; }
         
         public bool? IsRepeatingVisit { get; set; }
-
-        public string ReferralDoctor { get; set; }
-
-        public int? PreviousPrescriptionId { get; set; }
-
+        
         public int Status { get; set; }
 
         public virtual ICollection<PrescriptionDiagnosticTest> PrescriptionDiagnosticTest { get; set; }

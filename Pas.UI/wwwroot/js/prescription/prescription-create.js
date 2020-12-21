@@ -1062,9 +1062,11 @@ $(document).ready(function () {
         $("#PrescriptionPreviewPatientDetails .patient-address").text(address);
 
         //## CC
+        $("#PrescriptionCCListUL").empty();
         $("#ChiefComplaintList option:selected").each(function (index) {
-            $("#PrescriptionCCListUL").empty();
-            $("#PrescriptionCCListUL").append("<li class='list-group-item'>" + $(this).text() + "</li>");
+            //$("#PrescriptionCCListUL").append("<li class='list-group-item'>" + $(this).text() + "</li>");
+            $("#PrescriptionCCListUL").append("<li>" + $(this).text() + "</li>");
+            //console.log($(this).text());
         });
 
         //## Examination- values are already updated- when Modal Form SubmitButton Clicked.
@@ -1104,16 +1106,16 @@ $(document).ready(function () {
         $("#PreviewInvestigationListUL").append($("#InvestigationSelectedItemsUL").html())
         $("#PreviewInvestigationListUL").find(".delete-investigation-item").remove();
 
-        //## If no DrugItem is added- then don't show the "Finish" Button in the Preview Modal
-        if ($("#PrescriptionItemsPreviewContainer .prescription-item-row").length >= 1) {
-            $("#PrescriptionFinishButton, #DisclaimerCheckBoxDiv").removeClass("d-none");
-        }
-
 
         //## Finally all the DrugItem names will be copied to the Preview Panel
         $("#PrintPreviewContainer").html($("#PrescriptionItemsPreviewContainer").html());
         $("#PrintPreviewContainer .prescription-action-column").remove();   //## we don't need the action buttons in the Preview
         $("#PrintPreviewContainer .prescription-item-details").removeClass("col-6").addClass("col-7");   //## Increase the width of all Drug item columns
+
+        //## If no DrugItem is added- then don't show the "Finish" Button in the Preview Modal
+        if ($("#PrescriptionItemsPreviewContainer .prescription-item-row").length >= 1) {
+            $("#PrescriptionFinishButton, #DisclaimerCheckBoxDiv").removeClass("d-none");
+        }
 
         $("#PrintPreviewContainerModalPopup").modal("show");
 

@@ -41,7 +41,7 @@ $(".update-header-text-button").click(function () {
     $(this).parent().find(".edit-header-text-button").removeClass("d-none");    //## Show the Edit Button again
     $(this).addClass("d-none"); //## Hide this Update button                
 
-    return;
+    //return;
 
     $.ajax({
         url: postUrl,
