@@ -52,10 +52,12 @@ namespace Pas.Common.Enums
 
     public enum ExminationCategory
     {
+        [Display(Name = "General")]
+        General = 1,  //## will use: public enum ExminationGeneralItems
         [Display(Name = "Abdomen")]
-        Abdominal = 1,
+        Abdominal = 2,
         [Display(Name = "CVS")]
-        Cardiovascular = 2,
+        Cardiovascular = 3,
         [Display(Name = "R/S")]
         Respiratory,
         [Display(Name = "M/S")]
@@ -79,6 +81,15 @@ namespace Pas.Common.Enums
         Gait = 10,
         MotorSystem = 11,
         Sensory = 12
+    }
+
+    public enum ExminationGeneralItems
+    {
+        Pulse = 20,
+        BP = 21,
+        Temerature=22,
+        ResporatoryRate = 23,
+        Weight = 24
     }
 
     public enum InvestigationCategory

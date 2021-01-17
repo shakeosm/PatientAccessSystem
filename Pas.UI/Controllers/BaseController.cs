@@ -29,9 +29,9 @@ namespace Pas.UI.Controllers
 
         protected async Task<AppUserDetailsVM> GetCurrentUser()
         {
-            var userEmail = _userManager.GetUserName(HttpContext.User);
+            //var userEmail = _userManager.GetUserName(HttpContext.User);
 
-            var currentUser = await _appAuthorisationService.GetActiveUserFromCache(userEmail);
+            var currentUser = await _appAuthorisationService.GetActiveUserFromCache();
 
             return currentUser;
         }

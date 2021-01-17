@@ -66,28 +66,38 @@ $(document).ready(function () {
 
     $('#ExaminationItemAddedAlert').fadeOut();
 
+    $("#ExaminationItemEntryDiv .exam-option-list").click(function () {
+        var selectedPointId = $(this).val();
+        var selectedPointText = $(this).children(":selected").text();
+
+        $("#ExaminationPointIdInput").val(selectedPointId);
+        $("#ExaminationPointTextInput").val(selectedPointText);
+    });
+
+    
+
     $("#ExaminationItemAddButton").click(function () {
-        debugger;
 
         var examFindings = $("#ExaminationFindingInput").val();
-        var category = $("#ExminationCategorySelect option:selected").text();
-        var genericOption = $("#ExminationGenericItemsSelect option:selected").text();
-        var nervousOption = $("#ExminationNervousSystemItemsSelect option:selected").text();
-
-        var examItem = genericOption === "" ? nervousOption : genericOption;
-        var examPointId = genericOption === "" ? $("#ExminationNervousSystemItemsSelect").val() : $("#ExminationGenericItemsSelect").val();
-
-        if (examFindings === "" || category === "" || examItem === "") {
+        var category = $("#ExaminationCategorySelect option:selected").text() + "- ";
+       
+        var examItem = $("#ExaminationPointTextInput").val();
+        var examPointId = $("#ExaminationPointIdInput").val();
+        
+        if (examFindings === "" || category === "" || examPointId === "") {
             $("#ExaminationFindingInput").parent().find(".error-feedback").removeClass("invisible");
             return;
         }
+
+        if (category.toLowerCase().indexOf("general") >= 0)
+            category = "";
                 
-        var examinationItem = category.concat("- ", examItem, ": ", examFindings);
+        var examinationItem = category.concat(examItem, ": ", examFindings);
 
         $(this).prop("disabled", true); //## to stop from clicking multiple times
 
         //## Post via Ajax to Controller
-        Post_NewExaminationItem($("#ExminationCategorySelect").val(), examPointId, examFindings, examinationItem);                
+        Post_NewExaminationItem($("#ExaminationCategorySelect").val(), examPointId, examFindings, examinationItem);                
 
     });
 
@@ -132,7 +142,7 @@ $(document).ready(function () {
 
                     $('[data-toggle="tooltip"]').tooltip();
                     
-
+                    ResetExaminationItemSelectionValues();
 
                 } else {
                     $("#ExaminationModalPopup").modal("hide");
@@ -146,6 +156,14 @@ $(document).ready(function () {
                 return false;
             }
         });
+    }
+
+    function ResetExaminationItemSelectionValues() {
+        $("#ExaminationPointIdInput").val();
+        $("#ExaminationPointTextInput").val();
+
+        $("#ExaminationItemEntryDiv .exam-option-list").prop('selectedIndex', -1);
+
     }
 
     $(document).on("click", ".delete-examination-item", function (e) {
@@ -206,15 +224,21 @@ $(document).ready(function () {
     }
 
 
-    $("#ExminationCategorySelect").click(function() {
-        var category = $("#ExminationCategorySelect").val();
-        if (category === "5") { //## ExminationCategory.Nervous = 5
+    $("#ExaminationCategorySelect").click(function() {
+        var category = $("#ExaminationCategorySelect").val();
+        $("#ExaminationItemDiv .exam-option-list").addClass("d-none");
+        ResetExaminationItemSelectionValues();
+
+        if (category === "6") { //## ExminationCategory.Nervous = 6            
             $("#ExminationNervousSystemItemsSelect").removeClass("d-none");
-            $("#ExminationGenericItemsSelect").addClass("d-none");
+        } else if (category === "1") { //## ExminationCategory.General = 1
+            if (!$("#ExminationGeneralItemsSelect").is(":visible")) { //## when not visible- make it visible
+                $("#ExminationGeneralItemsSelect").removeClass("d-none");
+            }
         } else {
-            if ($("#ExminationNervousSystemItemsSelect").is(":visible")) {
-                $("#ExminationNervousSystemItemsSelect").addClass("d-none");
-                $("#ExminationGenericItemsSelect").removeClass("d-none");
+            if (!$("#ExaminationGenericItemsSelect").is(":visible")) {
+                //$("#ExminationNervousSystemItemsSelect").addClass("d-none");
+                $("#ExaminationGenericItemsSelect").removeClass("d-none");
             }
         }
     });
@@ -837,6 +861,7 @@ $(document).ready(function () {
         $("#DrugDoseTemplateListSelect").empty()
         $("#DrugDoseTemplateListSelect").append(new Option("Select a Diagnosis", null));
 
+        toastr.info(brandName + ' ' + doseArray[0] + ' added to prescription');
 
     }
 
@@ -919,80 +944,7 @@ $(document).ready(function () {
 
         
     });
-
-    $("#PatientVitalEntryModalButton").click(function() {
-        $("#PatientVitalsModalPopup").modal("show");
-    });
-
-    //## UPdate the Prescription Area with the Vital Info from the Popup Modal
-    $("#VitalModalSubmitButton").click(function () {
-        var vitalsHistoryId = GetVal("#VitalsHistoryId");
-        debugger;
-
-        var temperature = GetVal("#TemperatureInput");
-        var pulseInput = GetVal("#PulseInput");
-        var diastolic = GetVal("#BoodPressureDiastolicInput");
-        var systolic = GetVal("#BoodPressureSystolicInput");
-        var weight = GetVal("#WeightInput");
-        //var height = GetVal("#HeightInput");
-
-        //## Now POST
-        var postUrl = "/Doctor/Prescription/Update_Vitals";
-
-        $.ajax({
-            type: "POST",
-            url: postUrl,
-            data: {
-                __RequestVerificationToken: token,  //# AntiForgeryToken__Validate : token,
-                "Id": vitalsHistoryId,
-                "PatientId": _patientId,
-                "PrescriptionId": _prescriptionId,
-                "Temperature": temperature,
-                "BloodPulse": pulseInput,
-                "Diastolic": diastolic,
-                "Systolic": systolic,
-                "Weight": weight,
-                //"Weight": weight,
-            },
-            dataType: "json",
-            success: function (response) {
-                debugger;
-                if (response !== 0) {
-                    $("#VitalsHistoryId").val(response);    //## Update the returned RecordId
-
-                    $(".vital-temperature").text(temperature);
-                    $(".vital-pulse").text(pulseInput);
-                    $(".vital-pressure").text(diastolic + "/" + systolic);
-                    $(".vital-weight").text(weight);
-                    //$("#PatientVitalsInfoDiv .vital-height").text(height);
-
-                    //## Update the value in PrintPreview, too.. save time
-                    //$("#PrescriptionVitalsDiv .vital-temperature").text(temp);
-                    //$("#PrescriptionVitalsDiv .vital-pulse").text(pulse);
-                    //$("#PrescriptionVitalsDiv .vital-pressure").text(pressure);
-                    //$("#PrescriptionVitalsDiv .vital-weight").text(weight);
-
-                    //## Once success- then hide the Modal
-                    $("#PatientVitalsModalPopup").modal("hide");
-                    
-                } else {
-                    OnError_VitalsUpdateFailed()
-                }
-            },
-            error: function (xhr, status, error) {
-                OnError_VitalsUpdateFailed()
-            }
-        });
-
-        
-    });
-
-    function OnError_VitalsUpdateFailed() {
-        $("#PatientVitalsModalPopup").modal("hide");
-
-        ShowAlert("warning", "Failed to update", "There was an error and the Patient Vitals was not updated. Please reload the page and try again.");
-    }
-        
+    
 
     $("#RelatedToMealCheckBox").click(function () {
         if ($(this).is(":checked")) {

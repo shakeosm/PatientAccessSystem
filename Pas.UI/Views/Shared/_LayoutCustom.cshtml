@@ -135,7 +135,7 @@
                 <!-- END PRIMARY NAVIGATION -->
                 <!-- NAV FOOTER -->
                 <div class="nav-footer shadow-top">
-                    <a href="#" onclick="return false;" data-action="toggle" data-class="nav-function-minify" class="hidden-md-down">
+                    <a href="#" onclick="layouts.minifyNavigation('off');" data-action="toggle" data-class="nav-function-minify" class="hidden-md-down">
                         <i class="ni ni-chevron-right"></i>
                         <i class="ni ni-chevron-right"></i>
                     </a>
@@ -173,17 +173,17 @@
                     </div>
                     <!-- DOC: nav menu layout change shortcut -->
                     <div class="hidden-md-down dropdown-icon-menu position-relative">
-                        <a href="#" class="header-btn btn js-waves-off" data-action="toggle" data-class="nav-function-hidden" title="Hide Navigation">
+                        <a id="HideNavigationLinkButton" href="#" class="header-btn btn js-waves-off" data-action="toggle" data-class="nav-function-hidden" title="Hide Navigation">
                             <i class="ni ni-menu"></i>
                         </a>
                         <ul>
                             <li>
-                                <a href="#" class="btn js-waves-off" data-action="toggle" data-class="nav-function-minify" title="Minify Navigation">
+                                <a id="MinifyNavigationLinkButton" href="#" class="btn js-waves-off" data-action="toggle" data-class="nav-function-minify" title="Minify Navigation">
                                     <i class="ni ni-minify-nav"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="btn js-waves-off" data-action="toggle" data-class="nav-function-fixed" title="Lock Navigation">
+                                <a id="LockNavigationLinkButton" href="#" class="btn js-waves-off" data-action="toggle" data-class="nav-function-fixed" title="Lock Navigation">
                                     <i class="ni ni-lock-nav"></i>
                                 </a>
                             </li>
@@ -286,10 +286,13 @@
     <script src="~/js/lib/jquery/dist/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://raw.githubusercontent.com/cowboy/jquery-throttle-debounce/master/jquery.ba-throttle-debounce.min.js"></script>
     <script src="~/js/app.bundle.js"></script>
     <script src="~/js/vendors.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
-    @*<script src="~/js/site.js"></script>*@
+
+    <script src="~/js/site.js"></script>
 
     @{
         await Html.RenderPartialAsync("_PageLoadingAnimation.cshtml");

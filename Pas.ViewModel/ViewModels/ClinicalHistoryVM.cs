@@ -28,7 +28,7 @@ namespace Pas.Web.ViewModels
 
         public string Height { get; set; }
 
-        public string Weight { get; set; }
+        public string Weight { get; set; }        
 
         public string Pulse { get; set; }
 
@@ -43,7 +43,7 @@ namespace Pas.Web.ViewModels
         /// <summary>List of known Allergies- from [Patient].[ClinicalHistory]</summary>
         public IList<string> AllergyList { get; set; }
         public IEnumerable<DrugDetailsVM> RecentMedication { get; set; }
-        public IEnumerable<IndicationVM> RecentDiagnosis { get; set; }
+        //public IEnumerable<IndicationVM> RecentDiagnosis { get; set; }
         //public IEnumerable<ChiefComplaintsVM> ChiefComplaints{ get; set; }        
     }
 }

@@ -31,7 +31,7 @@
 
     @await Html.PartialAsync("_PatientVitalsModal")
     
-    @await Html.PartialAsync("_ExaminationModal")
+    @await Html.PartialAsync("_ExaminationModal", @Model.PatientDetails.Gender)
 
     @await Html.PartialAsync("_InvestigationModal")
 

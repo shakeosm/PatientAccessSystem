@@ -6,7 +6,7 @@
 @{    
     var clinicalInfo = Model.ClinicialInfo;
     var recentMedications = clinicalInfo.RecentMedication.Take(6);
-    var recentDiagnosis = clinicalInfo.RecentDiagnosis;
+    //var recentDiagnosis = clinicalInfo.RecentDiagnosis;
     var allergyList = clinicalInfo.AllergyList;
 
     var symptomList = await DrugService.ListAllSymptoms();
@@ -40,8 +40,6 @@
 
             </div>
 
-
-            @await Html.PartialAsync("_PatientVitals")
         </div>
 
         <div id="ClinicalHistory" class="col-12 invisible d-none">
@@ -68,45 +66,15 @@
 
     </div>
 
-    <!-- Allergy, Ailments and Recent Medication -->
+    <!-- Past medical History and Recent Medication -->
     <div id="RightColumn" class="col-sm-12 col-md-6">
 
         <div class="accordion" id="PatientClinicalDetailsAccordion">
-            <div class="card AllergyAccordion">
-                <div class="card-header">
-                    <a href="javascript:void(0);" class="card-title px-3 py-2 bg-success-600 text-white" data-toggle="collapse" data-target="#AllergyAccordion" aria-expanded="true">
-                        <i class="fas fa-allergies fa-lg mr-2"></i>
-                        Allergies:
-                        <span class="ml-auto">
-                            <span class="collapsed-reveal">
-                                <i class="fal fa-minus fs-xl"></i>
-                            </span>
-                            <span class="collapsed-hidden">
-                                <i class="fal fa-plus fs-xl"></i>
-                            </span>
-                        </span>
-                    </a>
-                </div>
-                <div id="AllergyAccordion" class="collapse show" data-parent="#PatientClinicalDetailsAccordion" style="">
-                    <div class="card-body bg-success-50 p-3">
-                        @if (allergyList.Count > 0)
-                        {
-                            @foreach (var item in allergyList)
-                            {
-                                <span class="alert alert-warning p-2 mr-1">@item</span>
-                            }
-                        }
-                        else
-                        {
-                            <span class="h4 text-info">No known allergy</span>
-                        }
-                    </div>
-                </div>
-            </div>
+
             <div class="card DiagnosisAccordion">
                 <div class="card-header">
                     <a href="javascript:void(0);" class="card-title px-3 py-2 bg-warning-500 text-dark collapsed" data-toggle="collapse" data-target="#DiagnosisAccordion" aria-expanded="false">
-                        <i class="fas fa-procedures fa-lg mr-2"></i>Diagnosis: <!-- Indications / Diagnosis -->
+                        <i class="fas fa-procedures fa-lg mr-2"></i>Past Medical History: <!-- Past Medical History -->
 
                         <span class="ml-auto">
                             <span class="collapsed-reveal">
@@ -119,8 +87,8 @@
                     </a>
                 </div>
                 <div id="DiagnosisAccordion" class="collapse" data-parent="#PatientClinicalDetailsAccordion" style="">
-                    <div class="card-body bg-warning-50 p-3">
-                        @if (recentDiagnosis != null && recentDiagnosis.Count() > 0)
+                    <div class="card-body bg-success p-3">
+                        @*@if (recentDiagnosis != null && recentDiagnosis.Count() > 0)
                         {
                             @foreach (var item in recentDiagnosis)
                             {
@@ -130,7 +98,7 @@
                         else
                         {
                             <span class="h4 text-info">No recent Diagnosis found</span>
-                        }
+                        }*@
                     </div>
                 </div>
             </div>
@@ -155,7 +123,6 @@
                             {
                                 @foreach (var item in recentMedications)
                                 {
-                                    @*<span class="alert alert-info p-2 mr-1">@item.Name - @item.Dosage</span>*@
                                     <span class="clinical-info-item">@item.Name - @item.Dosage</span>
                                 }
                             }
@@ -168,29 +135,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-
-        @*<div id="PatientAllergies" class="col-12 mb-3">
-            <span class="font-weight-bolder d-block mb-2">
-                <i class="fas fa-allergies fa-lg mr-2"></i>
-                Allergies:
-            </span>
-
-        </div>*@
-
-        @*<div id="PatientDiagnosis" class="col-12 mb-3">
-            <span class="font-weight-bolder d-block mb-2">
-                
-            </span>
-
-        </div>*@
-
-        <div id="PatientRecentMedications" class="col-12 mb-3 overflow-auto">
-            <span class="font-weight-bolder d-block mb-2">
-                
-            </span>
-
         </div>
 
     </div>

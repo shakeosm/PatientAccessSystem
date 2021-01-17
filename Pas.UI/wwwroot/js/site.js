@@ -53,6 +53,19 @@ function logToConsole(object) {
 //## This variable will be used Gloablly for all Calendar Control. One place - one head, one ache!
 window.calendarFormat = "DD MMM YYYY";
 
+//$("#HideNavigationLinkButton").click(function() {
+
+//});
+
+//$("#MinifyNavigationLinkButton").click(function() {
+
+//});
+
+//$("#LockNavigationLinkButton").click(function() {
+
+//});
+
+
 $(document).ready(function () {
 
     $("#loaderbody").addClass('invisible');
@@ -62,20 +75,26 @@ $(document).ready(function () {
         $("#loaderbody").addClass('invisible');
     });
 
-    //tempus dominus datepicker
-    $('.datepicker').each(function (i) {
-        $(this).datetimepicker(
-            {
-                //date: moment($(this).children('.datetimepicker-input').prop('defaultValue'), "DD-MM-YYYY HH:mm:ss" ),
-                format: calendarFormat,
-                autoclose: true
-            })
-    }).focusin(function () {
-        $(this).datetimepicker('show');
-    });
+    //Doctor / Home / ViewPatient -->
+    if (
+        //$("#PatientProfileViewDiv").length > 0 || 
+        $("#PrescriptionMainContainer").length > 0
+        ) {
+        layouts.minifyNavigation('on');
+    }
 
-    $('.data-table').DataTable({
-    });
+
+    //tempus dominus datepicker
+    //$('.datepicker').each(function (i) {
+    //    $(this).datetimepicker(
+    //        {
+    //            //date: moment($(this).children('.datetimepicker-input').prop('defaultValue'), "DD-MM-YYYY HH:mm:ss" ),
+    //            format: calendarFormat,
+    //            autoclose: true
+    //        })
+    //}).focusin(function () {
+    //    $(this).datetimepicker('show');
+    //});
 
 });
 

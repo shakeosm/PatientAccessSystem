@@ -28,5 +28,15 @@ INSERT INTO
 SELECT D.Id, D.Name, 1, GETDATE()
 FROM [Drug].[Drugs]D
 
+-- Clinical History.
+insert into    
+	[pas-db-test].[Patient].[ClinicalHistory] 
+		([UserId],[BloodGroupId],[Smoker]      ,[Drinker],[Excercise],[Sports],[PersonalHistoryLastUpdated],
+		[Height],[Weight],[Pulse],[PressureSystolic],[PressureDiastolic],[Cholesterol],[Diabetes],[ClinicalInfoLastUpdated])
 
+		select 18,[BloodGroupId],[Smoker]      ,[Drinker],[Excercise],[Sports],[PersonalHistoryLastUpdated],
+		[Height],[Weight],[Pulse],[PressureSystolic],[PressureDiastolic],[Cholesterol],[Diabetes],[ClinicalInfoLastUpdated]
+
+from [pas-db-test].[Patient].[ClinicalHistory] AS U
+where U.id=1
 

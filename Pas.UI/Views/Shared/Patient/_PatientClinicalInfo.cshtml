@@ -39,14 +39,14 @@
                         <div class="col-4 font-weight-bold border-right">Drink habit</div>
                         <div class="col-8 drink-habit"> @Model.Drinker</div>
                     </div>
-                    <div class="row">
+                    @*<div class="row">
                         <div class="col-4 font-weight-bold border-right">Excercise</div>
                         <div class="col-8 excercise">@Model.ExcerciseDisplay()</div>
                     </div>
                     <div class="row">
                         <div class="col-4 font-weight-bold border-right">Sports</div>
                         <div class="col-8 sports">@Model.Sports</div>
-                    </div>
+                    </div>*@
                 </div>
             </div>
             <div class="card-footer">
@@ -58,6 +58,9 @@
 
     @* Card: Key information *@
     <div class="col-xs-12 col-lg-6 ">
+        @{ 
+            double weightInPounds = (Convert.ToDouble(Model.Weight)) * 2.2;
+        }
         <div id="KeyInformationDiv" class="card">
             <div class="card-header bg-trans-gradient py-2 pr-2 d-flex align-items-center flex-wrap">
                 <!-- we wrap header title inside a span tag with utility padding -->
@@ -75,20 +78,20 @@
                     </div>
                     <div class="row">
                         <div class="col-4 font-weight-bold">Weight</div>
-                        <div class="col-8">: @Model.Weight kg</div>@*158 lbs / 72 kgs*@
+                        <div class="col-8">: @Model.Weight kg (@weightInPounds lbs )</div>@*158 lbs / 72 kgs*@
                     </div>
                     <div class="row">
-                        <div class="col-4 font-weight-bold">Blood pressure</div>
+                        <div class="col-4 font-weight-bold">BP</div>
                         <div class="col-8">: @Model.BloodPressure</div>
                     </div>
                     <div class="row">
                         <div class="col-4 font-weight-bold">Pulse</div>
                         <div class="col-8">: @Model.Pulse</div>
                     </div>
-                    <div class="row">
+                    @*<div class="row">
                         <div class="col-4 font-weight-bold">Cholesterol</div>
                         <div class="col-8">: @Model.Cholesterol</div>
-                    </div>
+                    </div>*@
                     <div class="row">
                         <div class="col-4 font-weight-bold">Diabetes</div>
                         <div class="col-8">: @Model.Diabetes</div>
@@ -139,7 +142,7 @@
 
                 <div class="w-100">&nbsp;</div>
 
-                <div id="AilmentHistoryCardDiv" class="mb-3">
+                @*<div id="AilmentHistoryCardDiv" class="mb-3">
                     <h5 class="card-title h6">
                         <i class="fas fa-procedures fa-lg mr-2"></i>
                         Diagnosis History
@@ -163,7 +166,7 @@
                         </span>
 
                     }
-                </div>
+                </div>*@
 
             </div>
             <div class="card-footer">

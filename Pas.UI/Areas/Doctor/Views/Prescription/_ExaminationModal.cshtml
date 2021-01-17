@@ -1,4 +1,10 @@
 ﻿@using Pas.Common.Enums
+@model Pas.Common.Enums.Gender
+
+@{ 
+    var showPregnancyExamEntry = Model == Gender.Female;
+
+}
 <!-- _ExaminationModal.cshtml -->
 
 <div id="ExaminationModalPopup" class="modal fade" tabindex="-1" role="dialog" aria-label="Patient Examination Modal Popup" aria-hidden="true">
@@ -12,25 +18,33 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-row col-12">
+                <div id="ExaminationItemEntryDiv" class="form-row col-12">
                     <div id="ExaminationCategoryDiv" class="col-5">
-                        <label class="" for="ExminationCategorySelect">System</label>
-                        @Html.DropDownList("ExminationCategorySelect", Html.GetEnumSelectList<ExminationCategory>(),
+                        <label class="" for="ExaminationCategorySelect">System</label>
+                        @Html.DropDownList("ExaminationCategorySelect", Html.GetEnumSelectList<ExminationCategory>(),
                                new
                                     {
-                                   id = "ExminationCategorySelect",
-                                   @class = "form-control exam-option-list",
+                                   id = "ExaminationCategorySelect",
+                                   @class = "form-control exam-option-category",
                                    size = "7"
                                })
-                        
+
                     </div>
                     <div id="ExaminationItemDiv" class="col-7">
-                        <label class="" for="ExminationGenericItemsSelect">Points</label>
-                        @Html.DropDownList("ExminationGenericItemsSelect", Html.GetEnumSelectList<ExminationGenericItems>(),
+                        <label class="" for="ExminationGeneralItemsSelect">Points</label>
+                        @Html.DropDownList("ExminationGeneralItemsSelect", Html.GetEnumSelectList<ExminationGeneralItems>(),
+                       new
+                       {
+                           id = "ExminationGeneralItemsSelect",
+                           @class = "form-control exam-option-list",
+                           size = "7"
+                       })
+
+                        @Html.DropDownList("ExaminationGenericItemsSelect", Html.GetEnumSelectList<ExminationGenericItems>(),
                                new
                                     {
-                                   id = "ExminationGenericItemsSelect",
-                                   @class = "form-control exam-option-list",
+                                   id = "ExaminationGenericItemsSelect",
+                                   @class = "form-control exam-option-list d-none",
                                    size = "7"
                                })
 
@@ -42,11 +56,39 @@
                                   size = "7"
                               })
 
-                        @*<select id="ExminationGenericItemsSelect" class="form-control"
-                asp-items="Html.GetEnumSelectList<ExminationGenericItems>()" size="7">
-        </select>*@
+                        @*<select id="ExaminationGenericItemsSelect" class="form-control"
+                        asp-items="Html.GetEnumSelectList<ExminationGenericItems>()" size="7">
+                </select>*@
                     </div>
-                </div>              
+                </div>
+
+                @*Pregnancy Examination entry*@
+                @if (showPregnancyExamEntry)
+                {
+                    <div class="form-row col-12 mt-3">
+
+                        <div id="ExaminationCPregnancyDiv" class="col-5">
+                            <label class="" for="ExaminationPregnancySelect">Pregnancy</label>
+                            <select id="ExaminationPregnancySelect" name="ExaminationPregnancySelect" class="form-control" size="4">
+                                <option value="10">P/A</option>
+                                <option value="11">P/V</option>
+                            </select>
+
+                        </div>
+                        <div id="ExaminationPregnancyItemDiv" class="col-7">
+                            <label class="" for="ExminationPregnancyItemsSelect">Points</label>
+                            @Html.DropDownList("ExminationPregnancyItemsSelect", Html.GetEnumSelectList<ExminationNervousSystemItems>(),
+                                  new
+                                       {
+                                      id = "ExminationPregnancyItemsSelect",
+                                      @class = "form-control exam-option-list",
+                                      size = "7"
+                                  })
+                        </div>
+                    </div>
+
+                }
+
 
                 <div class="col-12 form-row mt-2">
                     <label class="col-2" for="ExaminationFindingInput">Findings:</label>
@@ -62,6 +104,10 @@
                 </div>
 
                 <div class="col-12 mt-2">
+
+                    <input type="hidden" id="ExaminationPointIdInput" value="" />
+                    <input type="hidden" id="ExaminationPointTextInput" value="" />
+
                     <button id="ExaminationItemAddButton" type="button" class="btn btn-primary float-right">
                         <i class="fal fa-notes-medical fa-lg mr-2"></i>
                         Add

@@ -52,7 +52,7 @@ namespace Pas.UI.Areas.Doctor.Controllers
                 PatientId = id
             };
 
-            int prescriptionId = 1003;// await _prescriptionService.CreateInitialDefault(vm);
+            int prescriptionId = 1004;// await _prescriptionService.CreateInitialDefault(vm);
 
 
             if (id < 1)
@@ -72,7 +72,6 @@ namespace Pas.UI.Areas.Doctor.Controllers
             AppUserDetailsVM patientDetails = await _appUserService.Find(vm.PatientId, includeAddressBook: true);
 
             ClinicalHistoryVM clinicialInfo = await _patientService.GetClinicalDetails(patientDetails.Id);            
-            //var chiefComplaints = await _patientService.GetPatientChiefComplaints(patientDetails.Id);
 
             //## PrescriptionCreateVM- will have all necessary info to make a Prescription- 
             //## When the Doc needs to see preview of Prescription before Print/Save
@@ -83,8 +82,7 @@ namespace Pas.UI.Areas.Doctor.Controllers
                 Doctor = currentUser, //## Doctor details is at- AppUserDetailsVM.DoctorDetailsVM()
                 ChamberDetails = chamber,
                 PatientDetails = patientDetails,
-                //AllergyList = clinicialInfo.AllergyList,
-                ClinicialInfo = clinicialInfo, //## AllergyList is withi ClinicalInfo
+                ClinicialInfo = clinicialInfo, //## AllergyList, RecentMedication, RecentDiagnosis are within ClinicalInfo
             };
 
             //## Re-factor UserDetails- 'Doctor' type values     

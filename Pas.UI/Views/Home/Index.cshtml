@@ -40,7 +40,7 @@
                 <li class="list-group-item">
                     <a id="PrintLinkButton" class="nav-link text-dark"
                        @*asp-action="Profile" asp-controller="AppUser"*@
-                       href="@profilePageUrl" 
+                       href="@profilePageUrl"
                        aria-labelledby="View Profile">
                         <i class="fas fa-user fa-2x mr-1"></i>
                         View Profile
@@ -56,6 +56,17 @@
                 </li>
                 @if (Model.HasMultipleRoles)
                 {
+
+                    <li class="list-group-item">
+                        <a id="SwitchRoleButton" class="nav-link text-dark"
+                           asp-area="Doctor"
+                           asp-action="SearchPatient" asp-controller="Home"
+                           aria-labelledby="Search Patient">
+                            <i class="fal fa-hospital-user fa-2x"></i>
+                            Search Patient
+                        </a>
+                    </li>
+
                     <li class="list-group-item">
                         <a id="SwitchRoleButton" class="nav-link text-dark"
                            asp-area=""

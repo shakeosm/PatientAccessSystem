@@ -57,7 +57,7 @@ namespace Pas.UI.Controllers
 
             if (userEmail != null) {
                 //## if the user is Logged in- check- do we have a value in Cache for this User?
-                currentUser = await _appAuthorisationService.GetActiveUserFromCache(userEmail);
+                currentUser = await _appAuthorisationService.GetActiveUserFromCache();
 
                 if (currentUser is null) { 
                     //## First time Logging in this Session (1 hour)- fetch the record from DataBase

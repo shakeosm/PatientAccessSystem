@@ -11,7 +11,7 @@ namespace Pas.Service.Interface
 
         bool SetActiveUserInCache(AppUserDetailsVM user);
 
-        Task<AppUserDetailsVM> GetActiveUserFromCache(string userEmail);
+        Task<AppUserDetailsVM> GetActiveUserFromCache();
 
         bool SetUserRolesInCache(IEnumerable<UserRoleVM> roles, int appUserId);
 

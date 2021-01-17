@@ -98,8 +98,10 @@ namespace Pas.Service
 
         /// <summary>This will return a AppUserDetailsVM Object- which doesn't have any child entity</summary>
         /// <returns>AppUser Object</returns>
-        public async Task<AppUserDetailsVM> GetActiveUserFromCache(string userEmail)
+        public async Task<AppUserDetailsVM> GetActiveUserFromCache()
         {
+            var userEmail = _httpContext.HttpContext.User.Identity?.Name;
+
             //var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             //var userEmail = Context.HttpContext.User.FindFirst(ClaimTypes.Email).Value;

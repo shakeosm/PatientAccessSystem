@@ -154,7 +154,7 @@ namespace Pas.Service
                     cachedResult = MapToClinicalHistoryVM(search);
 
                     cachedResult.RecentMedication = await GetRecentMedication(id);
-                    cachedResult.RecentDiagnosis = await GetRecentDiagnosis(id);
+                    //cachedResult.RecentDiagnosis = await GetRecentDiagnosis(id);
 
                     _cacheService.SetCacheValue(redisKey, cachedResult);
                 }
@@ -215,11 +215,10 @@ namespace Pas.Service
                 {
                     UserId = ch.UserId,
                     Age = ch.User.Age,
+                    DateOfBirth = ch.User.DateOfBirth.Value,
                     BloodGroupType = ch.BloodGroupId is null ? BloodGroup.Unknown : (BloodGroup)ch.BloodGroupId,
-                    Smoker = ch.Smoker,
-                    Drinker = ch.Drinker.HasValue ? ((DrinkHabit) ch.Drinker).ToString() : "",
-                    Excercise = ch.Excercise.Value,
-                    Sports = (Sports) ch.Sports,
+                    Smoker = ch.Smoker ?? 0,
+                    Drinker = ch.Drinker.HasValue ? ((DrinkHabit) ch.Drinker).ToString() : "",                    
 
                     Cholesterol = ch.Cholesterol?.ToString(),
                     Diabetes = ch.Diabetes?.ToString(),
