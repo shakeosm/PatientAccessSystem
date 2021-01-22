@@ -64,14 +64,53 @@ $(document).ready(function () {
     });
 
 
+    
+    $("#ExaminationCategorySelect").click(function () {
+        var categoryId = $("#ExaminationCategorySelect").val();
+
+        var URL = `/Doctor/Prescription/ListAllExaminationItems/${categoryId}`;
+
+        var exminationItemsSelect = $("#ExminationItemsSelect");
+        exminationItemsSelect.empty();
+
+        axios.get(URL)
+            .then(function (response) {
+                for (i = 0; i < response.data.length; i++) {
+                    $(exminationItemsSelect).append("<option value=" + response.data[i].id + ">" + response.data[i].name + "</option>");
+                }
+            });
+    });
+
+
     $('#ExaminationItemAddedAlert').fadeOut();
 
-    $("#ExaminationItemEntryDiv .exam-option-list").click(function () {
-        var selectedPointId = $(this).val();
+    $("#ExminationItemsSelect").click(function () {
+        var examItemId = $(this).val();
+        if (examItemId < 1 || examItemId === undefined)
+            return;
+
         var selectedPointText = $(this).children(":selected").text();
 
-        $("#ExaminationPointIdInput").val(selectedPointId);
-        $("#ExaminationPointTextInput").val(selectedPointText);
+        var URL = `/Doctor/Prescription/ListAllExaminationItemOptions/${examItemId}`;
+
+        var examinationSubItemOptionsDiv = $("#ExaminationSubItemOptionsDiv");
+        examinationSubItemOptionsDiv.empty();
+
+        axios.get(URL)
+            .then(function (response) {
+                for (i = 0; i < response.data.length; i++) {                    
+                    $(examinationSubItemOptionsDiv).append("<span class='examination-sub-item'>" + response.data[i].name +"</span>");
+                }
+            });
+
+        //## Do we have more option under this Examination?
+        if ($("#ExaminationSubItemOptionsDiv .examination-sub-item").length < 1) {
+            //## No Sub-Items- so- good to save this selection
+            $("#ExaminationPointIdInput").val(examItemId);
+            $("#ExaminationPointTextInput").val(selectedPointText);
+        }
+
+        
     });
 
     
@@ -222,26 +261,6 @@ $(document).ready(function () {
             }
         });
     }
-
-
-    $("#ExaminationCategorySelect").click(function() {
-        var category = $("#ExaminationCategorySelect").val();
-        $("#ExaminationItemDiv .exam-option-list").addClass("d-none");
-        ResetExaminationItemSelectionValues();
-
-        if (category === "6") { //## ExminationCategory.Nervous = 6            
-            $("#ExminationNervousSystemItemsSelect").removeClass("d-none");
-        } else if (category === "1") { //## ExminationCategory.General = 1
-            if (!$("#ExminationGeneralItemsSelect").is(":visible")) { //## when not visible- make it visible
-                $("#ExminationGeneralItemsSelect").removeClass("d-none");
-            }
-        } else {
-            if (!$("#ExaminationGenericItemsSelect").is(":visible")) {
-                //$("#ExminationNervousSystemItemsSelect").addClass("d-none");
-                $("#ExaminationGenericItemsSelect").removeClass("d-none");
-            }
-        }
-    });
 
 
     //## Change of 'Diagnosis/Indications' Dropdown box

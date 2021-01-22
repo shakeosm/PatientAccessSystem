@@ -137,24 +137,24 @@ namespace Pas.Service
             return drugTips;
         }
 
-        public async Task<IList<Symptoms>> ListAllSymptoms()
+        public async Task<IList<ChiefComplaints>> ListAllChiefComplaints()
         {
-            string cacheKey = $"ListAllSymptoms";
+            string cacheKey = $"ListAllChiefComplaints";
 
-            var symptomList = _cacheService.GetCacheValue<List<Symptoms>>(cacheKey);
+            var ccList = _cacheService.GetCacheValue<List<ChiefComplaints>>(cacheKey);
 
-            if (symptomList is null)
+            if (ccList is null)
             {
-                symptomList = await _context.Symptoms
+                ccList = await _context.ChiefComplaints
                                             .AsNoTracking()
                                             .OrderBy(s=> s.Description)
                                             .ToListAsync();
 
-                _cacheService.SetCacheValue(cacheKey, symptomList);
+                _cacheService.SetCacheValue(cacheKey, ccList);
 
             }
 
-            return symptomList;
+            return ccList;
         }
 
         public async Task<IList<DrugBrandsForDiagnosisVM>> ListAllBrandsForDiagnosis(int diagnosisId = 0)

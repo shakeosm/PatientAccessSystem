@@ -11,12 +11,10 @@ namespace Pas.Web.ViewModels
         public int PrescriptionId { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Value for {0} must be between {1} and {2}.")]
-        public int CategoryId { get; set; }
+        public int ExaminationId { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Value for {0} must be between {1} and {2}.")]
-        public int PointId { get; set; }
+        public int ExaminationItemOptionId { get; set; }
 
         [Required]
         public string Findings { get; set; }

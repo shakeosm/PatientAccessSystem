@@ -24,7 +24,7 @@ namespace Pas.Service.Interface
         
         Task<IList<Manufacturer>> ListAllMenufacturer();
         
-        Task<IList<Symptoms>> ListAllSymptoms();
+        Task<IList<ChiefComplaints>> ListAllChiefComplaints();
         Task<IList<DrugBrandsForDiagnosisVM>> ListAllBrandsForDiagnosis(int id = 0);
 
         /// <summary>This will load all the Dose Templates for a Brand Drug, ie: Nurofen with 3 possible Dose Templates</summary>

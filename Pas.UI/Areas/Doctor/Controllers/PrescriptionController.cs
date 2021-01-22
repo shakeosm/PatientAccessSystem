@@ -18,6 +18,7 @@ namespace Pas.UI.Areas.Doctor.Controllers
     {
         private readonly IDrugService _drugService;
         private readonly IPatientService _patientService;
+        private readonly IExaminationService _examinationService;
 
         private IPrescriptionService _prescriptionService { get; }
 
@@ -26,6 +27,7 @@ namespace Pas.UI.Areas.Doctor.Controllers
                                 IPatientService PatientService,
                                 UserManager<IdentityUser> UserManager,
                                 IAppUserService AppUserService,
+                                IExaminationService ExaminationService,
                                 IAppAuthorisationService AppAuthorisationService,
                                 IUserOrgRoleService UserOrgRoleService
             ) : base(UserManager, AppUserService, AppAuthorisationService, UserOrgRoleService)
@@ -33,6 +35,7 @@ namespace Pas.UI.Areas.Doctor.Controllers
             _prescriptionService = PrescriptionService;
             _drugService = DrugService;
             _patientService = PatientService;
+            _examinationService = ExaminationService;
         }
 
         [HttpPost]
@@ -116,7 +119,6 @@ namespace Pas.UI.Areas.Doctor.Controllers
             }
 
             return View("Areas/Doctor/Views/Prescription/_FinishAndPreview.cshtml");
-            //return PartialView("/Doctor/Prescription/Views/FinishAndPreview");
 
         }
 
@@ -261,6 +263,26 @@ namespace Pas.UI.Areas.Doctor.Controllers
             return Json(recordId);
         }
 
+
+        [HttpGet]
+        public ActionResult ListAllExaminationItems(int id)
+        {
+            if (id < 1)
+                return Json(null);
+
+            var result = _examinationService.GetItems(id);
+            return Json(result);
+        }
+
+        [HttpGet]
+        public ActionResult ListAllExaminationItemOptions(int id)
+        {
+            if (id < 1)
+                return Json(null);
+
+            var result = _examinationService.GetSubItems(id);
+            return Json(result);
+        }
 
         [HttpGet]
         public async Task<ActionResult> ListAllInvestigationsForDiagnosis(int id)

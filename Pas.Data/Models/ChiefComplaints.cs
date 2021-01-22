@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pas.Data.Models
 {
-    public partial class Symptoms : BaseEntityModel
+    public partial class ChiefComplaints : BaseEntityModel
     {
 
-        public Symptoms()
+        public ChiefComplaints()
         {
             PrescriptionChiefComplaints = new HashSet<PrescriptionChiefComplaints>();
         }

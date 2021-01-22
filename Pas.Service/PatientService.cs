@@ -259,13 +259,13 @@ namespace Pas.Service
             if (complaints is null)
             {
                 var prescriptionChiefComplaints = await _pasContext.PrescriptionChiefComplaints
-                                                                    .Include(pc=> pc.Symptom)
+                                                                    .Include(pc=> pc.ChiefComplaint)
                                                                     .AsNoTracking()
                                                                     .Where(pa => pa.PatientId == id)
                                                                     .Distinct()
                                                                     .Select(cc=> new { 
                                                                         cc.Id,
-                                                                        cc.Symptom.Description
+                                                                        cc.ChiefComplaint.Description
                                                                     })                                                                    
                                                                     .ToListAsync();
 

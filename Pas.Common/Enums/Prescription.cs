@@ -21,15 +21,15 @@ namespace Pas.Common.Enums
         Three = 3
     }
 
-    public enum DoseLiquid
-    {
-        [Display(Name = "One Spoon")]
-        One_Spoon = 5,
-        [Display(Name = "Two Spoons")]
-        Two_Spoon = 6,
-        [Display(Name = "Three Spoons")]
-        Three_Spoon = 7        
-    }
+    //public enum DoseLiquid
+    //{
+    //    [Display(Name = "One Spoon")]
+    //    One_Spoon = 5,
+    //    [Display(Name = "Two Spoons")]
+    //    Two_Spoon = 6,
+    //    [Display(Name = "Three Spoons")]
+    //    Three_Spoon = 7        
+    //}
 
     public enum Tips
     {
@@ -37,60 +37,60 @@ namespace Pas.Common.Enums
         Instructions = 2
     }
 
-    public enum DrugUnitVolume
-    {
-        mcg,
-        mg,
-        gram,
-        kg,
-        pound,        
-        ml,
-        cc,
-        litre,
-        IU,
-    }
+    //public enum DrugUnitVolume
+    //{
+    //    mcg,
+    //    mg,
+    //    gram,
+    //    kg,
+    //    pound,        
+    //    ml,
+    //    cc,
+    //    litre,
+    //    IU,
+    //}
 
-    public enum ExminationCategory
-    {
-        [Display(Name = "General")]
-        General = 1,  //## will use: public enum ExminationGeneralItems
-        [Display(Name = "Abdomen")]
-        Abdominal = 2,
-        [Display(Name = "CVS")]
-        Cardiovascular = 3,
-        [Display(Name = "R/S")]
-        Respiratory,
-        [Display(Name = "M/S")]
-        Musculostkeletal,
-        [Display(Name = "N/S")]
-        Nervous, //## will use: public enum ExminationNervousSystemItems
-        [Display(Name = "U/G")]
-        Urogenital
-    }
+    //public enum ExminationCategory
+    //{
+    //    [Display(Name = "General")]
+    //    General = 1,  //## will use: public enum ExminationGeneralItems
+    //    [Display(Name = "Abdomen")]
+    //    Abdominal = 2,
+    //    [Display(Name = "CVS")]
+    //    Cardiovascular = 3,
+    //    [Display(Name = "R/S")]
+    //    Respiratory,
+    //    [Display(Name = "M/S")]
+    //    Musculostkeletal,
+    //    [Display(Name = "N/S")]
+    //    Nervous, //## will use: public enum ExminationNervousSystemItems
+    //    [Display(Name = "U/G")]
+    //    Urogenital
+    //}
 
-    public enum ExminationGenericItems
-    { 
-        Auscultation = 1,
-        Inspection = 2,
-        Palpation = 3,
-        Percussion = 4  
-    }
+    //public enum ExminationGenericItems
+    //{ 
+    //    Auscultation = 1,
+    //    Inspection = 2,
+    //    Palpation = 3,
+    //    Percussion = 4  
+    //}
 
-    public enum ExminationNervousSystemItems
-    {
-        Gait = 10,
-        MotorSystem = 11,
-        Sensory = 12
-    }
+    //public enum ExminationNervousSystemItems
+    //{
+    //    Gait = 10,
+    //    MotorSystem = 11,
+    //    Sensory = 12
+    //}
 
-    public enum ExminationGeneralItems
-    {
-        Pulse = 20,
-        BP = 21,
-        Temerature=22,
-        ResporatoryRate = 23,
-        Weight = 24
-    }
+    //public enum ExminationGeneralItems
+    //{
+    //    Pulse = 20,
+    //    BP = 21,
+    //    Temerature=22,
+    //    ResporatoryRate = 23,
+    //    Weight = 24
+    //}
 
     public enum InvestigationCategory
     {

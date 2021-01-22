@@ -187,7 +187,7 @@ namespace Pas.Service
                     PrescriptionChiefComplaints cc = new PrescriptionChiefComplaints() { 
                         PrescriptionId = vm.PrescriptionId,
                         PatientId= vm.PatientId,
-                        SymptomId = item
+                        ChiefComplaintId = item
                     };
 
                     _pasContext.PrescriptionChiefComplaints.Add(cc);
@@ -319,8 +319,8 @@ namespace Pas.Service
             var newExamination = new PrescriptionExamination() 
             {
                 PrescriptionId = vm.PrescriptionId,
-                ExaminationCategoryId = vm.CategoryId,
-                ExaminationTypeId = vm.PointId,
+                ExaminationItemId = vm.ExaminationId,
+                ExaminationItemOptionId = vm.ExaminationItemOptionId,
                 Result = vm.Findings
             };
             try

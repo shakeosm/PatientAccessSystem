@@ -7,9 +7,9 @@
     var clinicalInfo = Model.ClinicialInfo;
     var recentMedications = clinicalInfo.RecentMedication.Take(6);
     //var recentDiagnosis = clinicalInfo.RecentDiagnosis;
-    var allergyList = clinicalInfo.AllergyList;
+    //var allergyList = clinicalInfo.AllergyList;
 
-    var symptomList = await DrugService.ListAllSymptoms();
+    var symptomList = await DrugService.ListAllChiefComplaints();
     var symptomListSource = new SelectList(symptomList, "Id", "Description");
 
     int counter = 0;

@@ -31,7 +31,9 @@ namespace Pas.Data
         public virtual DbSet<DiagnosticTestHistory> DiagnosticTestHistory { get; set; }
         public virtual DbSet<DoctorSpeciality> DoctorSpeciality { get; set; }
         public virtual DbSet<DoctorMedicalDegrees> DoctorMedicalDegrees { get; set; }
-        public virtual DbSet<ExaminationTypes> ExaminationTypes{ get; set; }
+        //public virtual DbSet<ExaminationTypes> ExaminationTypes{ get; set; }
+        public virtual DbSet<ExaminationItem> ExaminationItems{ get; set; }
+        public virtual DbSet<ExaminationItemOption> ExaminationItemOptions { get; set; }
         public virtual DbSet<Investigation> Investigation { get; set; }
         public virtual DbSet<Speciality> Speciality { get; set; }
         public virtual DbSet<MedicalDegree> MedicalDegrees { get; set; }
@@ -58,7 +60,7 @@ namespace Pas.Data
         public virtual DbSet<PrescriptionExamination> PrescriptionExaminations { get; set; }
         public virtual DbSet<PrescriptionInvestigation> PrescriptionInvestigations { get; set; }
         public virtual DbSet<Role> Role { get; set; }
-        public virtual DbSet<Symptoms> Symptoms { get; set; }
+        public virtual DbSet<ChiefComplaints> ChiefComplaints { get; set; }
         public virtual DbSet<StrengthType> StrengthTypes { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserOrganisationRole> UserOrganisationRole { get; set; }
@@ -290,9 +292,14 @@ namespace Pas.Data
                 entity.ToTable("DoctorMedicalDegrees", "dbo");
             });
 
-            modelBuilder.Entity<ExaminationTypes>(entity =>
+            modelBuilder.Entity<ExaminationItem>(entity =>
             {
-                entity.ToTable("ExaminationTypes", "dbo");
+                entity.ToTable("ExaminationItems", "dbo");
+            });
+
+            modelBuilder.Entity<ExaminationItemOption>(entity =>
+            {
+                entity.ToTable("ExaminationItemOptions", "dbo");
             });
 
             modelBuilder.Entity<DoctorProfile>(entity =>
@@ -553,9 +560,9 @@ namespace Pas.Data
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Symptoms>(entity =>
+            modelBuilder.Entity<ChiefComplaints>(entity =>
             {
-                entity.ToTable("Symptoms", "dbo");
+                entity.ToTable("ChiefComplaints", "dbo");
             });
 
             modelBuilder.Entity<StrengthType>(entity =>

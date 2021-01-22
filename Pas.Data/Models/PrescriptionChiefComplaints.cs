@@ -17,10 +17,10 @@ namespace Pas.Data.Models
         public int PatientId { get; set; }
 
         [Required]
-        public int SymptomId { get; set; }
+        public int ChiefComplaintId { get; set; }
        
 
-        public virtual Symptoms Symptom { get; set; }
+        public virtual ChiefComplaints ChiefComplaint { get; set; }
 
         public virtual User Patient { get; set; }
     }
