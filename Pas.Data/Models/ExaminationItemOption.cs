@@ -20,7 +20,7 @@ namespace Pas.Data.Models
 
         public bool Show { get; set; }
 
-        public virtual ExaminationItem ExaminationItem { get; set; }
+        public virtual ExaminationItem Examination { get; set; }
         public virtual ICollection<PrescriptionExamination> PrescriptionExaminations { get; set; }
 
     }

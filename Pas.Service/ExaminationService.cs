@@ -2,6 +2,7 @@
 using Pas.Data;
 using Pas.Service.Interface;
 using Pas.Web.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,14 +31,15 @@ namespace Pas.Service
             {
                 //## Read all the Examination Items- Including the Main categories
                 var result = await _dataContext.ExaminationItems
-                                            .AsNoTracking()
-                                            .Select(e => new ExaminationItemVM()
-                                            {
-                                                Id = e.Id,
-                                                Name = e.Description,
-                                                ParentId = e.ParentId ?? 0
-                                            })
+                                            .AsNoTracking()                                            
                                             .ToListAsync();
+                
+                cachedResult = result.Select(e => new ExaminationItemVM()
+                {
+                    Id = e.Id,
+                    Name = e.Description,
+                    ParentId = e.ParentId ?? 0
+                });
 
                 //## Store all Items
                 _cacheService.SetCacheValue(cacheKey, cachedResult);
@@ -61,6 +63,11 @@ namespace Pas.Service
             var cachedResult = _cacheService.GetCacheValue<IEnumerable<ExaminationItemVM>>(cacheKey);
             //## NO need to to Check - if cachedResult is NULL! 
 
+            //## we have same ExamItems for some common Categories (Abdominal, Cardiovascular, Respiratory, Musculostkeletal, Urogenital)
+            if (categoryId == 3 || categoryId == 4 || categoryId == 5 || categoryId == 7) {
+                categoryId = 2;
+            }
+
             //## Return the Child Items of a Main category
             var examItems = cachedResult.Where(e => e.ParentId == categoryId);
 
@@ -75,15 +82,25 @@ namespace Pas.Service
             
             if (cachedResult is null)
             {
-                cachedResult = await _dataContext.ExaminationItemOptions
-                                            .AsNoTracking()
-                                            .Select(e => new ExaminationSubItemOptionsVM()
-                                            {
-                                                Id = e.Id,
-                                                Name = e.Description,
-                                                ParentId = e.ExaminationId
-                                            })
-                                            .ToListAsync();                    
+                try
+                {
+                    var result = await _dataContext.ExaminationItemOptions
+                                                .AsNoTracking()
+                                                .ToListAsync();
+
+                    cachedResult = result.Select(e => new ExaminationSubItemOptionsVM()
+                    {
+                        Id = e.Id,
+                        Name = e.Description,
+                        ParentId = e.ExaminationId
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+
+                                       
 
                 //## Store all Items
                 _cacheService.SetCacheValue(cacheKey, cachedResult);
